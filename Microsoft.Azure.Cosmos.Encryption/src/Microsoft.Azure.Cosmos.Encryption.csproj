@@ -4,14 +4,38 @@
     <AssemblyName>Microsoft.Azure.Cosmos.Encryption</AssemblyName>
     <RootNamespace>Microsoft.Azure.Cosmos.Encryption</RootNamespace>
     <LangVersion>latest</LangVersion>
+    <IsPreview>true</IsPreview>
+    
+    <CurrentDate>$([System.DateTime]::Now.ToString(yyyyMMdd))</CurrentDate>
+    <Version>$(EncryptionVersion)</Version>
+    <Company>Microsoft Corporation</Company>
+    <Authors>Microsoft</Authors>
+    <Description>This library provides an implementation for client-side encryption for Azure Cosmos's SQL API. For more information, refer to https://aka.ms/CosmosClientEncryption</Description>
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+    <Title>Microsoft Azure Cosmos DB client-side encryption library</Title>
+    <PackageId>Microsoft.Azure.Cosmos.Encryption</PackageId>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://aka.ms/netcoregaeula</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Azure/azure-cosmos-dotnet-v3</PackageProjectUrl>
+    <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</PackageIconUrl>
+    <PackageTags>microsoft;azure;cosmos;cosmosdb;documentdb;docdb;nosql;azureofficial;dotnetcore;netcore;netstandard;client;encryption;byok</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Microsoft.Azure.Cosmos\src\Microsoft.Azure.Cosmos.csproj" />
+    <AdditionalFiles Include="..\..\Microsoft.Azure.Cosmos\src\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <DefineConstants Condition=" '$(IsNightly)' == 'true' or '$(IsPreview)' == 'true' ">$(DefineConstants);PREVIEW</DefineConstants>
-  </PropertyGroup>
+  <ItemGroup>
+     <PackageReference Include="Azure.Security.KeyVault.Keys" Version="4.0.3" />
+     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.15.0-preview" />
+     <PackageReference Include="Azure.Core" Version="1.3.0" />
+     <PackageReference Include="Azure.Identity" Version="1.1.1" />
+     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />     
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.0.102" PrivateAssets="All" />
+  </ItemGroup>
   
   <PropertyGroup>
     <SigningType>Product</SigningType>

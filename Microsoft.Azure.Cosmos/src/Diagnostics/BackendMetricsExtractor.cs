@@ -75,6 +75,11 @@ namespace Microsoft.Azure.Cosmos.Diagnostics
             return (ParseFailureReason.None, backendMetrics);
         }
 
+        public override (ParseFailureReason, BackendMetrics) Visit(CosmosSystemInfo cpuLoadHistory)
+        {
+            return BackendMetricsExtractor.MetricsNotFound;
+        }
+
         public override (ParseFailureReason, BackendMetrics) Visit(AddressResolutionStatistics addressResolutionStatistics)
         {
             return BackendMetricsExtractor.MetricsNotFound;
@@ -86,6 +91,16 @@ namespace Microsoft.Azure.Cosmos.Diagnostics
         }
 
         public override (ParseFailureReason, BackendMetrics) Visit(CosmosClientSideRequestStatistics clientSideRequestStatistics)
+        {
+            return BackendMetricsExtractor.MetricsNotFound;
+        }
+
+        public override (ParseFailureReason, BackendMetrics) Visit(FeedRangeStatistics feedRangeStatistics)
+        {
+            return BackendMetricsExtractor.MetricsNotFound;
+        }
+
+        public override (ParseFailureReason, BackendMetrics) Visit(RequestHandlerScope requestHandlerScope)
         {
             return BackendMetricsExtractor.MetricsNotFound;
         }

@@ -6,10 +6,7 @@ namespace Microsoft.Azure.Cosmos.Json
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Globalization;
-    using System.IO;
     using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// JsonReader partial.
@@ -24,7 +21,7 @@ namespace Microsoft.Azure.Cosmos.Json
         /// <summary>
         /// JsonReader that knows how to read text
         /// </summary>
-        private sealed class JsonTextReader : JsonReader
+        private sealed class JsonTextReader : JsonReader, IJsonTextReaderPrivateImplementation
         {
             private const char Int8TokenPrefix = 'I';
             private const char Int16TokenPrefix = 'H';
@@ -48,9 +45,7 @@ namespace Microsoft.Azure.Cosmos.Json
             /// Initializes a new instance of the JsonTextReader class.
             /// </summary>
             /// <param name="buffer">The IJsonTextBuffer to read from.</param>
-            /// <param name="skipValidation">Whether or not to skip validation.</param>
-            public JsonTextReader(ReadOnlyMemory<byte> buffer, bool skipValidation = false)
-                : base(skipValidation)
+            public JsonTextReader(ReadOnlyMemory<byte> buffer)
             {
                 this.jsonTextBuffer = new JsonTextMemoryReader(buffer);
             }
@@ -147,13 +142,7 @@ namespace Microsoft.Azure.Cosmos.Json
             }
 
             /// <inheritdoc />
-            public override JsonSerializationFormat SerializationFormat
-            {
-                get
-                {
-                    return JsonSerializationFormat.Text;
-                }
-            }
+            public override JsonSerializationFormat SerializationFormat => JsonSerializationFormat.Text;
 
             /// <inheritdoc />
             public override bool Read()
@@ -303,17 +292,19 @@ namespace Microsoft.Azure.Cosmos.Json
             }
 
             /// <inheritdoc />
-            public override bool TryGetBufferedUtf8StringValue(out ReadOnlyMemory<byte> bufferedUtf8StringValue)
+            public override bool TryGetBufferedStringValue(out Utf8Memory value)
             {
                 if (this.token.JsonTextTokenType.HasFlag(JsonTextTokenType.EscapedFlag))
                 {
-                    bufferedUtf8StringValue = default;
+                    value = default;
                     return false;
                 }
 
-                bufferedUtf8StringValue = this.jsonTextBuffer.GetBufferedRawJsonToken(
-                    this.token.Start,
-                    this.token.End);
+                // Remove the quotes.
+                value = Utf8Memory.UnsafeCreateNoValidation(
+                    this.jsonTextBuffer.GetBufferedRawJsonToken(
+                        this.token.Start + 1,
+                        this.token.End - 1));
                 return true;
             }
 
@@ -398,13 +389,12 @@ namespace Microsoft.Azure.Cosmos.Json
                 return JsonTextParser.GetBinaryValue(binaryToken);
             }
 
-            /// <inheritdoc />
-            public override bool TryGetBufferedRawJsonToken(out ReadOnlyMemory<byte> bufferedRawJsonToken)
+            Utf8Memory IJsonTextReaderPrivateImplementation.GetBufferedJsonToken()
             {
-                bufferedRawJsonToken = this.jsonTextBuffer.GetBufferedRawJsonToken(
+                ReadOnlyMemory<byte> bufferedRawJson = this.jsonTextBuffer.GetBufferedRawJsonToken(
                     this.token.Start,
                     this.token.End);
-                return true;
+                return Utf8Memory.UnsafeCreateNoValidation(bufferedRawJson);
             }
 
             private static JsonTokenType JsonTextToJsonTokenType(JsonTextTokenType jsonTextTokenType)
@@ -748,7 +738,7 @@ namespace Microsoft.Azure.Cosmos.Json
                             break;
 
                         case '\\':
-                            this.token.JsonTextTokenType = (JsonTextTokenType)(this.token.JsonTextTokenType | JsonTextTokenType.EscapedFlag);
+                            this.token.JsonTextTokenType = this.token.JsonTextTokenType | JsonTextTokenType.EscapedFlag;
                             char escapeCharacter = this.jsonTextBuffer.ReadCharacter();
                             if (escapeCharacter == 'u')
                             {

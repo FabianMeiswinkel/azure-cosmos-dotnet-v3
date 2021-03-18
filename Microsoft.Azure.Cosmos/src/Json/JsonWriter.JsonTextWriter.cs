@@ -7,8 +7,9 @@ namespace Microsoft.Azure.Cosmos.Json
     using System.Buffers;
     using System.Buffers.Text;
     using System.Globalization;
-    using System.Linq;
-    using System.Text;
+    using System.Numerics;
+    using System.Runtime.CompilerServices;
+    using Microsoft.Azure.Cosmos.Core.Utf8;
 
     /// <summary>
     /// Partial class for the JsonWriter that has a private JsonTextWriter below.
@@ -28,10 +29,8 @@ namespace Microsoft.Azure.Cosmos.Json
         /// The user can also provide initial size to reserve string buffer, that will help reduce cost of reallocation.
         /// It provides error checking based on JSON grammar. It provides escaping for nine characters specified in JSON.
         /// </summary>
-        private sealed class JsonTextWriter : JsonWriter
+        private sealed class JsonTextWriter : JsonWriter, IJsonTextWriterExtensions
         {
-            private const int MaxStackAlloc = 4 * 1024;
-
             private const byte ValueSeperatorToken = (byte)':';
             private const byte MemberSeperatorToken = (byte)',';
             private const byte ObjectStartToken = (byte)'{';
@@ -51,6 +50,10 @@ namespace Microsoft.Azure.Cosmos.Json
             private const byte DoubleTokenPrefix = (byte)'D';
             private const byte GuidTokenPrefix = (byte)'G';
             private const byte BinaryTokenPrefix = (byte)'B';
+
+            private const byte DoubleQuote = (byte)'"';
+            private const byte ReverseSolidus = (byte)'\\';
+            private const byte Space = (byte)' ';
 
             private static readonly ReadOnlyMemory<byte> NotANumber = new byte[]
             {
@@ -77,10 +80,9 @@ namespace Microsoft.Azure.Cosmos.Json
                 (byte)'n', (byte)'u', (byte)'l', (byte)'l'
             };
 
-            /// <summary>
-            /// JSON needs to escape quote, reverse soldius, and control characters (anything less than space).
-            /// </summary>
-            private static readonly byte[] CharactersThatNeedEscaping = Enumerable.Range(0, (int)' ').Select(x => (byte)x).Concat(new byte[] { (byte)'"', (byte)'\\' }).ToArray();
+            private static readonly Vector<byte> DoubleQuoteVector = new Vector<byte>(DoubleQuote);
+            private static readonly Vector<byte> ReverseSolidusVector = new Vector<byte>(ReverseSolidus);
+            private static readonly Vector<byte> SpaceVector = new Vector<byte>(Space);
 
             private readonly JsonTextMemoryWriter jsonTextMemoryWriter;
 
@@ -92,31 +94,17 @@ namespace Microsoft.Azure.Cosmos.Json
             /// <summary>
             /// Initializes a new instance of the JsonTextWriter class.
             /// </summary>
-            /// <param name="skipValidation">Whether or not to skip validation</param>
-            public JsonTextWriter(bool skipValidation)
-                : base(skipValidation)
+            public JsonTextWriter(int initialCapacity = 256)
             {
                 this.firstValue = true;
-                this.jsonTextMemoryWriter = new JsonTextMemoryWriter();
+                this.jsonTextMemoryWriter = new JsonTextMemoryWriter(initialCapacity);
             }
 
             /// <inheritdoc />
-            public override JsonSerializationFormat SerializationFormat
-            {
-                get
-                {
-                    return JsonSerializationFormat.Text;
-                }
-            }
+            public override JsonSerializationFormat SerializationFormat => JsonSerializationFormat.Text;
 
             /// <inheritdoc />
-            public override long CurrentLength
-            {
-                get
-                {
-                    return this.jsonTextMemoryWriter.Position;
-                }
-            }
+            public override long CurrentLength => this.jsonTextMemoryWriter.Position;
 
             /// <inheritdoc />
             public override void WriteObjectStart()
@@ -157,17 +145,7 @@ namespace Microsoft.Azure.Cosmos.Json
             }
 
             /// <inheritdoc />
-            public override unsafe void WriteFieldName(string fieldName)
-            {
-                int utf8Length = Encoding.UTF8.GetByteCount(fieldName);
-                Span<byte> utf8FieldName = utf8Length < JsonTextWriter.MaxStackAlloc ? stackalloc byte[utf8Length] : new byte[utf8Length];
-                Encoding.UTF8.GetBytes(fieldName, utf8FieldName);
-
-                this.WriteFieldName(utf8FieldName);
-            }
-
-            /// <inheritdoc />
-            public override void WriteFieldName(ReadOnlySpan<byte> utf8FieldName)
+            public override void WriteFieldName(Utf8Span fieldName)
             {
                 this.JsonObjectState.RegisterToken(JsonTokenType.FieldName);
                 this.PrefixMemberSeparator();
@@ -176,30 +154,24 @@ namespace Microsoft.Azure.Cosmos.Json
                 this.firstValue = true;
 
                 this.jsonTextMemoryWriter.Write(PropertyStartToken);
-                this.WriteEscapedString(utf8FieldName);
+
+                this.WriteEscapedString(fieldName);
+
                 this.jsonTextMemoryWriter.Write(PropertyEndToken);
 
                 this.jsonTextMemoryWriter.Write(ValueSeperatorToken);
             }
 
             /// <inheritdoc />
-            public override void WriteStringValue(string value)
-            {
-                int utf8Length = Encoding.UTF8.GetByteCount(value);
-                Span<byte> utf8String = utf8Length < JsonTextWriter.MaxStackAlloc ? stackalloc byte[utf8Length] : new byte[utf8Length];
-                Encoding.UTF8.GetBytes(value, utf8String);
-
-                this.WriteStringValue(utf8String);
-            }
-
-            /// <inheritdoc />
-            public override void WriteStringValue(ReadOnlySpan<byte> utf8StringValue)
+            public override void WriteStringValue(Utf8Span value)
             {
                 this.JsonObjectState.RegisterToken(JsonTokenType.String);
                 this.PrefixMemberSeparator();
 
                 this.jsonTextMemoryWriter.Write(StringStartToken);
-                this.WriteEscapedString(utf8StringValue);
+
+                this.WriteEscapedString(value);
+
                 this.jsonTextMemoryWriter.Write(StringEndToken);
             }
 
@@ -323,61 +295,31 @@ namespace Microsoft.Azure.Cosmos.Json
                 this.jsonTextMemoryWriter.WriteBinaryAsBase64(value);
             }
 
-            /// <inheritdoc />
-            public override ReadOnlyMemory<byte> GetResult()
+            public void WriteRawJsonValue(ReadOnlyMemory<byte> buffer, bool isFieldName)
             {
-                return this.jsonTextMemoryWriter.Buffer.Slice(
-                    0,
-                    this.jsonTextMemoryWriter.Position);
+                // The token type here does not matter, we only need to know whether it is a field name
+                this.JsonObjectState.RegisterToken(isFieldName ? JsonTokenType.FieldName : JsonTokenType.String);
+
+                this.PrefixMemberSeparator();
+
+                this.jsonTextMemoryWriter.Write(buffer.Span);
+
+                if (isFieldName)
+                {
+                    // no separator after property name
+                    this.firstValue = true;
+
+                    // Append value separator character
+                    this.jsonTextMemoryWriter.Write(ValueSeperatorToken);
+                }
             }
 
             /// <inheritdoc />
-            protected override void WriteRawJsonToken(
-                JsonTokenType jsonTokenType,
-                ReadOnlySpan<byte> rawJsonToken)
+            public override ReadOnlyMemory<byte> GetResult()
             {
-                switch (jsonTokenType)
-                {
-                    case JsonTokenType.String:
-                    case JsonTokenType.Number:
-                    case JsonTokenType.True:
-                    case JsonTokenType.False:
-                    case JsonTokenType.Null:
-                    case JsonTokenType.FieldName:
-                    case JsonTokenType.Int8:
-                    case JsonTokenType.Int16:
-                    case JsonTokenType.Int32:
-                    case JsonTokenType.Int64:
-                    case JsonTokenType.UInt32:
-                    case JsonTokenType.Float32:
-                    case JsonTokenType.Float64:
-                    case JsonTokenType.Guid:
-                    case JsonTokenType.Binary:
-                        // Supported Tokens
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException($"Unknown token type: {jsonTokenType}.");
-                }
-
-                if (rawJsonToken.IsEmpty)
-                {
-                    throw new ArgumentException($"Expected non empty {nameof(rawJsonToken)}.");
-                }
-
-                this.JsonObjectState.RegisterToken(jsonTokenType);
-                this.PrefixMemberSeparator();
-
-                // No separator after property name
-                if (jsonTokenType == JsonTokenType.FieldName)
-                {
-                    this.firstValue = true;
-                    this.jsonTextMemoryWriter.Write(rawJsonToken);
-                    this.jsonTextMemoryWriter.Write(ValueSeperatorToken);
-                }
-                else
-                {
-                    this.jsonTextMemoryWriter.Write(rawJsonToken);
-                }
+                return this.jsonTextMemoryWriter.BufferAsMemory.Slice(
+                    0,
+                    this.jsonTextMemoryWriter.Position);
             }
 
             private void WriteIntegerInternal(long value)
@@ -425,7 +367,7 @@ namespace Microsoft.Azure.Cosmos.Json
                 this.firstValue = false;
             }
 
-            private void WriteEscapedString(ReadOnlySpan<byte> unescapedString)
+            private void WriteEscapedString(Utf8Span unescapedString)
             {
                 while (!unescapedString.IsEmpty)
                 {
@@ -438,16 +380,16 @@ namespace Microsoft.Azure.Cosmos.Json
 
                     // Write as much of the string as possible
                     this.jsonTextMemoryWriter.Write(
-                        unescapedString.Slice(
+                        unescapedString.Span.Slice(
                             start: 0,
                             length: indexOfFirstCharacterThatNeedsEscaping.Value));
-                    unescapedString = unescapedString.Slice(start: indexOfFirstCharacterThatNeedsEscaping.Value);
+                    unescapedString = Utf8Span.UnsafeFromUtf8BytesNoValidation(unescapedString.Span.Slice(start: indexOfFirstCharacterThatNeedsEscaping.Value));
 
                     // Escape the next character if it exists
                     if (!unescapedString.IsEmpty)
                     {
-                        byte character = unescapedString[0];
-                        unescapedString = unescapedString.Slice(start: 1);
+                        byte character = unescapedString.Span[0];
+                        unescapedString = Utf8Span.UnsafeFromUtf8BytesNoValidation(unescapedString.Span.Slice(start: 1));
 
                         switch (character)
                         {
@@ -506,17 +448,73 @@ namespace Microsoft.Azure.Cosmos.Json
                 }
             }
 
-            private static int? IndexOfCharacterThatNeedsEscaping(ReadOnlySpan<byte> span)
+            private static unsafe int? IndexOfCharacterThatNeedsEscaping(Utf8Span utf8Span)
             {
-                int? index = null;
+                int vectorCount = Vector<byte>.Count;
+                int index = 0;
 
-                int indexOfAny = span.IndexOfAny(JsonTextWriter.CharactersThatNeedEscaping.AsSpan());
-                if (indexOfAny != -1)
+                // If we can benefit from SIMD scan, use that approach
+                if (Vector.IsHardwareAccelerated)
                 {
-                    index = indexOfAny;
+                    // Ensure we stop the SIMD scan before the length of the vector would
+                    // go past the end of the array
+#pragma warning disable IDE0047 // Remove unnecessary parentheses
+                    int lastVectorMultiple = (utf8Span.Length / vectorCount) * vectorCount;
+#pragma warning restore IDE0047 // Remove unnecessary parentheses
+
+                    for (; index < lastVectorMultiple; index += vectorCount)
+                    {
+                        Vector<byte> vector;
+                        unsafe
+                        {
+                            fixed (byte* spanPtr = utf8Span.Span)
+                            {
+                                vector = Unsafe.Read<Vector<byte>>(spanPtr + index);
+                            }
+                        }
+
+                        if (JsonTextWriter.HasCharacterThatNeedsEscaping(vector))
+                        {
+                            // The Vector contained a character that needed escaping
+                            // Loop to find the exact character and index
+                            for (; index < utf8Span.Length; ++index)
+                            {
+                                byte c = utf8Span.Span[index];
+
+                                if (JsonTextWriter.NeedsEscaping(c))
+                                {
+                                    return index;
+                                }
+                            }
+                        }
+                    }
                 }
 
-                return index;
+                // Unless the scan ended on a vectorCount multiple,
+                // still need to check the last few characters
+                for (; index < utf8Span.Length; ++index)
+                {
+                    byte c = utf8Span.Span[index];
+
+                    if (JsonTextWriter.NeedsEscaping(c))
+                    {
+                        return index;
+                    }
+                }
+
+                return null;
+            }
+
+            private static bool HasCharacterThatNeedsEscaping(Vector<byte> vector)
+            {
+                return Vector.EqualsAny(vector, JsonTextWriter.ReverseSolidusVector) ||
+                    Vector.EqualsAny(vector, JsonTextWriter.DoubleQuoteVector) ||
+                    Vector.LessThanAny(vector, JsonTextWriter.SpaceVector);
+            }
+
+            private static bool NeedsEscaping(byte value)
+            {
+                return (value == ReverseSolidus) || (value == DoubleQuote) || (value < Space);
             }
 
             private static byte GetHexDigit(int value)
@@ -541,7 +539,7 @@ namespace Microsoft.Azure.Cosmos.Json
                 {
                     const int MaxBoolLength = 5;
                     this.EnsureRemainingBufferSpace(MaxBoolLength);
-                    if (!Utf8Formatter.TryFormat(value, this.Cursor.Span, out int bytesWritten))
+                    if (!Utf8Formatter.TryFormat(value, this.Cursor, out int bytesWritten))
                     {
                         throw new InvalidOperationException($"Failed to {nameof(this.Write)}({typeof(bool).FullName}{value})");
                     }
@@ -552,7 +550,7 @@ namespace Microsoft.Azure.Cosmos.Json
                 public void Write(byte value)
                 {
                     this.EnsureRemainingBufferSpace(1);
-                    this.Buffer.Span[this.Position] = value;
+                    this.buffer[this.Position] = value;
                     this.Position++;
                 }
 
@@ -560,7 +558,7 @@ namespace Microsoft.Azure.Cosmos.Json
                 {
                     const int MaxInt8Length = 4;
                     this.EnsureRemainingBufferSpace(MaxInt8Length);
-                    if (!Utf8Formatter.TryFormat(value, this.Cursor.Span, out int bytesWritten))
+                    if (!Utf8Formatter.TryFormat(value, this.Cursor, out int bytesWritten))
                     {
                         throw new InvalidOperationException($"Failed to {nameof(this.Write)}({typeof(sbyte).FullName}{value})");
                     }
@@ -572,7 +570,7 @@ namespace Microsoft.Azure.Cosmos.Json
                 {
                     const int MaxInt16Length = 6;
                     this.EnsureRemainingBufferSpace(MaxInt16Length);
-                    if (!Utf8Formatter.TryFormat(value, this.Cursor.Span, out int bytesWritten))
+                    if (!Utf8Formatter.TryFormat(value, this.Cursor, out int bytesWritten))
                     {
                         throw new InvalidOperationException($"Failed to {nameof(this.Write)}({typeof(short).FullName}{value})");
                     }
@@ -584,7 +582,7 @@ namespace Microsoft.Azure.Cosmos.Json
                 {
                     const int MaxInt32Length = 11;
                     this.EnsureRemainingBufferSpace(MaxInt32Length);
-                    if (!Utf8Formatter.TryFormat(value, this.Cursor.Span, out int bytesWritten))
+                    if (!Utf8Formatter.TryFormat(value, this.Cursor, out int bytesWritten))
                     {
                         throw new InvalidOperationException($"Failed to {nameof(this.Write)}({typeof(int).FullName}{value})");
                     }
@@ -596,7 +594,7 @@ namespace Microsoft.Azure.Cosmos.Json
                 {
                     const int MaxInt32Length = 11;
                     this.EnsureRemainingBufferSpace(MaxInt32Length);
-                    if (!Utf8Formatter.TryFormat(value, this.Cursor.Span, out int bytesWritten))
+                    if (!Utf8Formatter.TryFormat(value, this.Cursor, out int bytesWritten))
                     {
                         throw new InvalidOperationException($"Failed to {nameof(this.Write)}({typeof(int).FullName}{value})");
                     }
@@ -608,7 +606,7 @@ namespace Microsoft.Azure.Cosmos.Json
                 {
                     const int MaxInt64Length = 20;
                     this.EnsureRemainingBufferSpace(MaxInt64Length);
-                    if (!Utf8Formatter.TryFormat(value, this.Cursor.Span, out int bytesWritten))
+                    if (!Utf8Formatter.TryFormat(value, this.Cursor, out int bytesWritten))
                     {
                         throw new InvalidOperationException($"Failed to {nameof(this.Write)}({typeof(long).FullName}{value})");
                     }
@@ -626,7 +624,7 @@ namespace Microsoft.Azure.Cosmos.Json
                     for (int index = 0; index < floatString.Length; index++)
                     {
                         // we can cast to byte, since it's all ascii
-                        this.Cursor.Span[0] = (byte)floatString[index];
+                        this.buffer[this.Position] = (byte)floatString[index];
                         this.Position++;
                     }
                 }
@@ -641,7 +639,7 @@ namespace Microsoft.Azure.Cosmos.Json
                     for (int index = 0; index < doubleString.Length; index++)
                     {
                         // we can cast to byte, since it's all ascii
-                        this.Cursor.Span[0] = (byte)doubleString[index];
+                        this.buffer[this.Position] = (byte)doubleString[index];
                         this.Position++;
                     }
                 }
@@ -650,7 +648,7 @@ namespace Microsoft.Azure.Cosmos.Json
                 {
                     const int GuidLength = 38;
                     this.EnsureRemainingBufferSpace(GuidLength);
-                    if (!Utf8Formatter.TryFormat(value, this.Cursor.Span, out int bytesWritten))
+                    if (!Utf8Formatter.TryFormat(value, this.Cursor, out int bytesWritten))
                     {
                         throw new InvalidOperationException($"Failed to {nameof(this.Write)}({typeof(double).FullName}{value})");
                     }
@@ -661,7 +659,7 @@ namespace Microsoft.Azure.Cosmos.Json
                 public void WriteBinaryAsBase64(ReadOnlySpan<byte> binary)
                 {
                     this.EnsureRemainingBufferSpace(Base64.GetMaxEncodedToUtf8Length(binary.Length));
-                    Base64.EncodeToUtf8(binary, this.Cursor.Span, out int bytesConsumed, out int bytesWritten);
+                    Base64.EncodeToUtf8(binary, this.Cursor, out int bytesConsumed, out int bytesWritten);
 
                     this.Position += bytesWritten;
                 }

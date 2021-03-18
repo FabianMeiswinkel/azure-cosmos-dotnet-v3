@@ -1,35 +1,31 @@
 ﻿//------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------
-namespace Microsoft.Azure.Cosmos.Sql
+namespace Microsoft.Azure.Cosmos.SqlObjects
 {
     using System;
+    using Microsoft.Azure.Cosmos.SqlObjects.Visitors;
 
-    internal sealed class SqlSelectItem : SqlObject
+#if INTERNAL
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements should be documented
+    public
+#else
+    internal
+#endif
+    sealed class SqlSelectItem : SqlObject
     {
         private SqlSelectItem(
            SqlScalarExpression expression,
            SqlIdentifier alias)
-            : base(SqlObjectKind.SelectItem)
         {
-            if (expression == null)
-            {
-                throw new ArgumentNullException("expression");
-            }
-
-            this.Expression = expression;
+            this.Expression = expression ?? throw new ArgumentNullException(nameof(expression));
             this.Alias = alias;
         }
 
-        public SqlScalarExpression Expression
-        {
-            get;
-        }
+        public SqlScalarExpression Expression { get; }
 
-        public SqlIdentifier Alias
-        {
-            get;
-        }
+        public SqlIdentifier Alias { get; }
 
         public static SqlSelectItem Create(
             SqlScalarExpression expression,

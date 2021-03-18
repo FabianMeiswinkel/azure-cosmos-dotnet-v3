@@ -1,37 +1,35 @@
 ﻿//------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------
-namespace Microsoft.Azure.Cosmos.Sql
+namespace Microsoft.Azure.Cosmos.SqlObjects
 {
     using System;
+    using Microsoft.Azure.Cosmos.SqlObjects.Visitors;
 
-    internal sealed class SqlOrderByItem : SqlObject
+#if INTERNAL
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements should be documented
+    public
+#else
+    internal
+#endif
+    sealed class SqlOrderByItem : SqlObject
     {
         private SqlOrderByItem(
             SqlScalarExpression expression,
             bool isDescending)
-            : base(SqlObjectKind.OrderByItem)
         {
-            if (expression == null)
-            {
-                throw new ArgumentNullException("expression");
-            }
-
-            this.Expression = expression;
+            this.Expression = expression ?? throw new ArgumentNullException(nameof(expression));
             this.IsDescending = isDescending;
         }
 
-        public SqlScalarExpression Expression
-        {
-            get;
-        }
+        public SqlScalarExpression Expression { get; }
 
-        public bool IsDescending
-        {
-            get;
-        }
+        public bool IsDescending { get; }
 
-        public static SqlOrderByItem Create(SqlScalarExpression expression, bool isDescending)
+        public static SqlOrderByItem Create(
+            SqlScalarExpression expression,
+            bool isDescending)
         {
             return new SqlOrderByItem(expression, isDescending);
         }

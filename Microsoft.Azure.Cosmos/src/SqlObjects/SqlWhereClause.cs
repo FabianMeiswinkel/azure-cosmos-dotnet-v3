@@ -1,27 +1,26 @@
 ﻿//------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------
-namespace Microsoft.Azure.Cosmos.Sql
+namespace Microsoft.Azure.Cosmos.SqlObjects
 {
     using System;
+    using Microsoft.Azure.Cosmos.SqlObjects.Visitors;
 
-    internal sealed class SqlWhereClause : SqlObject
+#if INTERNAL
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements should be documented
+    public
+#else
+    internal
+#endif
+    sealed class SqlWhereClause : SqlObject
     {
         private SqlWhereClause(SqlScalarExpression filterExpression)
-            : base(SqlObjectKind.WhereClause)
         {
-            if (filterExpression == null)
-            {
-                throw new ArgumentNullException("filterExpression");
-            }
-
-            this.FilterExpression = filterExpression;
+            this.FilterExpression = filterExpression ?? throw new ArgumentNullException(nameof(filterExpression));
         }
 
-        public SqlScalarExpression FilterExpression
-        {
-            get;
-        }
+        public SqlScalarExpression FilterExpression { get; }
 
         public static SqlWhereClause Create(SqlScalarExpression filterExpression)
         {

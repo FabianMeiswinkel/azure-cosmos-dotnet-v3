@@ -5,13 +5,10 @@
 namespace Microsoft.Azure.Cosmos
 {
     using System;
-    using System.Globalization;
     using System.IO;
-    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Azure.Cosmos.Handlers;
-    using Microsoft.Azure.Cosmos.Query;
     using Microsoft.Azure.Documents;
 
     /// <summary>
@@ -29,7 +26,7 @@ namespace Microsoft.Azure.Cosmos
 
         internal abstract CosmosSerializerCore SerializerCore { get; }
 
-        internal abstract CosmosResponseFactory ResponseFactory { get; }
+        internal abstract CosmosResponseFactoryInternal ResponseFactory { get; }
 
         internal abstract RequestInvokerHandler RequestHandler { get; }
 
@@ -37,10 +34,8 @@ namespace Microsoft.Azure.Cosmos
 
         internal abstract string UserAgent { get; }
 
-        internal abstract EncryptionProcessor EncryptionProcessor { get; }
-
         internal abstract BatchAsyncContainerExecutor GetExecutorForContainer(
-            ContainerCore container);
+            ContainerInternal container);
 
         /// <summary>
         /// Generates the URI link for the resource
@@ -49,7 +44,7 @@ namespace Microsoft.Azure.Cosmos
         /// <param name="uriPathSegment">The URI path segment</param>
         /// <param name="id">The id of the resource</param>
         /// <returns>A resource link in the format of {parentLink}/this.UriPathSegment/this.Name with this.Name being a Uri escaped version</returns>
-        internal abstract Uri CreateLink(
+        internal abstract string CreateLink(
             string parentLink,
             string uriPathSegment,
             string id);
@@ -58,18 +53,27 @@ namespace Microsoft.Azure.Cosmos
 
         internal abstract Task<ContainerProperties> GetCachedContainerPropertiesAsync(
             string containerUri,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken);
+
+        internal abstract Task<TResult> OperationHelperAsync<TResult>(
+            string operationName,
+            RequestOptions requestOptions,
+            Func<CosmosDiagnosticsContext, Task<TResult>> task);
+
+        internal abstract CosmosDiagnosticsContext CreateDiagnosticContext(
+            string operationName,
+            RequestOptions requestOptions);
 
         /// <summary>
         /// This is a wrapper around ExecUtil method. This allows the calls to be mocked so logic done 
         /// in a resource can be unit tested.
         /// </summary>
         internal abstract Task<ResponseMessage> ProcessResourceOperationStreamAsync(
-            Uri resourceUri,
+            string resourceUri,
             ResourceType resourceType,
             OperationType operationType,
             RequestOptions requestOptions,
-            ContainerCore cosmosContainerCore,
+            ContainerInternal cosmosContainerCore,
             PartitionKey? partitionKey,
             string itemId,
             Stream streamPayload,
@@ -82,11 +86,11 @@ namespace Microsoft.Azure.Cosmos
         /// in a resource can be unit tested.
         /// </summary>
         internal abstract Task<ResponseMessage> ProcessResourceOperationStreamAsync(
-            Uri resourceUri,
+            string resourceUri,
             ResourceType resourceType,
             OperationType operationType,
             RequestOptions requestOptions,
-            ContainerCore cosmosContainerCore,
+            ContainerInternal cosmosContainerCore,
             PartitionKey? partitionKey,
             Stream streamPayload,
             Action<RequestMessage> requestEnricher,
@@ -98,30 +102,17 @@ namespace Microsoft.Azure.Cosmos
         /// in a resource can be unit tested.
         /// </summary>
         internal abstract Task<T> ProcessResourceOperationAsync<T>(
-           Uri resourceUri,
+           string resourceUri,
            ResourceType resourceType,
            OperationType operationType,
            RequestOptions requestOptions,
-           ContainerCore cosmosContainerCore,
+           ContainerInternal containerInternal,
            PartitionKey? partitionKey,
            Stream streamPayload,
            Action<RequestMessage> requestEnricher,
            Func<ResponseMessage, T> responseCreator,
            CosmosDiagnosticsContext diagnosticsContext,
            CancellationToken cancellationToken);
-
-        internal abstract Task<Stream> EncryptItemAsync(
-            Stream input,
-            EncryptionOptions encryptionOptions,
-            DatabaseCore database,
-            CosmosDiagnosticsContext diagnosticsContext,
-            CancellationToken cancellationToken);
-
-        internal abstract Task<Stream> DecryptItemAsync(
-            Stream input,
-            DatabaseCore database,
-            CosmosDiagnosticsContext diagnosticsContext,
-            CancellationToken cancellationToken);
 
         public abstract void Dispose();
     }

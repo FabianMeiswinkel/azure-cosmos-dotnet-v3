@@ -3,8 +3,11 @@
 //------------------------------------------------------------
 namespace Microsoft.Azure.Cosmos.CosmosElements
 {
+#nullable enable
+
     using System;
     using Microsoft.Azure.Cosmos.Json;
+    using Microsoft.Azure.Cosmos.Query.Core.Monads;
 
 #if INTERNAL
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
@@ -14,10 +17,12 @@ namespace Microsoft.Azure.Cosmos.CosmosElements
 #else
     internal
 #endif
-    abstract partial class CosmosGuid : CosmosElement
+    abstract partial class CosmosGuid : CosmosElement, IEquatable<CosmosGuid>, IComparable<CosmosGuid>
     {
+        private const uint HashSeed = 527095639;
+
         protected CosmosGuid()
-            : base(CosmosElementType.Guid)
+            : base()
         {
         }
 
@@ -25,31 +30,39 @@ namespace Microsoft.Azure.Cosmos.CosmosElements
 
         public override void Accept(ICosmosElementVisitor cosmosElementVisitor)
         {
-            if (cosmosElementVisitor == null)
-            {
-                throw new ArgumentNullException(nameof(cosmosElementVisitor));
-            }
-
             cosmosElementVisitor.Visit(this);
         }
 
         public override TResult Accept<TResult>(ICosmosElementVisitor<TResult> cosmosElementVisitor)
         {
-            if (cosmosElementVisitor == null)
-            {
-                throw new ArgumentNullException(nameof(cosmosElementVisitor));
-            }
-
             return cosmosElementVisitor.Visit(this);
         }
+
         public override TResult Accept<TArg, TResult>(ICosmosElementVisitor<TArg, TResult> cosmosElementVisitor, TArg input)
         {
-            if (cosmosElementVisitor == null)
-            {
-                throw new ArgumentNullException(nameof(cosmosElementVisitor));
-            }
-
             return cosmosElementVisitor.Visit(this, input);
+        }
+
+        public override bool Equals(CosmosElement cosmosElement)
+        {
+            return cosmosElement is CosmosGuid cosmosGuid && this.Equals(cosmosGuid);
+        }
+
+        public bool Equals(CosmosGuid cosmosGuid)
+        {
+            return this.Value == cosmosGuid.Value;
+        }
+
+        public override int GetHashCode()
+        {
+            uint hash = HashSeed;
+            hash = MurmurHash3.Hash32(this.Value, hash);
+            return (int)hash;
+        }
+
+        public int CompareTo(CosmosGuid cosmosGuid)
+        {
+            return this.Value.CompareTo(cosmosGuid.Value);
         }
 
         public static CosmosGuid Create(
@@ -66,12 +79,44 @@ namespace Microsoft.Azure.Cosmos.CosmosElements
 
         public override void WriteTo(IJsonWriter jsonWriter)
         {
-            if (jsonWriter == null)
+            jsonWriter.WriteGuidValue(this.Value);
+        }
+
+        public static new CosmosGuid CreateFromBuffer(ReadOnlyMemory<byte> buffer)
+        {
+            return CosmosElement.CreateFromBuffer<CosmosGuid>(buffer);
+        }
+
+        public static new CosmosGuid Parse(string json)
+        {
+            return CosmosElement.Parse<CosmosGuid>(json);
+        }
+
+        public static bool TryCreateFromBuffer(
+            ReadOnlyMemory<byte> buffer,
+            out CosmosGuid cosmosGuid)
+        {
+            return CosmosElement.TryCreateFromBuffer<CosmosGuid>(buffer, out cosmosGuid);
+        }
+
+        public static bool TryParse(
+            string json,
+            out CosmosGuid cosmosGuid)
+        {
+            return CosmosElement.TryParse<CosmosGuid>(json, out cosmosGuid);
+        }
+
+        public static new class Monadic
+        {
+            public static TryCatch<CosmosGuid> CreateFromBuffer(ReadOnlyMemory<byte> buffer)
             {
-                throw new ArgumentNullException($"{nameof(jsonWriter)}");
+                return CosmosElement.Monadic.CreateFromBuffer<CosmosGuid>(buffer);
             }
 
-            jsonWriter.WriteGuidValue(this.Value);
+            public static TryCatch<CosmosGuid> Parse(string json)
+            {
+                return CosmosElement.Monadic.Parse<CosmosGuid>(json);
+            }
         }
     }
 #if INTERNAL

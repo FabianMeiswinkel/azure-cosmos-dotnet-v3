@@ -10,7 +10,6 @@ namespace Microsoft.Azure.Cosmos
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Azure.Cosmos.Query;
 
     /// <summary>
     /// Operations for reading, replacing, or deleting a specific, existing container or item in a container by id.
@@ -33,6 +32,11 @@ namespace Microsoft.Azure.Cosmos
         public abstract string Id { get; }
 
         /// <summary>
+        /// Returns the parent Database reference
+        /// </summary>
+        public abstract Database Database { get; }
+
+        /// <summary>
         /// Returns the conflicts
         /// </summary>
         public abstract Conflicts Conflicts { get; }
@@ -50,19 +54,7 @@ namespace Microsoft.Azure.Cosmos
         /// <returns>
         /// A <see cref="Task"/> containing a <see cref="ContainerResponse"/> which wraps a <see cref="ContainerProperties"/> containing the read resource record.
         /// </returns>
-        /// <exception cref="CosmosException">This exception can encapsulate many different types of errors. To determine the specific error always look at the StatusCode property. Some common codes you may get when creating a Document are:
-        /// <list type="table">
-        ///     <listheader>
-        ///         <term>StatusCode</term><description>Reason for exception</description>
-        ///     </listheader>
-        ///     <item>
-        ///         <term>404</term><description>NotFound - This means the resource you tried to read did not exist.</description>
-        ///     </item>
-        ///     <item>
-        ///         <term>429</term><description>TooManyRequests - This means you have exceeded the number of request units per second. Consult the DocumentClientException.RetryAfter value to see how long you should wait before retrying this operation.</description>
-        ///     </item>
-        /// </list>
-        /// </exception>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <example>
         /// <code language="c#">
         /// <![CDATA[
@@ -73,7 +65,7 @@ namespace Microsoft.Azure.Cosmos
         /// </example>
         public abstract Task<ContainerResponse> ReadContainerAsync(
             ContainerRequestOptions requestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Reads a <see cref="ContainerProperties"/> from the Azure Cosmos service as an asynchronous operation.
@@ -83,6 +75,7 @@ namespace Microsoft.Azure.Cosmos
         /// <returns>
         /// A <see cref="Task"/> containing a <see cref="ResponseMessage"/> containing the read resource record.
         /// </returns>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#stream-api</exception>
         /// <example>
         /// <code language="c#">
         /// <![CDATA[
@@ -93,7 +86,7 @@ namespace Microsoft.Azure.Cosmos
         /// </example>
         public abstract Task<ResponseMessage> ReadContainerStreamAsync(
             ContainerRequestOptions requestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Replace a <see cref="ContainerProperties"/> from the Azure Cosmos service as an asynchronous operation.
@@ -104,19 +97,7 @@ namespace Microsoft.Azure.Cosmos
         /// <returns>
         /// A <see cref="Task"/> containing a <see cref="ContainerResponse"/> which wraps a <see cref="ContainerProperties"/> containing the replace resource record.
         /// </returns>
-        /// <exception cref="CosmosException">This exception can encapsulate many different types of errors. To determine the specific error always look at the StatusCode property. Some common codes you may get when creating a Document are:
-        /// <list type="table">
-        ///     <listheader>
-        ///         <term>StatusCode</term><description>Reason for exception</description>
-        ///     </listheader>
-        ///     <item>
-        ///         <term>404</term><description>NotFound - This means the resource you tried to read did not exist.</description>
-        ///     </item>
-        ///     <item>
-        ///         <term>429</term><description>TooManyRequests - This means you have exceeded the number of request units per second. Consult the DocumentClientException.RetryAfter value to see how long you should wait before retrying this operation.</description>
-        ///     </item>
-        /// </list>
-        /// </exception>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <example>
         /// Update the container to disable automatic indexing
         /// <code language="c#">
@@ -131,7 +112,7 @@ namespace Microsoft.Azure.Cosmos
         public abstract Task<ContainerResponse> ReplaceContainerAsync(
             ContainerProperties containerProperties,
             ContainerRequestOptions requestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Replace a <see cref="ContainerProperties"/> from the Azure Cosmos service as an asynchronous operation.
@@ -143,7 +124,7 @@ namespace Microsoft.Azure.Cosmos
         /// A <see cref="Task"/> containing a <see cref="ResponseMessage"/> containing the replace resource record.
         /// </returns>
         /// <example>
-        ///
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#stream-api</exception>
         /// <code language="c#">
         /// <![CDATA[
         /// ContainerProperties containerProperties = containerReadResponse;
@@ -155,7 +136,7 @@ namespace Microsoft.Azure.Cosmos
         public abstract Task<ResponseMessage> ReplaceContainerStreamAsync(
             ContainerProperties containerProperties,
             ContainerRequestOptions requestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Delete a <see cref="ContainerProperties"/> from the Azure Cosmos DB service as an asynchronous operation.
@@ -163,16 +144,7 @@ namespace Microsoft.Azure.Cosmos
         /// <param name="requestOptions">(Optional) The options for the container request.</param>
         /// <param name="cancellationToken">(Optional) <see cref="CancellationToken"/> representing request cancellation.</param>
         /// <returns>A <see cref="Task"/> containing a <see cref="ContainerResponse"/> which will contain information about the request issued.</returns>
-        /// <exception cref="CosmosException">This exception can encapsulate many different types of errors. To determine the specific error always look at the StatusCode property. Some common codes you may get when creating a Document are:
-        /// <list type="table">
-        ///     <listheader>
-        ///         <term>StatusCode</term><description>Reason for exception</description>
-        ///     </listheader>
-        ///     <item>
-        ///         <term>404</term><description>NotFound - This means the resource you tried to delete did not exist.</description>
-        ///     </item>
-        /// </list>
-        /// </exception>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <example>
         /// <code language="c#">
         /// <![CDATA[
@@ -183,13 +155,14 @@ namespace Microsoft.Azure.Cosmos
         /// </example>
         public abstract Task<ContainerResponse> DeleteContainerAsync(
             ContainerRequestOptions requestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Delete a <see cref="ContainerProperties"/> from the Azure Cosmos DB service as an asynchronous operation.
         /// </summary>
         /// <param name="requestOptions">(Optional) The options for the container request.</param>
         /// <param name="cancellationToken">(Optional) <see cref="CancellationToken"/> representing request cancellation.</param>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#stream-api</exception>
         /// <example>
         /// <code language="c#">
         /// <![CDATA[
@@ -201,13 +174,14 @@ namespace Microsoft.Azure.Cosmos
         /// <returns>A <see cref="Task"/> containing a <see cref="ResponseMessage"/> which will contain information about the request issued.</returns>
         public abstract Task<ResponseMessage> DeleteContainerStreamAsync(
             ContainerRequestOptions requestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Gets container throughput in measurement of request units per second in the Azure Cosmos service.
         /// </summary>
         /// <param name="cancellationToken">(Optional) <see cref="CancellationToken"/> representing request cancellation.</param>
         /// <returns>Provisioned throughput in request units per second</returns>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <value>
         /// The provisioned throughput for this container.
         /// </value>
@@ -225,9 +199,9 @@ namespace Microsoft.Azure.Cosmos
         /// </code>
         /// </example>
         /// <seealso href="https://docs.microsoft.com/azure/cosmos-db/request-units">Request Units</seealso>
-        /// <seealso href="https://docs.microsoft.com/azure/cosmos-db/set-throughput#set-throughput-on-a-database">Set throughput on a database</seealso>
+        /// <seealso href="https://docs.microsoft.com/azure/cosmos-db/set-throughput#set-throughput-on-a-container">Set throughput on a container</seealso>
         public abstract Task<int?> ReadThroughputAsync(
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Gets container throughput in measurement of request units per second in the Azure Cosmos service.
@@ -235,14 +209,10 @@ namespace Microsoft.Azure.Cosmos
         /// <param name="requestOptions">The options for the throughput request.</param>
         /// <param name="cancellationToken">(Optional) <see cref="CancellationToken"/> representing request cancellation.</param>
         /// <returns>The throughput response</returns>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <value>
         /// The provisioned throughput for this container.
         /// </value>
-        /// <remarks>
-        /// <para>
-        /// Refer to http://azure.microsoft.com/documentation/articles/documentdb-performance-levels/ for details on provision offer throughput.
-        /// </para>
-        /// </remarks>
         /// <example>
         /// The following example shows how to get the throughput
         /// <code language="c#">
@@ -265,9 +235,11 @@ namespace Microsoft.Azure.Cosmos
         /// ]]>
         /// </code>
         /// </example>
+        /// <seealso href="https://docs.microsoft.com/azure/cosmos-db/request-units">Request Units</seealso>
+        /// <seealso href="https://docs.microsoft.com/azure/cosmos-db/set-throughput#set-throughput-on-a-container">Set throughput on a container</seealso>
         public abstract Task<ThroughputResponse> ReadThroughputAsync(
             RequestOptions requestOptions,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Sets throughput provisioned for a container in measurement of request units per second in the Azure Cosmos service.
@@ -276,6 +248,7 @@ namespace Microsoft.Azure.Cosmos
         /// <param name="requestOptions">(Optional) The options for the throughput request.</param>
         /// <param name="cancellationToken">(Optional) <see cref="CancellationToken"/> representing request cancellation.</param>
         /// <returns>The throughput response.</returns>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <value>
         /// The provisioned throughput for this container.
         /// </value>
@@ -288,12 +261,12 @@ namespace Microsoft.Azure.Cosmos
         /// </code>
         /// </example>
         /// <seealso href="https://docs.microsoft.com/azure/cosmos-db/request-units">Request Units</seealso>
+        /// <seealso href="https://docs.microsoft.com/azure/cosmos-db/set-throughput#set-throughput-on-a-container">Set throughput on a container</seealso>
         public abstract Task<ThroughputResponse> ReplaceThroughputAsync(
             int throughput,
             RequestOptions requestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
-#if PREVIEW
         /// <summary>
         /// Sets throughput provisioned for a container in measurement of request units per second in the Azure Cosmos service.
         /// </summary>
@@ -301,6 +274,7 @@ namespace Microsoft.Azure.Cosmos
         /// <param name="requestOptions">(Optional) The options for the throughput request.</param>
         /// <param name="cancellationToken">(Optional) <see cref="CancellationToken"/> representing request cancellation.</param>
         /// <returns>The throughput response.</returns>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <example>
         /// The following example shows how to replace the fixed throughput.
         /// <code language="c#">
@@ -321,12 +295,12 @@ namespace Microsoft.Azure.Cosmos
         /// </example>
         /// <remarks>
         /// <seealso href="https://docs.microsoft.com/azure/cosmos-db/request-units">Request Units</seealso>
+        /// <seealso href="https://docs.microsoft.com/azure/cosmos-db/set-throughput#set-throughput-on-a-container">Set throughput on a container</seealso>
         /// </remarks>
         public abstract Task<ThroughputResponse> ReplaceThroughputAsync(
             ThroughputProperties throughputProperties,
             RequestOptions requestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken));
-#endif
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Creates a Item as an asynchronous operation in the Azure Cosmos service.
@@ -339,6 +313,7 @@ namespace Microsoft.Azure.Cosmos
         /// <remarks>
         /// The Stream operation only throws on client side exceptions. This is to increase performance and prevent the overhead of throwing exceptions. Check the HTTP status code on the response to check if the operation failed.
         /// </remarks>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#stream-api</exception>
         /// <example>
         /// This example creates an item in a Cosmos container.
         /// <code language="c#">
@@ -368,7 +343,7 @@ namespace Microsoft.Azure.Cosmos
                     Stream streamPayload,
                     PartitionKey partitionKey,
                     ItemRequestOptions requestOptions = null,
-                    CancellationToken cancellationToken = default(CancellationToken));
+                    CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Creates a item as an asynchronous operation in the Azure Cosmos service.
@@ -378,29 +353,7 @@ namespace Microsoft.Azure.Cosmos
         /// <param name="requestOptions">(Optional) The options for the item request.</param>
         /// <param name="cancellationToken">(Optional) <see cref="CancellationToken"/> representing request cancellation.</param>
         /// <returns>The <see cref="ItemResponse{T}"/> that was created contained within a <see cref="System.Threading.Tasks.Task"/> object representing the service response for the asynchronous operation.</returns>
-        /// <exception cref="System.AggregateException">Represents a consolidation of failures that occurred during async processing. Look within InnerExceptions to find the actual exception(s)</exception>
-        /// <exception cref="CosmosException">This exception can encapsulate many different types of errors. To determine the specific error always look at the StatusCode property. Some common codes you may get when creating a Document are:
-        /// <list type="table">
-        ///     <listheader>
-        ///         <term>StatusCode</term><description>Reason for exception</description>
-        ///     </listheader>
-        ///     <item>
-        ///         <term>400</term><description>BadRequest - This means something was wrong with the document supplied. </description>
-        ///     </item>
-        ///     <item>
-        ///         <term>403</term><description>Forbidden - This likely means the collection in to which you were trying to create the document is full.</description>
-        ///     </item>
-        ///     <item>
-        ///         <term>409</term><description>Conflict - This means a item with an id matching the id field of <paramref name="item"/> already existed</description>
-        ///     </item>
-        ///     <item>
-        ///         <term>413</term><description>RequestEntityTooLarge - This means the item exceeds the current max entity size. Consult documentation for limits and quotas.</description>
-        ///     </item>
-        ///     <item>
-        ///         <term>429</term><description>TooManyRequests - This means you have exceeded the number of request units per second.</description>
-        ///     </item>
-        /// </list>
-        /// </exception>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <example>
         /// <code language="c#">
         /// <![CDATA[
@@ -423,7 +376,7 @@ namespace Microsoft.Azure.Cosmos
             T item,
             PartitionKey? partitionKey = null,
             ItemRequestOptions requestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Reads a item from the Azure Cosmos service as an asynchronous operation.
@@ -436,6 +389,7 @@ namespace Microsoft.Azure.Cosmos
         /// A <see cref="Task"/> containing a <see cref="ResponseMessage"/> which wraps a <see cref="Stream"/> containing the read resource record.
         /// </returns>
         /// <remarks>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#stream-api</exception>
         /// The Stream operation only throws on client side exceptions. This is to increase performance and prevent the overhead of throwing exceptions. Check the HTTP status code on the response to check if the operation failed.
         /// </remarks>
         /// <example>
@@ -467,7 +421,7 @@ namespace Microsoft.Azure.Cosmos
                     string id,
                     PartitionKey partitionKey,
                     ItemRequestOptions requestOptions = null,
-                    CancellationToken cancellationToken = default(CancellationToken));
+                    CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Reads a item from the Azure Cosmos service as an asynchronous operation.
@@ -485,16 +439,7 @@ namespace Microsoft.Azure.Cosmos
         /// * "_etag": Gets the entity tag associated with the item from the Azure Cosmos DB service.
         /// * "ttl": Gets the time to live in seconds of the item in the Azure Cosmos DB service.
         /// </remarks>
-        /// <exception cref="CosmosException">This exception can encapsulate many different types of errors. To determine the specific error always look at the StatusCode property. Some common codes you may get when creating a Document are:
-        /// <list type="table">
-        ///     <listheader>
-        ///         <term>StatusCode</term><description>Reason for exception</description>
-        ///     </listheader>
-        ///     <item>
-        ///         <term>429</term><description>TooManyRequests - This means you have exceeded the number of request units per second.</description>
-        ///     </item>
-        /// </list>
-        /// </exception>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <example>
         /// <code language="c#">
         /// <![CDATA[
@@ -512,7 +457,7 @@ namespace Microsoft.Azure.Cosmos
             string id,
             PartitionKey partitionKey,
             ItemRequestOptions requestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Upserts an item stream as an asynchronous operation in the Azure Cosmos service.
@@ -529,6 +474,7 @@ namespace Microsoft.Azure.Cosmos
         /// This is to increase performance and prevent the overhead of throwing exceptions. 
         /// Check the HTTP status code on the response to check if the operation failed.
         /// </remarks>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#stream-api</exception>
         /// <example>
         /// Upsert a Stream containing the item to Cosmos
         /// <code language="c#">
@@ -557,7 +503,7 @@ namespace Microsoft.Azure.Cosmos
                     Stream streamPayload,
                     PartitionKey partitionKey,
                     ItemRequestOptions requestOptions = null,
-                    CancellationToken cancellationToken = default(CancellationToken));
+                    CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Upserts an item as an asynchronous operation in the Azure Cosmos service.
@@ -567,26 +513,7 @@ namespace Microsoft.Azure.Cosmos
         /// <param name="requestOptions">(Optional) The options for the item request.</param>
         /// <param name="cancellationToken">(Optional) <see cref="CancellationToken"/> representing request cancellation.</param>
         /// <returns>The <see cref="ItemResponse{T}"/> that was upserted contained within a <see cref="System.Threading.Tasks.Task"/> object representing the service response for the asynchronous operation.</returns>
-        /// <exception cref="System.AggregateException">Represents a consolidation of failures that occurred during async processing. Look within InnerExceptions to find the actual exception(s)</exception>
-        /// <exception cref="CosmosException">This exception can encapsulate many different types of errors. To determine the specific error always look at the StatusCode property. Some common codes you may get when creating a Document are:
-        /// <list type="table">
-        ///     <listheader>
-        ///         <term>StatusCode</term><description>Reason for exception</description>
-        ///     </listheader>
-        ///     <item>
-        ///         <term>400</term><description>BadRequest - This means something was wrong with the document supplied.</description>
-        ///     </item>
-        ///     <item>
-        ///         <term>403</term><description>Forbidden - This likely means the collection in to which you were trying to upsert the document is full.</description>
-        ///     </item>
-        ///     <item>
-        ///         <term>413</term><description>RequestEntityTooLarge - This means the item exceeds the current max entity size. Consult documentation for limits and quotas.</description>
-        ///     </item>
-        ///     <item>
-        ///         <term>429</term><description>TooManyRequests - This means you have exceeded the number of request units per second. Consult the DocumentClientException.RetryAfter value to see how long you should wait before retrying this operation.</description>
-        ///     </item>
-        /// </list>
-        /// </exception>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <example>
         /// <code language="c#">
         /// <![CDATA[
@@ -609,7 +536,7 @@ namespace Microsoft.Azure.Cosmos
             T item,
             PartitionKey? partitionKey = null,
             ItemRequestOptions requestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Replaces a item in the Azure Cosmos service as an asynchronous operation.
@@ -631,6 +558,7 @@ namespace Microsoft.Azure.Cosmos
         /// This is to increase performance and prevent the overhead of throwing exceptions. 
         /// Check the HTTP status code on the response to check if the operation failed.
         /// </remarks>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#stream-api</exception>
         /// <example>
         /// Replace an item in Cosmos
         /// <code language="c#">
@@ -660,7 +588,7 @@ namespace Microsoft.Azure.Cosmos
                     string id,
                     PartitionKey partitionKey,
                     ItemRequestOptions requestOptions = null,
-                    CancellationToken cancellationToken = default(CancellationToken));
+                    CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Replaces a item in the Azure Cosmos service as an asynchronous operation.
@@ -677,27 +605,7 @@ namespace Microsoft.Azure.Cosmos
         /// <returns>
         /// A <see cref="Task"/> containing a <see cref="ItemResponse{T}"/> which wraps the updated resource record.
         /// </returns>
-        /// <exception cref="ArgumentNullException">If either <paramref name="item"/> is not set.</exception>
-        /// <exception cref="CosmosException">
-        /// This exception can encapsulate many different types of errors. To determine the specific error always look at the StatusCode property.
-        /// <list type="table">
-        ///     <listheader>
-        ///         <term>StatusCode</term><description>Reason for exception</description>
-        ///     </listheader>
-        ///     <item>
-        ///         <term>400</term><description>BadRequest - This means something was wrong with the document supplied. </description>
-        ///     </item>
-        ///     <item>
-        ///         <term>403</term><description>Forbidden - This likely means the collection in to which you were trying to create the document is full.</description>
-        ///     </item>
-        ///     <item>
-        ///         <term>413</term><description>RequestEntityTooLarge - This means the item exceeds the current max entity size. Consult documentation for limits and quotas.</description>
-        ///     </item>
-        ///     <item>
-        ///         <term>429</term><description>TooManyRequests - This means you have exceeded the number of request units per second.</description>
-        ///     </item>
-        /// </list>
-        /// </exception>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <example>
         /// <code language="c#">
         /// <![CDATA[
@@ -721,7 +629,102 @@ namespace Microsoft.Azure.Cosmos
             string id,
             PartitionKey? partitionKey = null,
             ItemRequestOptions requestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
+
+#if INTERNAL
+        /// <summary>
+        /// Patches an item in the Azure Cosmos service as an asynchronous operation.
+        /// </summary>
+        /// <remarks>
+        /// The item's partition key value is immutable. 
+        /// To change an item's partition key value you must delete the original item and insert a new item.
+        /// The patch operations are atomic and are executed sequentially.
+        /// By default, resource body will be returned as part of the response. User can request no content by setting <see cref="ItemRequestOptions.EnableContentResponseOnWrite"/> flag to false.
+        /// </remarks>
+        /// <param name="id">The Cosmos item id of the item to be patched.</param>
+        /// <param name="partitionKey"><see cref="PartitionKey"/> for the item</param>
+        /// <param name="patchOperations">Represents a list of operations to be sequentially applied to the referred Cosmos item.</param>
+        /// <param name="requestOptions">(Optional) The options for the item request.</param>
+        /// <param name="cancellationToken">(Optional) <see cref="CancellationToken"/> representing request cancellation.</param>
+        /// <returns>
+        /// A <see cref="Task"/> containing a <see cref="ItemResponse{T}"/> which wraps the updated resource record.
+        /// </returns>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
+        /// <example>
+        /// <code language="c#">
+        /// <![CDATA[
+        /// public class ToDoActivity{
+        ///     public string id {get; set;}
+        ///     public string status {get; set;}
+        ///     public string description {get; set;}
+        ///     public int frequency {get; set;}
+        /// }
+        /// 
+        /// ToDoActivity toDoActivity = await this.container.ReadItemAsync<ToDoActivity>("id", new PartitionKey("partitionKey"));
+        /// /* toDoActivity = {
+        ///     "id" : "someId",
+        ///     "status" : "someStatusPK",
+        ///     "description" : "someDescription",
+        ///     "frequency" : 7
+        /// }*/
+        /// 
+        /// List<PatchOperation> patchOperations = new List<PatchOperation>()
+        ///                                             {
+        ///                                                 PatchOperation.CreateAddOperation("/daysOfWeek", new string[]{"Monday", "Thursday"}),
+        ///                                                 PatchOperation.CreateReplaceOperation("/frequency", 2),
+        ///                                                 PatchOperation.CreateRemoveOperation("/description")
+        ///                                             };
+        /// 
+        /// ItemResponse item = await this.container.PatchItemAsync<dynamic>(toDoActivity.id, new PartitionKey(toDoActivity.status), patchOperations);
+        /// /* item = {
+        ///     "id" : "someId",
+        ///     "status" : "someStatusPK",
+        ///     "description" : null,
+        ///     "frequency" : 2,
+        ///     "daysOfWeek" : ["Monday", "Thursday"]
+        /// }*/
+        /// ]]>
+        /// </code>
+        /// </example>
+        public abstract Task<ItemResponse<T>> PatchItemAsync<T>(
+            string id,
+            PartitionKey partitionKey,
+            IReadOnlyList<PatchOperation> patchOperations,
+            ItemRequestOptions requestOptions = null,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Patches an item in the Azure Cosmos service as an asynchronous operation.
+        /// </summary>
+        /// <remarks>
+        /// The item's partition key value is immutable. 
+        /// To change an item's partition key value you must delete the original item and insert a new item.
+        /// The patch operations are atomic and are executed sequentially.
+        /// By default, resource body will be returned as part of the response. User can request no content by setting <see cref="ItemRequestOptions.EnableContentResponseOnWrite"/> flag to false.
+        /// </remarks>
+        /// <param name="id">The Cosmos item id</param>
+        /// <param name="partitionKey">The partition key for the item.</param>
+        /// <param name="patchOperations">Represents a list of operations to be sequentially applied to the referred Cosmos item.</param>
+        /// <param name="requestOptions">(Optional) The options for the item request.</param>
+        /// <param name="cancellationToken">(Optional) <see cref="CancellationToken"/> representing request cancellation.</param>
+        /// <returns>
+        /// A <see cref="Task"/> containing a <see cref="ResponseMessage"/> which wraps a <see cref="Stream"/> containing the patched resource record.
+        /// </returns>
+        /// <remarks>
+        /// https://aka.ms/cosmosdb-dot-net-exceptions#stream-api
+        /// This is to increase performance and prevent the overhead of throwing exceptions. 
+        /// Check the HTTP status code on the response to check if the operation failed.
+        /// </remarks>
+        /// <example>
+        /// <see cref="Container.PatchItemAsync"/>
+        /// </example>
+        public abstract Task<ResponseMessage> PatchItemStreamAsync(
+            string id,
+            PartitionKey partitionKey,
+            IReadOnlyList<PatchOperation> patchOperations,
+            ItemRequestOptions requestOptions = null,
+            CancellationToken cancellationToken = default);
+#endif
 
         /// <summary>
         /// Delete a item from the Azure Cosmos service as an asynchronous operation.
@@ -733,6 +736,7 @@ namespace Microsoft.Azure.Cosmos
         /// <returns>
         /// A <see cref="Task"/> containing a <see cref="ResponseMessage"/> which wraps a <see cref="Stream"/> containing the delete resource record.
         /// </returns>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#stream-api</exception>
         /// <remarks>
         /// The Stream operation only throws on client side exceptions. This is to increase performance and prevent the overhead of throwing exceptions. Check the HTTP status code on the response to check if the operation failed.
         /// </remarks>
@@ -755,7 +759,7 @@ namespace Microsoft.Azure.Cosmos
                     string id,
                     PartitionKey partitionKey,
                     ItemRequestOptions requestOptions = null,
-                    CancellationToken cancellationToken = default(CancellationToken));
+                    CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Delete a item from the Azure Cosmos service as an asynchronous operation.
@@ -765,17 +769,7 @@ namespace Microsoft.Azure.Cosmos
         /// <param name="requestOptions">(Optional) The options for the item request.</param>
         /// <param name="cancellationToken">(Optional) <see cref="CancellationToken"/> representing request cancellation.</param>
         /// <returns>A <see cref="Task"/> containing a <see cref="ItemResponse{T}"/> which will contain information about the request issued.</returns>
-        /// <exception cref="CosmosException">
-        /// This exception can encapsulate many different types of errors. To determine the specific error always look at the StatusCode property. Some common codes you may get when creating a Document are:
-        /// <list type="table">
-        ///     <listheader>
-        ///         <term>StatusCode</term><description>Reason for exception</description>
-        ///     </listheader>
-        ///     <item>
-        ///         <term>429</term><description>TooManyRequests - This means you have exceeded the number of request units per second.</description>
-        ///     </item>
-        /// </list>
-        /// </exception>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <example>
         /// <code language="c#">
         /// <![CDATA[
@@ -792,7 +786,7 @@ namespace Microsoft.Azure.Cosmos
             string id,
             PartitionKey partitionKey,
             ItemRequestOptions requestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         ///  This method creates a query for items under a container in an Azure Cosmos database using a SQL statement with parameterized values. It returns a FeedIterator.
@@ -802,9 +796,7 @@ namespace Microsoft.Azure.Cosmos
         /// <param name="continuationToken">(Optional) The continuation token in the Azure Cosmos DB service.</param>
         /// <param name="requestOptions">(Optional) The options for the item query request.</param>
         /// <returns>An iterator to go through the items.</returns>
-        /// <remarks>
-        /// Query as a stream only supports single partition queries 
-        /// </remarks>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#stream-api</exception>
         /// <example>
         /// Create a query to get all the ToDoActivity that have a cost greater than 9000 for the specified partition
         /// <code language="c#">
@@ -817,19 +809,20 @@ namespace Microsoft.Azure.Cosmos
         /// 
         /// QueryDefinition queryDefinition = new QueryDefinition("select * from ToDos t where t.cost > @expensive")
         ///     .WithParameter("@expensive", 9000);
-        /// FeedIterator feedIterator = this.Container.GetItemQueryStreamIterator(
+        /// using (FeedIterator feedIterator = this.Container.GetItemQueryStreamIterator(
         ///     queryDefinition,
         ///     null,
-        ///     new QueryRequestOptions() { PartitionKey = new PartitionKey("Error")});
-        ///
-        /// while (feedIterator.HasMoreResults)
+        ///     new QueryRequestOptions() { PartitionKey = new PartitionKey("Error")}))
         /// {
-        ///     using (ResponseMessage response = await feedIterator.ReadNextAsync())
+        ///     while (feedIterator.HasMoreResults)
         ///     {
-        ///         using (StreamReader sr = new StreamReader(response.Content))
-        ///         using (JsonTextReader jtr = new JsonTextReader(sr))
+        ///         using (ResponseMessage response = await feedIterator.ReadNextAsync())
         ///         {
-        ///             JObject result = JObject.Load(jtr);
+        ///             using (StreamReader sr = new StreamReader(response.Content))
+        ///             using (JsonTextReader jtr = new JsonTextReader(sr))
+        ///             {
+        ///                 JObject result = JObject.Load(jtr);
+        ///             }
         ///         }
         ///     }
         /// }
@@ -849,6 +842,7 @@ namespace Microsoft.Azure.Cosmos
         /// <param name="continuationToken">(Optional) The continuation token in the Azure Cosmos DB service.</param>
         /// <param name="requestOptions">(Optional) The options for the item query request.</param>
         /// <returns>An iterator to go through the items.</returns>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <example>
         /// Create a query to get all the ToDoActivity that have a cost greater than 9000
         /// <code language="c#">
@@ -861,16 +855,17 @@ namespace Microsoft.Azure.Cosmos
         /// 
         /// QueryDefinition queryDefinition = new QueryDefinition("select * from ToDos t where t.cost > @expensive")
         ///     .WithParameter("@expensive", 9000);
-        /// FeedIterator<ToDoActivity> feedIterator = this.Container.GetItemQueryIterator<ToDoActivity>(
+        /// using (FeedIterator<ToDoActivity> feedIterator = this.Container.GetItemQueryIterator<ToDoActivity>(
         ///     queryDefinition,
         ///     null,
-        ///     new QueryRequestOptions() { PartitionKey = new PartitionKey("Error")});
-        ///
-        /// while (feedIterator.HasMoreResults)
+        ///     new QueryRequestOptions() { PartitionKey = new PartitionKey("Error")}))
         /// {
-        ///     foreach(var item in await feedIterator.ReadNextAsync()){
+        ///     while (feedIterator.HasMoreResults)
         ///     {
-        ///         Console.WriteLine(item.cost); 
+        ///         foreach(var item in await feedIterator.ReadNextAsync()){
+        ///         {
+        ///             Console.WriteLine(item.cost); 
+        ///         }
         ///     }
         /// }
         /// ]]>
@@ -892,6 +887,7 @@ namespace Microsoft.Azure.Cosmos
         /// <remarks>
         /// Query as a stream only supports single partition queries 
         /// </remarks>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#stream-api</exception>
         /// <example>
         /// 1. Create a query to get all the ToDoActivity that have a cost greater than 9000 for the specified partition
         /// <code language="c#">
@@ -902,19 +898,20 @@ namespace Microsoft.Azure.Cosmos
         ///     public int cost {get; set;}
         /// }
         /// 
-        /// FeedIterator feedIterator = this.Container.GetItemQueryStreamIterator(
+        /// using (FeedIterator feedIterator = this.Container.GetItemQueryStreamIterator(
         ///     "select * from ToDos t where t.cost > 9000",
         ///     null,
-        ///     new QueryRequestOptions() { PartitionKey = new PartitionKey("Error")});
-        ///
-        /// while (feedIterator.HasMoreResults)
+        ///     new QueryRequestOptions() { PartitionKey = new PartitionKey("Error")}))
         /// {
-        ///     using (ResponseMessage response = await feedIterator.ReadNextAsync())
+        ///     while (feedIterator.HasMoreResults)
         ///     {
-        ///         using (StreamReader sr = new StreamReader(response.Content))
-        ///         using (JsonTextReader jtr = new JsonTextReader(sr))
+        ///         using (ResponseMessage response = await feedIterator.ReadNextAsync())
         ///         {
-        ///             JObject result = JObject.Load(jtr);
+        ///             using (StreamReader sr = new StreamReader(response.Content))
+        ///             using (JsonTextReader jtr = new JsonTextReader(sr))
+        ///             {
+        ///                 JObject result = JObject.Load(jtr);
+        ///             }
         ///         }
         ///     }
         /// }
@@ -931,19 +928,20 @@ namespace Microsoft.Azure.Cosmos
         ///     public int cost {get; set;}
         /// }
         ///
-        /// FeedIterator feedIterator = this.Container.GetItemQueryStreamIterator(
+        /// using (FeedIterator feedIterator = this.Container.GetItemQueryStreamIterator(
         ///     null,
         ///     null,
-        ///     new QueryRequestOptions() { PartitionKey = new PartitionKey("Error")});
-        ///
-        /// while (feedIterator.HasMoreResults)
+        ///     new QueryRequestOptions() { PartitionKey = new PartitionKey("Error")}))
         /// {
-        ///     using (ResponseMessage response = await feedIterator.ReadNextAsync())
+        ///     while (feedIterator.HasMoreResults)
         ///     {
-        ///         using (StreamReader sr = new StreamReader(response.Content))
-        ///         using (JsonTextReader jtr = new JsonTextReader(sr))
+        ///         using (ResponseMessage response = await feedIterator.ReadNextAsync())
         ///         {
-        ///             JObject result = JObject.Load(jtr);
+        ///             using (StreamReader sr = new StreamReader(response.Content))
+        ///             using (JsonTextReader jtr = new JsonTextReader(sr))
+        ///             {
+        ///                 JObject result = JObject.Load(jtr);
+        ///             }
         ///         }
         ///     }
         /// }
@@ -963,6 +961,7 @@ namespace Microsoft.Azure.Cosmos
         /// <param name="continuationToken">(Optional) The continuation token in the Azure Cosmos DB service.</param>
         /// <param name="requestOptions">(Optional) The options for the item query request.</param>
         /// <returns>An iterator to go through the items.</returns>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <example>
         /// 1. Create a query to get all the ToDoActivity that have a cost greater than 9000
         /// <code language="c#">
@@ -973,16 +972,17 @@ namespace Microsoft.Azure.Cosmos
         ///     public int cost {get; set;}
         /// }
         /// 
-        /// FeedIterator<ToDoActivity> feedIterator = this.Container.GetItemQueryIterator<ToDoActivity>(
+        /// using (FeedIterator<ToDoActivity> feedIterator = this.Container.GetItemQueryIterator<ToDoActivity>(
         ///     "select * from ToDos t where t.cost > 9000",
         ///     null,
-        ///     new QueryRequestOptions() { PartitionKey = new PartitionKey("Error")});
-        ///
-        /// while (feedIterator.HasMoreResults)
+        ///     new QueryRequestOptions() { PartitionKey = new PartitionKey("Error")}))
         /// {
-        ///     foreach(var item in await feedIterator.ReadNextAsync()){
+        ///     while (feedIterator.HasMoreResults)
         ///     {
-        ///         Console.WriteLine(item.cost);
+        ///         foreach(var item in await feedIterator.ReadNextAsync()){
+        ///         {
+        ///             Console.WriteLine(item.cost);
+        ///         }
         ///     }
         /// }
         /// ]]>
@@ -998,16 +998,17 @@ namespace Microsoft.Azure.Cosmos
         ///     public int cost {get; set;}
         /// }
         ///
-        /// FeedIterator<ToDoActivity> feedIterator = this.Container.GetItemQueryIterator<ToDoActivity>(
+        /// using (FeedIterator<ToDoActivity> feedIterator = this.Container.GetItemQueryIterator<ToDoActivity>(
         ///     null,
         ///     null,
-        ///     new QueryRequestOptions() { PartitionKey = new PartitionKey("Error")});
-        ///
-        /// while (feedIterator.HasMoreResults)
+        ///     new QueryRequestOptions() { PartitionKey = new PartitionKey("Error")}))
         /// {
-        ///     foreach(var item in await feedIterator.ReadNextAsync()){
+        ///     while (feedIterator.HasMoreResults)
         ///     {
-        ///         Console.WriteLine(item.cost); 
+        ///         foreach(var item in await feedIterator.ReadNextAsync()){
+        ///         {
+        ///             Console.WriteLine(item.cost); 
+        ///         }
         ///     }
         /// }
         /// ]]>
@@ -1022,6 +1023,7 @@ namespace Microsoft.Azure.Cosmos
         /// This method creates a LINQ query for items under a container in an Azure Cosmos DB service.
         /// IQueryable extension method ToFeedIterator() should be use for asynchronous execution with FeedIterator, please refer to example 2.
         /// </summary>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <remarks>
         /// LINQ execution is synchronous which will cause issues related to blocking calls. 
         /// It is recommended to always use ToFeedIterator(), and to do the asynchronous execution.
@@ -1077,19 +1079,19 @@ namespace Microsoft.Azure.Cosmos
         /// <![CDATA[
         ///
         /// // LINQ query generation
-        /// var setIterator = container.GetItemLinqQueryable<Book>()
+        /// using (FeedIterator setIterator = container.GetItemLinqQueryable<Book>()
         ///                      .Where(b => b.Title == "War and Peace")
-        ///                      .ToFeedIterator();
-        ///                      
-        /// //Asynchronous query execution
-        /// while (setIterator.HasMoreResults)
-        /// {
-        ///     foreach(var item in await feedIterator.ReadNextAsync()){
+        ///                      .ToFeedIterator())
+        /// {                   
+        ///     //Asynchronous query execution
+        ///     while (setIterator.HasMoreResults)
         ///     {
-        ///         Console.WriteLine(item.cost); 
+        ///         foreach(var item in await feedIterator.ReadNextAsync()){
+        ///         {
+        ///             Console.WriteLine(item.cost); 
+        ///         }
         ///     }
         /// }
-        ///
         /// ]]>
         /// </code>
         /// </example>
@@ -1107,6 +1109,7 @@ namespace Microsoft.Azure.Cosmos
         /// <param name="changes">The changes that happened.</param>
         /// <param name="cancellationToken">A cancellation token representing the current cancellation status of the <see cref="ChangeFeedProcessor"/> instance.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation that is going to be done with the changes.</returns>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         public delegate Task ChangesHandler<T>(
             IReadOnlyCollection<T> changes,
             CancellationToken cancellationToken);
@@ -1117,6 +1120,7 @@ namespace Microsoft.Azure.Cosmos
         /// <param name="estimatedPendingChanges">An estimation in number of items.</param>
         /// <param name="cancellationToken">A cancellation token representing the current cancellation status of the <see cref="ChangeFeedProcessor"/> instance.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation that is going to be done with the estimation.</returns>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         public delegate Task ChangesEstimationHandler(
             long estimatedPendingChanges,
             CancellationToken cancellationToken);
@@ -1145,6 +1149,20 @@ namespace Microsoft.Azure.Cosmos
             string processorName,
             ChangesEstimationHandler estimationDelegate,
             TimeSpan? estimationPeriod = null);
+#if PREVIEW
+        /// <summary>
+        /// Gets a <see cref="ChangeFeedEstimator"/> for change feed monitoring.
+        /// </summary>
+        /// <param name="processorName">The name of the Processor the Estimator is going to measure.</param>
+        /// <param name="leaseContainer">Instance of a Cosmos Container that holds the leases.</param>
+        /// <remarks>
+        /// The goal of the Estimator is to measure progress of a particular processor. In order to do that, the <paramref name="processorName"/> and other parameters, like the leases container, need to match that of the Processor to measure.
+        /// </remarks>
+        /// <returns>An instance of <see cref="ChangeFeedEstimator"/></returns>
+        public abstract ChangeFeedEstimator GetChangeFeedEstimator(
+            string processorName,
+            Container leaseContainer);
+#endif
 
         /// <summary>
         /// Initializes a new instance of <see cref="TransactionalBatch"/>
@@ -1157,214 +1175,122 @@ namespace Microsoft.Azure.Cosmos
 
 #if PREVIEW
         /// <summary>
-        /// Obtains a list of <see cref="FeedToken"/> that can be used to parallelize Read Feed operations.
+        /// Obtains a list of <see cref="FeedRange"/> that can be used to parallelize Feed operations.
         /// </summary>
         /// <param name="cancellationToken">(Optional) <see cref="CancellationToken"/> representing request cancellation.</param>
-        /// <returns>A list of <see cref="FeedToken"/>.</returns>
-        public abstract Task<IReadOnlyList<FeedToken>> GetFeedTokensAsync(CancellationToken cancellationToken = default(CancellationToken));
+        /// <returns>A list of <see cref="FeedRange"/>.</returns>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
+        public abstract Task<IReadOnlyList<FeedRange>> GetFeedRangesAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
-        ///  This method creates an iterator to consume the container's Change Feed.
-        ///  The iterator exposes mechanisms to save and resume state through <see cref="FeedIterator.FeedToken"/>.
+        ///  This method creates an iterator to consume a Change Feed.
         /// </summary>
+        /// <param name="changeFeedStartFrom">Where to start the changefeed from.</param>
         /// <param name="changeFeedRequestOptions">(Optional) The options for the Change Feed consumption.</param>
+        /// <seealso cref="Container.GetFeedRangesAsync(CancellationToken)"/>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#stream-api</exception>
+        /// <example>
+        /// <code language="c#">
+        /// <![CDATA[
+        /// IReadOnlyList<FeedRange> feedRanges = await this.Container.GetFeedRangesAsync();
+        /// // Distribute feedRanges across multiple compute units and pass each one to a different iterator
+        ///
+        /// ChangeFeedRequestOptions options = new ChangeFeedRequestOptions()
+        /// {
+        ///     PageSizeHint = 10,
+        /// }
+        /// 
+        /// FeedIterator feedIterator = this.Container.GetChangeFeedStreamIterator(
+        ///     ChangeFeedStartFrom.Beginning(feedRanges[0]),
+        ///     options);
+        ///
+        /// while (feedIterator.HasMoreResults)
+        /// {
+        ///     while (feedIterator.HasMoreResults)
+        ///     {
+        ///         using (ResponseMessage response = await feedIterator.ReadNextAsync())
+        ///         {
+        ///             using (StreamReader sr = new StreamReader(response.Content))
+        ///             using (JsonTextReader jtr = new JsonTextReader(sr))
+        ///             {
+        ///                 JObject result = JObject.Load(jtr);
+        ///             }
+        ///         }
+        ///     }
+        /// }
+        /// ]]>
+        /// </code>
+        /// </example>
         /// <returns>An iterator to go through the Change Feed.</returns>
-        /// <example>
-        /// <code language="c#">
-        /// <![CDATA[
-        /// FeedIterator feedIterator = this.Container.GetChangeFeedStreamIterator();
-        ///
-        /// while (feedIterator.HasMoreResults)
-        /// {
-        ///     using (ResponseMessage response = await feedIterator.ReadNextAsync())
-        ///     {
-        ///         using (StreamReader sr = new StreamReader(response.Content))
-        ///         using (JsonTextReader jtr = new JsonTextReader(sr))
-        ///         {
-        ///             JObject result = JObject.Load(jtr);
-        ///         }
-        ///     }
-        /// }
-        /// ]]>
-        /// </code>
-        /// </example>
-        public abstract FeedIterator GetChangeFeedStreamIterator(ChangeFeedRequestOptions changeFeedRequestOptions = null);
-
-        /// <summary>
-        ///  This method creates an iterator to consume a FeedToken's Change Feed.
-        ///  The iterator exposes mechanisms to save and resume state through <see cref="FeedIterator.FeedToken"/>.
-        /// </summary>
-        /// <param name="feedToken">A FeedToken obtained from <see cref="Container.GetFeedTokensAsync(CancellationToken)"/> or from a previous FeedIterator</param>
-        /// <param name="changeFeedRequestOptions">(Optional) The options for the Change Feed consumption.</param>
-        /// <seealso cref="Container.GetFeedTokensAsync(CancellationToken)"/>
-        /// <example>
-        /// <code language="c#">
-        /// <![CDATA[
-        /// IReadOnlyList<FeedToken> feedTokens = await this.Container.GetFeedTokensAsync();
-        /// // Distribute feedTokens across multiple compute units and pass each one to a different iterator
-        /// FeedIterator feedIterator = this.Container.GetChangeFeedStreamIterator(feedToken[0]);
-        ///
-        /// while (feedIterator.HasMoreResults)
-        /// {
-        ///     using (ResponseMessage response = await feedIterator.ReadNextAsync())
-        ///     {
-        ///         using (StreamReader sr = new StreamReader(response.Content))
-        ///         using (JsonTextReader jtr = new JsonTextReader(sr))
-        ///         {
-        ///             JObject result = JObject.Load(jtr);
-        ///         }
-        ///     }
-        /// }
-        /// ]]>
-        /// </code>
-        /// </example>
-        /// <returns>An iterator to go through the Change Feed for a particular FeedToken.</returns>
         public abstract FeedIterator GetChangeFeedStreamIterator(
-            FeedToken feedToken,
+            ChangeFeedStartFrom changeFeedStartFrom,
             ChangeFeedRequestOptions changeFeedRequestOptions = null);
 
         /// <summary>
-        ///  This method creates an iterator to consume the Change Feed for a Partition Key value.
-        ///  The iterator exposes mechanisms to save and resume state through <see cref="FeedIterator.FeedToken"/>.
+        ///  This method creates an iterator to consume a Change Feed.
         /// </summary>
-        /// <param name="partitionKey">A <see cref="PartitionKey"/> to read the Change Feed for.</param>
+        /// <param name="changeFeedStartFrom">Where to start the changefeed from.</param>
         /// <param name="changeFeedRequestOptions">(Optional) The options for the Change Feed consumption.</param>
+        /// <seealso cref="Container.GetFeedRangesAsync(CancellationToken)"/>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <example>
         /// <code language="c#">
         /// <![CDATA[
-        /// FeedIterator feedIterator = this.Container.GetChangeFeedStreamIterator(new PartitionKey("myPartitionKey"));
+        /// IReadOnlyList<FeedRange> feedRanges = await this.Container.GetFeedRangessAsync();
+        /// // Distribute feedRangess across multiple compute units and pass each one to a different iterator
         ///
+        /// ChangeFeedRequestOptions options = new ChangeFeedRequestOptions()
+        /// {
+        ///     PageSizeHint = 10,
+        /// }
+        /// 
+        /// FeedIterator<MyItem> feedIterator = this.Container.GetChangeFeedIterator<MyItem>(
+        ///     ChangeFeedStartFrom.Beginning(feedRanges[0]),
+        ///     options);
         /// while (feedIterator.HasMoreResults)
         /// {
-        ///     using (ResponseMessage response = await feedIterator.ReadNextAsync())
+        ///     while (feedIterator.HasMoreResults)
         ///     {
-        ///         using (StreamReader sr = new StreamReader(response.Content))
-        ///         using (JsonTextReader jtr = new JsonTextReader(sr))
+        ///         FeedResponse<MyItem> response = await feedIterator.ReadNextAsync();
+        ///         foreach (var item in response)
         ///         {
-        ///             JObject result = JObject.Load(jtr);
+        ///             Console.WriteLine(item);
         ///         }
         ///     }
         /// }
         /// ]]>
         /// </code>
         /// </example>
-        /// <returns>An iterator to go through the Change Feed for a particular FeedToken.</returns>
-        public abstract FeedIterator GetChangeFeedStreamIterator(
-            PartitionKey partitionKey,
-            ChangeFeedRequestOptions changeFeedRequestOptions = null);
-
-        /// <summary>
-        ///  This method creates an iterator to consume the container's Change Feed.
-        ///  The iterator exposes mechanisms to save and resume state through <see cref="FeedIterator.FeedToken"/>.
-        /// </summary>
-        /// <param name="changeFeedRequestOptions">(Optional) The options for the Change Feed consumption.</param>
         /// <returns>An iterator to go through the Change Feed.</returns>
-        /// <example>
-        /// <code language="c#">
-        /// <![CDATA[
-        /// FeedIterator<MyItem> feedIterator = this.Container.GetChangeFeedIterator<MyItem>();
-        /// FeedToken lastFeedTokenState;
-        /// while (feedIterator.HasMoreResults)
-        /// {
-        ///     FeedResponse<MyItem> response = await feedIterator.ReadNextAsync();
-        ///     foreach (var item in response)
-        ///     {
-        ///         Console.WriteLine(item);
-        ///     }
-        ///     
-        ///     // if saving state is needed, the FeedToken can be saved and stored
-        ///     lastFeedTokenState = feedIterator.FeedToken;
-        /// }
-        /// ]]>
-        /// </code>
-        /// </example>
-        public abstract FeedIterator<T> GetChangeFeedIterator<T>(ChangeFeedRequestOptions changeFeedRequestOptions = null);
-
-        /// <summary>
-        ///  This method creates an iterator to consume a FeedToken's Change Feed.
-        ///  The iterator exposes mechanisms to save and resume state through <see cref="FeedIterator.FeedToken"/>.
-        /// </summary>
-        /// <param name="feedToken">A FeedToken obtained from <see cref="Container.GetFeedTokensAsync(CancellationToken)"/> or from a previous FeedIterator</param>
-        /// <param name="changeFeedRequestOptions">(Optional) The options for the Change Feed consumption.</param>
-        /// <seealso cref="Container.GetFeedTokensAsync(CancellationToken)"/>
-        /// <example>
-        /// <code language="c#">
-        /// <![CDATA[
-        /// IReadOnlyList<FeedToken> feedTokens = await this.Container.GetFeedTokensAsync();
-        /// // Distribute feedTokens across multiple compute units and pass each one to a different iterator
-        /// FeedIterator<MyItem> feedIterator = this.Container.GetChangeFeedIterator<MyItem>(feedToken[0]);
-        /// FeedToken lastFeedTokenState;
-        /// while (feedIterator.HasMoreResults)
-        /// {
-        ///     FeedResponse<MyItem> response = await feedIterator.ReadNextAsync();
-        ///     foreach (var item in response)
-        ///     {
-        ///         Console.WriteLine(item);
-        ///     }
-        ///     
-        ///     // if saving state is needed, the FeedToken can be saved and stored
-        ///     lastFeedTokenState = feedIterator.FeedToken;
-        /// }
-        /// ]]>
-        /// </code>
-        /// </example>
-        /// <returns>An iterator to go through the Change Feed for a particular FeedToken.</returns>
         public abstract FeedIterator<T> GetChangeFeedIterator<T>(
-            FeedToken feedToken,
+            ChangeFeedStartFrom changeFeedStartFrom,
             ChangeFeedRequestOptions changeFeedRequestOptions = null);
 
         /// <summary>
-        ///  This method creates an iterator to consume the Change Feed for a Partition Key value.
-        ///  The iterator exposes mechanisms to save and resume state through <see cref="FeedIterator.FeedToken"/>.
+        /// Gets the list of Partition Key Range identifiers for a <see cref="FeedRange"/>.
         /// </summary>
-        /// <param name="partitionKey">A <see cref="PartitionKey"/> to read the Change Feed for.</param>
-        /// <param name="changeFeedRequestOptions">(Optional) The options for the Change Feed consumption.</param>
-        /// <example>
-        /// <code language="c#">
-        /// <![CDATA[
-        /// FeedIterator<MyItem> feedIterator = this.Container.GetChangeFeedIterator<MyItem>(new PartitionKey("myPartitionKey"));
-        /// FeedToken lastFeedTokenState;
-        /// while (feedIterator.HasMoreResults)
-        /// {
-        ///     FeedResponse<MyItem> response = await feedIterator.ReadNextAsync();
-        ///     foreach (var item in response)
-        ///     {
-        ///         Console.WriteLine(item);
-        ///     }
-        ///     
-        ///     // if saving state is needed, the FeedToken can be saved and stored
-        ///     lastFeedTokenState = feedIterator.FeedToken;
-        /// }
-        /// ]]>
-        /// </code>
-        /// </example>
-        /// <returns>An iterator to go through the Change Feed for a Partition Key.</returns>
-        public abstract FeedIterator<T> GetChangeFeedIterator<T>(
-            PartitionKey partitionKey,
-            ChangeFeedRequestOptions changeFeedRequestOptions = null);
-
-        /// <summary>
-        /// Gets the list of Partition Key Range identifiers for a <see cref="FeedToken"/>.
-        /// </summary>
-        /// <param name="feedToken">A <see cref="FeedToken"/></param>
+        /// <param name="feedRange">A <see cref="FeedRange"/></param>
         /// <param name="cancellationToken">(Optional) <see cref="CancellationToken"/> representing request cancellation.</param>
-        /// <returns>The list of Partition Key Range identifiers affected by a particular FeedToken.</returns>
-        /// <seealso cref="Container.GetFeedTokensAsync(CancellationToken)"/>
+        /// <returns>The list of Partition Key Range identifiers affected by a particular FeedRange.</returns>
+        /// <seealso cref="Container.GetFeedRangesAsync(CancellationToken)"/>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         public abstract Task<IEnumerable<string>> GetPartitionKeyRangesAsync(
-            FeedToken feedToken,
-            CancellationToken cancellationToken = default(CancellationToken));
+            FeedRange feedRange,
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         ///  This method creates a query for items under a container in an Azure Cosmos database using a SQL statement with parameterized values. It returns a FeedIterator.
         ///  For more information on preparing SQL statements with parameterized values, please see <see cref="QueryDefinition"/>.
         /// </summary>
-        /// <param name="feedToken">A FeedToken obtained from <see cref="Container.GetFeedTokensAsync(CancellationToken)"/> or from a previous FeedTokenIterator</param>
+        /// <param name="feedRange">A FeedRange obtained from <see cref="Container.GetFeedRangesAsync(CancellationToken)"/></param>
         /// <param name="queryDefinition">The Cosmos SQL query definition.</param>
+        /// <param name="continuationToken">(Optional) The continuation token in the Azure Cosmos DB service.</param>
         /// <param name="requestOptions">(Optional) The options for the item query request.</param>
         /// <returns>An iterator to go through the items.</returns>
         /// <remarks>
         /// Query as a stream only supports single partition queries 
         /// </remarks>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#stream-api</exception>
         /// <example>
         /// Create a query to get all the ToDoActivity that have a cost greater than 9000 for the specified partition
         /// <code language="c#">
@@ -1374,23 +1300,25 @@ namespace Microsoft.Azure.Cosmos
         ///     public string status {get; set;}
         ///     public int cost {get; set;}
         /// }
-        /// IReadOnlyList<FeedToken> feedTokens = await this.Container.GetFeedTokensAsync();
-        /// // Distribute feedTokens across multiple compute units and pass each one to a different iterator
+        /// IReadOnlyList<FeedRange> feedRanges = await this.Container.GetFeedRangesAsync();
+        /// // Distribute feedRanges across multiple compute units and pass each one to a different iterator
         /// QueryDefinition queryDefinition = new QueryDefinition("select * from ToDos t where t.cost > @expensive")
         ///     .WithParameter("@expensive", 9000);
-        /// FeedIterator feedIterator = this.Container.GetItemQueryStreamIterator(
+        /// using (FeedIterator feedIterator = this.Container.GetItemQueryStreamIterator(
+        ///     feedRanges[0],
         ///     queryDefinition,
-        ///     feedTokens[0],
-        ///     new QueryRequestOptions() { });
-        ///
-        /// while (feedIterator.HasMoreResults)
+        ///     null,
+        ///     new QueryRequestOptions() { }))
         /// {
-        ///     using (ResponseMessage response = await feedIterator.ReadNextAsync())
+        ///     while (feedIterator.HasMoreResults)
         ///     {
-        ///         using (StreamReader sr = new StreamReader(response.Content))
-        ///         using (JsonTextReader jtr = new JsonTextReader(sr))
+        ///         using (ResponseMessage response = await feedIterator.ReadNextAsync())
         ///         {
-        ///             JObject result = JObject.Load(jtr);
+        ///             using (StreamReader sr = new StreamReader(response.Content))
+        ///             using (JsonTextReader jtr = new JsonTextReader(sr))
+        ///             {
+        ///                 JObject result = JObject.Load(jtr);
+        ///             }
         ///         }
         ///     }
         /// }
@@ -1398,21 +1326,24 @@ namespace Microsoft.Azure.Cosmos
         /// </code>
         /// </example>
         public abstract FeedIterator GetItemQueryStreamIterator(
-            FeedToken feedToken,
+            FeedRange feedRange,
             QueryDefinition queryDefinition,
+            string continuationToken,
             QueryRequestOptions requestOptions = null);
 
         /// <summary>
         ///  This method creates a query for items under a container in an Azure Cosmos database using a SQL statement with parameterized values. It returns a FeedIterator.
         ///  For more information on preparing SQL statements with parameterized values, please see <see cref="QueryDefinition"/>.
         /// </summary>
-        /// <param name="feedToken">A FeedToken obtained from <see cref="Container.GetFeedTokensAsync(CancellationToken)"/> or from a previous FeedTokenIterator</param>
+        /// <param name="feedRange">A FeedRange obtained from <see cref="Container.GetFeedRangesAsync(CancellationToken)"/>.</param>
         /// <param name="queryDefinition">The Cosmos SQL query definition.</param>
+        /// <param name="continuationToken">(Optional) The continuation token in the Azure Cosmos DB service.</param>
         /// <param name="requestOptions">(Optional) The options for the item query request.</param>
         /// <returns>An iterator to go through the items.</returns>
         /// <remarks>
         /// Query as a stream only supports single partition queries 
         /// </remarks>
+        /// <exception>https://aka.ms/cosmosdb-dot-net-exceptions#typed-api</exception>
         /// <example>
         /// Create a query to get all the ToDoActivity that have a cost greater than 9000 for the specified partition
         /// <code language="c#">
@@ -1422,120 +1353,31 @@ namespace Microsoft.Azure.Cosmos
         ///     public string status {get; set;}
         ///     public int cost {get; set;}
         /// }
-        /// IReadOnlyList<FeedToken> feedTokens = await this.Container.GetFeedTokensAsync();
-        /// // Distribute feedTokens across multiple compute units and pass each one to a different iterator
+        /// IReadOnlyList<FeedRange> feedRanges = await this.Container.GetFeedRangesAsync();
+        /// // Distribute feedRanges across multiple compute units and pass each one to a different iterator
         /// QueryDefinition queryDefinition = new QueryDefinition("select * from ToDos t where t.cost > @expensive")
         ///     .WithParameter("@expensive", 9000);
-        /// FeedIterator<ToDoActivity> feedIterator = this.Container.GetItemQueryIterator<ToDoActivity>(
-        ///     feedTokens[0],
+        /// using (FeedIterator<ToDoActivity> feedIterator = this.Container.GetItemQueryIterator<ToDoActivity>(
+        ///     feedRanges[0],
         ///     queryDefinition,
-        ///     new QueryRequestOptions() { });
-        ///
-        /// while (feedIterator.HasMoreResults)
+        ///     null,
+        ///     new QueryRequestOptions() { }))
         /// {
-        ///     foreach(var item in await feedIterator.ReadNextAsync()){
+        ///     while (feedIterator.HasMoreResults)
         ///     {
-        ///         Console.WriteLine(item.cost); 
-        ///     }
-        /// }
-        /// ]]>
-        /// </code>
-        /// </example>
-        public abstract FeedIterator<T> GetItemQueryIterator<T>(
-            FeedToken feedToken,
-            QueryDefinition queryDefinition,
-            QueryRequestOptions requestOptions = null);
-
-        /// <summary>
-        ///  This method creates a query for items under a container in an Azure Cosmos database using a SQL statement with parameterized values. It returns a FeedIterator.
-        ///  For more information on preparing SQL statements with parameterized values, please see <see cref="QueryDefinition"/>.
-        /// </summary>
-        /// <param name="feedToken">A FeedToken obtained from <see cref="Container.GetFeedTokensAsync(CancellationToken)"/> or from a previous FeedTokenIterator</param>
-        /// <param name="queryText">The Cosmos SQL query text.</param>
-        /// <param name="requestOptions">(Optional) The options for the item query request.</param>
-        /// <returns>An iterator to go through the items.</returns>
-        /// <remarks>
-        /// Query as a stream only supports single partition queries 
-        /// </remarks>
-        /// <example>
-        /// Create a query to get all the ToDoActivity that have a cost greater than 9000 for the specified partition
-        /// <code language="c#">
-        /// <![CDATA[
-        /// public class ToDoActivity{
-        ///     public string id {get; set;}
-        ///     public string status {get; set;}
-        ///     public int cost {get; set;}
-        /// }
-        /// IReadOnlyList<FeedToken> feedTokens = await this.Container.GetFeedTokensAsync();
-        /// // Distribute feedTokens across multiple compute units and pass each one to a different iterator
-        /// QueryDefinition queryDefinition = new QueryDefinition("select * from ToDos t where t.cost > @expensive")
-        ///     .WithParameter("@expensive", 9000);
-        /// FeedIterator feedIterator = this.Container.GetItemQueryStreamIterator(
-        ///     queryDefinition,
-        ///     feedTokens[0],
-        ///     new QueryRequestOptions() { });
-        ///
-        /// while (feedIterator.HasMoreResults)
-        /// {
-        ///     using (ResponseMessage response = await feedIterator.ReadNextAsync())
-        ///     {
-        ///         using (StreamReader sr = new StreamReader(response.Content))
-        ///         using (JsonTextReader jtr = new JsonTextReader(sr))
+        ///         foreach(var item in await feedIterator.ReadNextAsync()){
         ///         {
-        ///             JObject result = JObject.Load(jtr);
+        ///             Console.WriteLine(item.cost); 
         ///         }
         ///     }
         /// }
         /// ]]>
         /// </code>
         /// </example>
-        public abstract FeedIterator GetItemQueryStreamIterator(
-            FeedToken feedToken,
-            string queryText = null,
-            QueryRequestOptions requestOptions = null);
-
-        /// <summary>
-        ///  This method creates a query for items under a container in an Azure Cosmos database using a SQL statement with parameterized values. It returns a FeedIterator.
-        ///  For more information on preparing SQL statements with parameterized values, please see <see cref="QueryDefinition"/>.
-        /// </summary>
-        /// <param name="feedToken">A FeedToken obtained from <see cref="Container.GetFeedTokensAsync(CancellationToken)"/> or from a previous FeedTokenIterator</param>
-        /// <param name="queryText">The Cosmos SQL query text.</param>
-        /// <param name="requestOptions">(Optional) The options for the item query request.</param>
-        /// <returns>An iterator to go through the items.</returns>
-        /// <remarks>
-        /// Query as a stream only supports single partition queries 
-        /// </remarks>
-        /// <example>
-        /// Create a query to get all the ToDoActivity that have a cost greater than 9000 for the specified partition
-        /// <code language="c#">
-        /// <![CDATA[
-        /// public class ToDoActivity{
-        ///     public string id {get; set;}
-        ///     public string status {get; set;}
-        ///     public int cost {get; set;}
-        /// }
-        /// IReadOnlyList<FeedToken> feedTokens = await this.Container.GetFeedTokensAsync();
-        /// // Distribute feedTokens across multiple compute units and pass each one to a different iterator
-        /// QueryDefinition queryDefinition = new QueryDefinition("select * from ToDos t where t.cost > @expensive")
-        ///     .WithParameter("@expensive", 9000);
-        /// FeedIterator<ToDoActivity> feedIterator = this.Container.GetItemQueryIterator<ToDoActivity>(
-        ///     feedTokens[0],
-        ///     queryDefinition,
-        ///     new QueryRequestOptions() { });
-        ///
-        /// while (feedIterator.HasMoreResults)
-        /// {
-        ///     foreach(var item in await feedIterator.ReadNextAsync()){
-        ///     {
-        ///         Console.WriteLine(item.cost); 
-        ///     }
-        /// }
-        /// ]]>
-        /// </code>
-        /// </example>
         public abstract FeedIterator<T> GetItemQueryIterator<T>(
-            FeedToken feedToken,
-            string queryText = null,
+            FeedRange feedRange,
+            QueryDefinition queryDefinition,
+            string continuationToken = null,
             QueryRequestOptions requestOptions = null);
 #endif
     }

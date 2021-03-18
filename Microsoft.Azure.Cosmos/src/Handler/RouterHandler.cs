@@ -9,7 +9,7 @@ namespace Microsoft.Azure.Cosmos.Handlers
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Handler which selects the piepline for the requested resource operation
+    /// Handler which selects the pipeline for the requested resource operation
     /// </summary>
     internal class RouterHandler : RequestHandler
     {
@@ -20,35 +20,19 @@ namespace Microsoft.Azure.Cosmos.Handlers
             RequestHandler documentFeedHandler,
             RequestHandler pointOperationHandler)
         {
-            if (documentFeedHandler == null)
-            {
-                throw new ArgumentNullException(nameof(documentFeedHandler));
-            }
-
-            if (pointOperationHandler == null)
-            {
-                throw new ArgumentNullException(nameof(pointOperationHandler));
-            }
-
-            this.documentFeedHandler = documentFeedHandler;
-            this.pointOperationHandler = pointOperationHandler;
+            this.documentFeedHandler = documentFeedHandler ?? throw new ArgumentNullException(nameof(documentFeedHandler));
+            this.pointOperationHandler = pointOperationHandler ?? throw new ArgumentNullException(nameof(pointOperationHandler));
         }
 
-        public override Task<ResponseMessage> SendAsync(
+        public override async Task<ResponseMessage> SendAsync(
             RequestMessage request,
             CancellationToken cancellationToken)
         {
-            RequestHandler targetHandler = null;
-            if (request.IsPartitionKeyRangeHandlerRequired)
+            RequestHandler targetHandler = request.IsPartitionKeyRangeHandlerRequired ? this.documentFeedHandler : this.pointOperationHandler;
+            using (request.DiagnosticsContext.CreateRequestHandlerScopeScope(targetHandler))
             {
-                targetHandler = documentFeedHandler;
+                return await targetHandler.SendAsync(request, cancellationToken);
             }
-            else
-            {
-                targetHandler = pointOperationHandler;
-            }
-
-            return targetHandler.SendAsync(request, cancellationToken);
         }
     }
 }

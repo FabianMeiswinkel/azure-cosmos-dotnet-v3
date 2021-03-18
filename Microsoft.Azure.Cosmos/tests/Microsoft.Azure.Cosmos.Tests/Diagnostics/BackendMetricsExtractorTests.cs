@@ -23,11 +23,12 @@ namespace Microsoft.Azure.Cosmos.Diagnostics
             requestCharge: 0,
             errorMessage: string.Empty,
             method: HttpMethod.Get,
-            requestUri: new Uri("http://localhost"),
+            requestUri: "http://localhost",
             requestSessionToken: null,
             responseSessionToken: null);
 
         private static readonly QueryPageDiagnostics MockQueryPageDiagnostics = new QueryPageDiagnostics(
+            clientQueryCorrelationId: Guid.NewGuid(),
             partitionKeyRangeId: nameof(QueryPageDiagnostics.PartitionKeyRangeId),
             queryMetricText: BackendMetricsTests.MockBackendMetrics.ToString(),
             indexUtilizationText: nameof(QueryPageDiagnostics.IndexUtilizationText),
@@ -77,6 +78,7 @@ namespace Microsoft.Azure.Cosmos.Diagnostics
         {
             string malformedString = "totalExecutionTimeInMs=asdf";
             QueryPageDiagnostics queryPageDiagnostics = new QueryPageDiagnostics(
+                clientQueryCorrelationId: Guid.NewGuid(),
                 partitionKeyRangeId: nameof(QueryPageDiagnostics.PartitionKeyRangeId),
                 queryMetricText: malformedString,
                 indexUtilizationText: nameof(QueryPageDiagnostics.IndexUtilizationText),

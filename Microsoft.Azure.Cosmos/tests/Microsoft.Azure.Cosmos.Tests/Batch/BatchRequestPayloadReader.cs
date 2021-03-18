@@ -20,10 +20,10 @@ namespace Microsoft.Azure.Cosmos.Tests
 
         internal async Task<List<ItemBatchOperation>> ReadPayloadAsync(Stream payload)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             await payload.ReadRecordIOAsync(
                 record =>
                 {
-
                     Result r = this.ReadOperation(record, out ItemBatchOperation operation);
                     if (r != Result.Success)
                     {
@@ -34,6 +34,7 @@ namespace Microsoft.Azure.Cosmos.Tests
                     return r;
                 },
                 resizer: new MemorySpanResizer<byte>((int)payload.Length));
+#pragma warning restore CS0618 // Type or member is obsolete
 
             return this.operations;
         }
@@ -208,22 +209,24 @@ namespace Microsoft.Azure.Cosmos.Tests
 
                 if (binaryId != null || effectivePartitionKey != null || ttlInSeconds.HasValue)
                 {
-                    requestOptions.Properties = new Dictionary<string, object>();
+                    Dictionary<string, object> properties = new Dictionary<string, object>();
 
                     if (binaryId != null)
                     {
-                        requestOptions.Properties.Add(WFConstants.BackendHeaders.BinaryId, binaryId);
+                        properties.Add(WFConstants.BackendHeaders.BinaryId, binaryId);
                     }
 
                     if (effectivePartitionKey != null)
                     {
-                        requestOptions.Properties.Add(WFConstants.BackendHeaders.EffectivePartitionKey, effectivePartitionKey);
+                        properties.Add(WFConstants.BackendHeaders.EffectivePartitionKey, effectivePartitionKey);
                     }
 
                     if (ttlInSeconds.HasValue)
                     {
-                        requestOptions.Properties.Add(WFConstants.BackendHeaders.TimeToLiveInSeconds, ttlInSeconds.ToString());
+                        properties.Add(WFConstants.BackendHeaders.TimeToLiveInSeconds, ttlInSeconds.ToString());
                     }
+
+                    requestOptions.Properties = properties;
                 }
             }
 

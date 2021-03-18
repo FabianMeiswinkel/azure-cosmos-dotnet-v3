@@ -4,7 +4,6 @@
 
 namespace Microsoft.Azure.Cosmos.Tests
 {
-    using System;
     using Microsoft.Azure.Documents;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -54,35 +53,74 @@ namespace Microsoft.Azure.Cosmos.Tests
         }
 
         [TestMethod]
-        public void IsFeedOperation_ForFeedTokenEPKRange()
+        public void IsFeedOperation_ForStoredProcedureReads()
         {
             RequestMessage request = new RequestMessage();
             request.OperationType = OperationType.ReadFeed;
-            request.ResourceType = ResourceType.Document;
-            FeedTokenInternal feedTokenEPKRange = new FeedTokenEPKRange(Guid.NewGuid().ToString(), new PartitionKeyRange() { MinInclusive = "AA", MaxExclusive = "BB", Id = "0" });
-            feedTokenEPKRange.EnrichRequest(request);
-            Assert.IsTrue(request.IsPartitionKeyRangeHandlerRequired);
-        }
-
-        [TestMethod]
-        public void IsFeedOperation_ForFeedTokenPartitionKeyRange()
-        {
-            RequestMessage request = new RequestMessage();
-            request.OperationType = OperationType.ReadFeed;
-            request.ResourceType = ResourceType.Document;
-            FeedTokenInternal feedTokenEPKRange = new FeedTokenPartitionKeyRange("0");
-            feedTokenEPKRange.EnrichRequest(request);
+            request.ResourceType = ResourceType.StoredProcedure;
             Assert.IsFalse(request.IsPartitionKeyRangeHandlerRequired);
         }
 
         [TestMethod]
-        public void IsFeedOperation_ForFeedTokenPartitionKey()
+        public void IsFeedOperation_ForUserDefinedFunctionReads()
         {
             RequestMessage request = new RequestMessage();
             request.OperationType = OperationType.ReadFeed;
-            request.ResourceType = ResourceType.Document;
-            FeedTokenInternal feedTokenEPKRange = new FeedTokenPartitionKey(new Cosmos.PartitionKey("0"));
-            feedTokenEPKRange.EnrichRequest(request);
+            request.ResourceType = ResourceType.UserDefinedFunction;
+            Assert.IsFalse(request.IsPartitionKeyRangeHandlerRequired);
+        }
+
+        [TestMethod]
+        public void IsFeedOperation_ForUserDefinedTypeReads()
+        {
+            RequestMessage request = new RequestMessage();
+            request.OperationType = OperationType.ReadFeed;
+            request.ResourceType = ResourceType.UserDefinedType;
+            Assert.IsFalse(request.IsPartitionKeyRangeHandlerRequired);
+        }
+
+        [TestMethod]
+        public void IsFeedOperation_ForClientEncryptionKeyReads()
+        {
+            RequestMessage request = new RequestMessage();
+            request.OperationType = OperationType.ReadFeed;
+            request.ResourceType = ResourceType.ClientEncryptionKey;
+            Assert.IsFalse(request.IsPartitionKeyRangeHandlerRequired);
+        }
+
+        [TestMethod]
+        public void IsFeedOperation_ForAttachmentReads()
+        {
+            RequestMessage request = new RequestMessage();
+            request.OperationType = OperationType.ReadFeed;
+            request.ResourceType = ResourceType.Attachment;
+            Assert.IsTrue(request.IsPartitionKeyRangeHandlerRequired);
+        }
+
+        [TestMethod]
+        public void IsFeedOperation_ForPartitionKeyReads()
+        {
+            RequestMessage request = new RequestMessage();
+            request.OperationType = OperationType.ReadFeed;
+            request.ResourceType = ResourceType.PartitionKey;
+            Assert.IsTrue(request.IsPartitionKeyRangeHandlerRequired);
+        }
+
+        [TestMethod]
+        public void IsFeedOperation_ForPartitionKeyRangeReads()
+        {
+            RequestMessage request = new RequestMessage();
+            request.OperationType = OperationType.ReadFeed;
+            request.ResourceType = ResourceType.PartitionKeyRange;
+            Assert.IsFalse(request.IsPartitionKeyRangeHandlerRequired);
+        }
+
+        [TestMethod]
+        public void IsFeedOperation_ForOfferReads()
+        {
+            RequestMessage request = new RequestMessage();
+            request.OperationType = OperationType.ReadFeed;
+            request.ResourceType = ResourceType.Offer;
             Assert.IsFalse(request.IsPartitionKeyRangeHandlerRequired);
         }
     }

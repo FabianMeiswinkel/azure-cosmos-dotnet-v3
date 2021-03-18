@@ -1,21 +1,23 @@
 ﻿//------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------
-namespace Microsoft.Azure.Cosmos.Sql
+namespace Microsoft.Azure.Cosmos.SqlObjects
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Immutable;
+    using Microsoft.Azure.Cosmos.SqlObjects.Visitors;
 
-    internal sealed class SqlSelectListSpec : SqlSelectSpec
+#if INTERNAL
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements should be documented
+    public
+#else
+    internal
+#endif
+    sealed class SqlSelectListSpec : SqlSelectSpec
     {
-        private SqlSelectListSpec(IReadOnlyList<SqlSelectItem> items)
-            : base(SqlObjectKind.SelectListSpec)
+        private SqlSelectListSpec(ImmutableArray<SqlSelectItem> items)
         {
-            if (items == null)
-            {
-                throw new ArgumentNullException($"{nameof(items)} must not be null.");
-            }
-
             foreach (SqlSelectItem item in items)
             {
                 if (item == null)
@@ -24,20 +26,17 @@ namespace Microsoft.Azure.Cosmos.Sql
                 }
             }
 
-            this.Items = new List<SqlSelectItem>(items);
+            this.Items = items;
         }
 
-        public IReadOnlyList<SqlSelectItem> Items
-        {
-            get;
-        }
+        public ImmutableArray<SqlSelectItem> Items { get; }
 
         public static SqlSelectListSpec Create(params SqlSelectItem[] items)
         {
-            return new SqlSelectListSpec(items);
+            return new SqlSelectListSpec(items.ToImmutableArray());
         }
 
-        public static SqlSelectListSpec Create(IReadOnlyList<SqlSelectItem> items)
+        public static SqlSelectListSpec Create(ImmutableArray<SqlSelectItem> items)
         {
             return new SqlSelectListSpec(items);
         }

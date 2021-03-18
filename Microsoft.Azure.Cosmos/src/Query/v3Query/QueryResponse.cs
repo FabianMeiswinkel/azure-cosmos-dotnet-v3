@@ -6,11 +6,9 @@ namespace Microsoft.Azure.Cosmos
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Net;
     using Microsoft.Azure.Cosmos.CosmosElements;
-    using Microsoft.Azure.Cosmos.Query;
-    using Microsoft.Azure.Documents;
+    using Microsoft.Azure.Cosmos.Serializer;
 
     /// <summary>
     /// Represents the template class used by feed methods (enumeration operations) for the Azure Cosmos DB service.
@@ -60,13 +58,7 @@ namespace Microsoft.Azure.Cosmos
 
         public int Count { get; }
 
-        public override Stream Content
-        {
-            get
-            {
-                return this.memoryStream?.Value;
-            }
-        }
+        public override Stream Content => this.memoryStream?.Value;
 
         internal virtual IReadOnlyList<CosmosElement> CosmosElements { get; }
 
@@ -106,10 +98,10 @@ namespace Microsoft.Azure.Cosmos
             }
 
             Lazy<MemoryStream> memoryStream = new Lazy<MemoryStream>(() => CosmosElementSerializer.ToStream(
-                       responseHeaders.ContainerRid,
-                       result,
-                       responseHeaders.ResourceType,
-                       serializationOptions));
+                responseHeaders.ContainerRid,
+                result,
+                responseHeaders.ResourceType,
+                serializationOptions));
 
             QueryResponse cosmosQueryResponse = new QueryResponse(
                result: result,
@@ -134,16 +126,16 @@ namespace Microsoft.Azure.Cosmos
             CosmosDiagnosticsContext diagnostics)
         {
             QueryResponse cosmosQueryResponse = new QueryResponse(
-                    result: new List<CosmosElement>(),
-                    count: 0,
-                    responseLengthBytes: 0,
-                    responseHeaders: responseHeaders,
-                    diagnostics: diagnostics,
-                    statusCode: statusCode,
-                    cosmosException: cosmosException,
-                    requestMessage: requestMessage,
-                    memoryStream: null,
-                    serializationOptions: null);
+                result: new List<CosmosElement>(),
+                count: 0,
+                responseLengthBytes: 0,
+                responseHeaders: responseHeaders,
+                diagnostics: diagnostics,
+                statusCode: statusCode,
+                cosmosException: cosmosException,
+                requestMessage: requestMessage,
+                memoryStream: null,
+                serializationOptions: null);
 
             return cosmosQueryResponse;
         }
@@ -216,7 +208,7 @@ namespace Microsoft.Azure.Cosmos
             QueryResponse<TInput> queryResponse;
             using (cosmosQueryResponse)
             {
-                cosmosQueryResponse.EnsureSuccessStatusCode();
+                _ = cosmosQueryResponse.EnsureSuccessStatusCode();
 
                 queryResponse = new QueryResponse<TInput>(
                     httpStatusCode: cosmosQueryResponse.StatusCode,

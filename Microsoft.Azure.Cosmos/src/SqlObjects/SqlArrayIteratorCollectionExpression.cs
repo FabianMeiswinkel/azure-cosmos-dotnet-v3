@@ -2,46 +2,37 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------
 
-namespace Microsoft.Azure.Cosmos.Sql
+namespace Microsoft.Azure.Cosmos.SqlObjects
 {
     using System;
+    using Microsoft.Azure.Cosmos.SqlObjects.Visitors;
 
-    internal sealed class SqlArrayIteratorCollectionExpression : SqlCollectionExpression
+#if INTERNAL
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements should be documented
+    public
+#else
+    internal
+#endif
+    sealed class SqlArrayIteratorCollectionExpression : SqlCollectionExpression
     {
         private SqlArrayIteratorCollectionExpression(
-           SqlIdentifier alias,
+           SqlIdentifier identifier,
            SqlCollection collection)
-            : base(SqlObjectKind.ArrayIteratorCollectionExpression)
         {
-            if (alias == null)
-            {
-                throw new ArgumentNullException("alias");
-            }
-
-            if (collection == null)
-            {
-                throw new ArgumentNullException("collection");
-            }
-
-            this.Alias = alias;
-            this.Collection = collection;
+            this.Identifier = identifier ?? throw new ArgumentNullException(nameof(identifier));
+            this.Collection = collection ?? throw new ArgumentNullException(nameof(collection));
         }
 
-        public SqlIdentifier Alias
-        {
-            get;
-        }
+        public SqlIdentifier Identifier { get; }
 
-        public SqlCollection Collection
-        {
-            get;
-        }
+        public SqlCollection Collection { get; }
 
         public static SqlArrayIteratorCollectionExpression Create(
-            SqlIdentifier alias,
+            SqlIdentifier identifier,
             SqlCollection collection)
         {
-            return new SqlArrayIteratorCollectionExpression(alias, collection);
+            return new SqlArrayIteratorCollectionExpression(identifier, collection);
         }
 
         public override void Accept(SqlObjectVisitor visitor)

@@ -1,27 +1,26 @@
 ﻿//------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------
-namespace Microsoft.Azure.Cosmos.Sql
+namespace Microsoft.Azure.Cosmos.SqlObjects
 {
     using System;
+    using Microsoft.Azure.Cosmos.SqlObjects.Visitors;
 
-    internal sealed class SqlSubqueryScalarExpression : SqlScalarExpression
+#if INTERNAL
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements should be documented
+    public
+#else
+    internal
+#endif
+    sealed class SqlSubqueryScalarExpression : SqlScalarExpression
     {
         private SqlSubqueryScalarExpression(SqlQuery query)
-            : base(SqlObjectKind.SubqueryScalarExpression)
         {
-            if (query == null)
-            {
-                throw new ArgumentNullException("query");
-            }
-
-            this.Query = query;
+            this.Query = query ?? throw new ArgumentNullException(nameof(query));
         }
 
-        public SqlQuery Query
-        {
-            get;
-        }
+        public SqlQuery Query { get; }
 
         public static SqlSubqueryScalarExpression Create(SqlQuery query)
         {

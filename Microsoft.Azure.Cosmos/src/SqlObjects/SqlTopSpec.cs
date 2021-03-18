@@ -1,36 +1,36 @@
 ﻿//------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------
-namespace Microsoft.Azure.Cosmos.Sql
+namespace Microsoft.Azure.Cosmos.SqlObjects
 {
     using System;
+    using System.Collections.Immutable;
     using System.Linq;
+    using Microsoft.Azure.Cosmos.SqlObjects.Visitors;
 
-    internal sealed class SqlTopSpec : SqlObject
+#if INTERNAL
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements should be documented
+    public
+#else
+    internal
+#endif
+    sealed class SqlTopSpec : SqlObject
     {
         private const int PremadeTopIndex = 256;
-        private static readonly SqlTopSpec[] PremadeTopSpecs = Enumerable
+        private static readonly ImmutableArray<SqlTopSpec> PremadeTopSpecs = Enumerable
             .Range(0, PremadeTopIndex)
             .Select(top => new SqlTopSpec(
                 SqlLiteralScalarExpression.Create(
                     SqlNumberLiteral.Create(top))))
-            .ToArray();
+            .ToImmutableArray();
 
         private SqlTopSpec(SqlScalarExpression topExpression)
-            : base(SqlObjectKind.TopSpec)
         {
-            if (topExpression == null)
-            {
-                throw new ArgumentNullException(nameof(topExpression));
-            }
-
-            this.TopExpresion = topExpression;
+            this.TopExpresion = topExpression ?? throw new ArgumentNullException(nameof(topExpression));
         }
 
-        public SqlScalarExpression TopExpresion
-        {
-            get;
-        }
+        public SqlScalarExpression TopExpresion { get; }
 
         public static SqlTopSpec Create(SqlNumberLiteral sqlNumberLiteral)
         {
@@ -48,7 +48,7 @@ namespace Microsoft.Azure.Cosmos.Sql
             value = Number64.ToLong(sqlNumberLiteral.Value);
             if ((value < PremadeTopIndex) && (value >= 0))
             {
-                return SqlTopSpec.PremadeTopSpecs[value];
+                return SqlTopSpec.PremadeTopSpecs[(int)value];
             }
 
             SqlScalarExpression topExpression = SqlLiteralScalarExpression.Create(

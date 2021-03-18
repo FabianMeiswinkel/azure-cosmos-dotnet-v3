@@ -58,7 +58,7 @@ namespace Microsoft.Azure.Cosmos.Tests
                  ""resourceType"": ""trigger""
                 }]}";
 
-            CosmosClient mockClient = MockCosmosUtil.CreateMockCosmosClient(
+            using CosmosClient mockClient = MockCosmosUtil.CreateMockCosmosClient(
                 (cosmosClientBuilder) => cosmosClientBuilder.WithConnectionModeDirect());
 
             Container container = mockClient.GetContainer("database", "container");
@@ -103,7 +103,7 @@ namespace Microsoft.Azure.Cosmos.Tests
                 }]}";
 
             JObject jObject = JObject.Parse(conflictResponsePayload);
-            CosmosClient mockClient = MockCosmosUtil.CreateMockCosmosClient(
+            using CosmosClient mockClient = MockCosmosUtil.CreateMockCosmosClient(
                 (cosmosClientBuilder) => cosmosClientBuilder.WithConnectionModeDirect());
 
             Container container = mockClient.GetContainer("database", "container");
@@ -127,9 +127,9 @@ namespace Microsoft.Azure.Cosmos.Tests
             mockClient.RequestHandler.InnerHandler = testHandler;
             ResponseMessage streamResponse = await feedIterator.ReadNextAsync();
 
-            IEnumerable<ConflictProperties> response = MockCosmosUtil.Serializer.FromFeedResponseStream<ConflictProperties>(
-                streamResponse.Content,
-                ResourceType.Conflict);
+            IEnumerable<ConflictProperties> response = CosmosFeedResponseSerializer.FromFeedResponseStream<ConflictProperties>(
+                MockCosmosUtil.Serializer,
+                streamResponse.Content);
 
             Assert.AreEqual(1, response.Count());
 

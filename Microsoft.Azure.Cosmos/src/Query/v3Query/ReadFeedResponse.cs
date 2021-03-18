@@ -4,27 +4,21 @@
 namespace Microsoft.Azure.Cosmos
 {
     using System.Collections.Generic;
-    using System.IO;
     using System.Net;
-    using Microsoft.Azure.Cosmos.CosmosElements;
-    using Microsoft.Azure.Cosmos.Json;
 
     internal class ReadFeedResponse<T> : FeedResponse<T>
     {
         protected ReadFeedResponse(
             HttpStatusCode httpStatusCode,
-            CosmosArray cosmosArray,
-            CosmosSerializerCore serializerCore,
+            IReadOnlyCollection<T> resources,
             Headers responseMessageHeaders,
             CosmosDiagnostics diagnostics)
         {
-            this.Count = cosmosArray != null ? cosmosArray.Count : 0;
+            this.Count = resources?.Count ?? 0;
             this.Headers = responseMessageHeaders;
             this.StatusCode = httpStatusCode;
             this.Diagnostics = diagnostics;
-            this.Resource = CosmosElementSerializer.GetResources<T>(
-                cosmosArray: cosmosArray,
-                serializerCore: serializerCore);
+            this.Resource = resources;
         }
 
         public override int Count { get; }
@@ -46,30 +40,19 @@ namespace Microsoft.Azure.Cosmos
 
         internal static ReadFeedResponse<TInput> CreateResponse<TInput>(
             ResponseMessage responseMessage,
-            CosmosSerializerCore serializerCore,
-            Documents.ResourceType resourceType)
+            CosmosSerializerCore serializerCore)
         {
             using (responseMessage)
             {
-                // ReadFeed can return 304 on some scenarios (Change Feed for example)
-                if (responseMessage.StatusCode != HttpStatusCode.NotModified)
-                {
-                    responseMessage.EnsureSuccessStatusCode();
-                }
+                responseMessage.EnsureSuccessStatusCode();
 
-                CosmosArray cosmosArray = null;
-                if (responseMessage.Content != null)
-                {
-                    cosmosArray = CosmosElementSerializer.ToCosmosElements(
-                        responseMessage.Content,
-                        resourceType,
-                        null);
-                }
+                IReadOnlyCollection<TInput> resources = CosmosFeedResponseSerializer.FromFeedResponseStream<TInput>(
+                        serializerCore,
+                        responseMessage.Content);
 
                 ReadFeedResponse<TInput> readFeedResponse = new ReadFeedResponse<TInput>(
                     httpStatusCode: responseMessage.StatusCode,
-                    cosmosArray: cosmosArray,
-                    serializerCore: serializerCore,
+                    resources: resources,
                     responseMessageHeaders: responseMessage.Headers,
                     diagnostics: responseMessage.Diagnostics);
 

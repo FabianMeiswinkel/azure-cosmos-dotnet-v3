@@ -7,6 +7,7 @@ namespace Microsoft.Azure.Cosmos
     using System.Collections;
     using System.Collections.Generic;
     using Microsoft.Azure.Cosmos.Diagnostics;
+    using Microsoft.Azure.Documents.Rntbd;
 
     /// <summary>
     /// This represents the diagnostics interface used in the SDK.
@@ -15,21 +16,31 @@ namespace Microsoft.Azure.Cosmos
     {
         public abstract DateTime StartUtc { get; }
 
-        public abstract int TotalRequestCount { get; protected set; }
+        public abstract string UserAgent { get; }
 
-        public abstract int FailedRequestCount { get; protected set; }
-
-        public abstract string UserAgent { get; protected set; }
+        public abstract string OperationName { get; }
 
         internal abstract CosmosDiagnostics Diagnostics { get; }
 
-        internal abstract CosmosDiagnosticScope GetOverallScope();
+        public abstract int GetTotalResponseCount();
 
-        internal abstract CosmosDiagnosticScope CreateScope(string name);
+        public abstract int GetFailedResponseCount();
 
-        internal abstract TimeSpan GetClientElapsedTime();
+        public abstract int GetRetriableResponseCount();
+
+        internal abstract IDisposable GetOverallScope();
+
+        internal abstract IDisposable CreateScope(string name);
+
+        internal abstract IDisposable CreateRequestHandlerScopeScope(RequestHandler requestHandler);
+
+        internal abstract TimeSpan GetRunningElapsedTime();
+
+        internal abstract bool TryGetTotalElapsedTime(out TimeSpan timeSpan);
 
         internal abstract bool IsComplete();
+
+        internal abstract void AddDiagnosticsInternal(CosmosSystemInfo cpuLoadHistory);
 
         internal abstract void AddDiagnosticsInternal(PointOperationStatistics pointOperationStatistics);
 
@@ -41,9 +52,9 @@ namespace Microsoft.Azure.Cosmos
 
         internal abstract void AddDiagnosticsInternal(CosmosClientSideRequestStatistics clientSideRequestStatistics);
 
-        internal abstract void AddDiagnosticsInternal(CosmosDiagnosticsContext newContext);
+        internal abstract void AddDiagnosticsInternal(FeedRangeStatistics feedRangeStatistics);
 
-        internal abstract void SetSdkUserAgent(string userAgent);
+        internal abstract void AddDiagnosticsInternal(CosmosDiagnosticsContext newContext);
 
         public abstract IEnumerator<CosmosDiagnosticsInternal> GetEnumerator();
 
@@ -52,9 +63,22 @@ namespace Microsoft.Azure.Cosmos
             return this.GetEnumerator();
         }
 
-        internal static CosmosDiagnosticsContext Create(RequestOptions requestOptions)
+        internal static CosmosDiagnosticsContext Create(
+            RequestOptions requestOptions)
         {
-            return requestOptions?.DiagnosticContextFactory?.Invoke() ?? new CosmosDiagnosticsContextCore();
+            return requestOptions?.DiagnosticContextFactory?.Invoke() ??
+                new CosmosDiagnosticsContextCore();
+        }
+
+        internal static CosmosDiagnosticsContext Create(
+            string operationName,
+            RequestOptions requestOptions,
+            string userAgentString)
+        {
+            return requestOptions?.DiagnosticContextFactory?.Invoke() ??
+                new CosmosDiagnosticsContextCore(
+                    operationName,
+                    userAgentString);
         }
     }
 }

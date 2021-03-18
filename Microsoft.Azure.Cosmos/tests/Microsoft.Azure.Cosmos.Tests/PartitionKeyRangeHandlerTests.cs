@@ -11,12 +11,7 @@ namespace Microsoft.Azure.Cosmos.Tests
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Azure.Cosmos.Collections;
-    using Microsoft.Azure.Cosmos.Common;
     using Microsoft.Azure.Cosmos.Handlers;
-    using Microsoft.Azure.Cosmos.Internal;
-    using Microsoft.Azure.Cosmos.Query;
-    using Microsoft.Azure.Cosmos.Query.Core.ContinuationTokens;
     using Microsoft.Azure.Cosmos.Routing;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Collections;
@@ -107,7 +102,7 @@ namespace Microsoft.Azure.Cosmos.Tests
             CompositeContinuationToken compositeContinuationToken = new CompositeContinuationToken { Range = expectedRange, Token = expectedToken };
             string continuation = JsonConvert.SerializeObject(compositeContinuationToken);
             PartitionRoutingHelper partitionRoutingHelper = new PartitionRoutingHelper();
-            DictionaryNameValueCollection headers = new DictionaryNameValueCollection();
+            StoreRequestNameValueCollection headers = new StoreRequestNameValueCollection();
             headers.Add(HttpConstants.HttpHeaders.Continuation, continuation);
             Range<string> range = partitionRoutingHelper.ExtractPartitionKeyRangeFromContinuationToken(headers, out List<CompositeContinuationToken> compositeContinuationTokens);
             Assert.IsTrue(expectedRange.Equals(range));
@@ -219,6 +214,52 @@ namespace Microsoft.Azure.Cosmos.Tests
         }
 
         [TestMethod]
+        public async Task GetTargetRangeFromContinuationTokenNonExistentContainer()
+        {
+            List<Range<string>> providedRanges = new List<Range<string>> {
+                    new Range<string>(
+                        PartitionKeyInternal.MinimumInclusiveEffectivePartitionKey,
+                        PartitionKeyInternal.MaximumExclusiveEffectivePartitionKey,
+                        isMinInclusive: true,
+                        isMaxInclusive: false)
+                };
+
+            //Not empty
+            Range<string> range = new Range<string>("A", "B", true, false);
+            List<CompositeContinuationToken> suppliedTokens = new List<CompositeContinuationToken>
+                {
+                    new CompositeContinuationToken{ Range = range }
+                };
+
+            IReadOnlyList<PartitionKeyRange> overlappingRanges = new List<PartitionKeyRange> {
+                new PartitionKeyRange { Id = "0", MinInclusive = "A", MaxExclusive = "B" },
+                new PartitionKeyRange { Id = "1", MinInclusive = "B", MaxExclusive = "C" }
+            }.AsReadOnly();
+
+            Mock<IRoutingMapProvider> routingMapProvider = new Mock<IRoutingMapProvider>();
+            routingMapProvider
+                .SetupSequence(m => m.TryGetOverlappingRangesAsync(
+                    It.IsAny<string>(),
+                    It.Is<Range<string>>(x => x.Min == range.Min),
+                    It.IsAny<bool>()))
+                .Returns(Task.FromResult((IReadOnlyList<PartitionKeyRange>)overlappingRanges.Skip(1).ToList()))
+                .Returns(Task.FromResult((IReadOnlyList<PartitionKeyRange>)null));
+
+            PartitionRoutingHelper partitionRoutingHelper = new PartitionRoutingHelper();
+            ResolvedRangeInfo resolvedRangeInfo = await partitionRoutingHelper.TryGetTargetRangeFromContinuationTokenRangeAsync(
+                providedRanges,
+                routingMapProvider.Object,
+                CollectionId,
+                range,
+                suppliedTokens,
+                RntdbEnumerationDirection.Reverse);
+
+            Assert.IsNotNull(resolvedRangeInfo);
+            Assert.IsNull(resolvedRangeInfo.ResolvedRange);
+            Assert.IsNull(resolvedRangeInfo.ContinuationTokens);
+        }
+
+        [TestMethod]
         public async Task GetTargetRangeFromContinuationTokenOnSplit()
         {
             const string Token = "token";
@@ -324,7 +365,7 @@ namespace Microsoft.Azure.Cosmos.Tests
 
             //Reverse
             PartitionRoutingHelper partitionRoutingHelper = new PartitionRoutingHelper();
-            DictionaryNameValueCollection headers = new DictionaryNameValueCollection();
+            StoreRequestNameValueCollection headers = new StoreRequestNameValueCollection();
             bool result = await partitionRoutingHelper.TryAddPartitionKeyRangeToContinuationTokenAsync(
                 headers,
                 providedRanges,
@@ -348,7 +389,7 @@ namespace Microsoft.Azure.Cosmos.Tests
                 It.IsAny<Range<string>>(),
                 It.IsAny<bool>()
             )).Returns(Task.FromResult((IReadOnlyList<PartitionKeyRange>)overlappingRanges.Skip(2).ToList())).Verifiable();
-            headers = new DictionaryNameValueCollection();
+            headers = new StoreRequestNameValueCollection();
             result = await partitionRoutingHelper.TryAddPartitionKeyRangeToContinuationTokenAsync(
                  headers,
                  providedRanges,
@@ -379,7 +420,7 @@ namespace Microsoft.Azure.Cosmos.Tests
             )).Returns(Task.FromResult<IReadOnlyList<PartitionKeyRange>>(null)).Verifiable();
 
             PartitionRoutingHelper partitionRoutingHelper = new PartitionRoutingHelper();
-            DictionaryNameValueCollection headers = new DictionaryNameValueCollection();
+            StoreRequestNameValueCollection headers = new StoreRequestNameValueCollection();
             headers.Add(HttpConstants.HttpHeaders.Continuation, "something");
             bool result = await partitionRoutingHelper.TryAddPartitionKeyRangeToContinuationTokenAsync(
                 headers,
@@ -401,7 +442,7 @@ namespace Microsoft.Azure.Cosmos.Tests
         public async Task AddPartitionKeyRangeToContinuationTokenOnSplit()
         {
             const string BackendToken = "backendToken";
-            DictionaryNameValueCollection headers = new DictionaryNameValueCollection();
+            StoreRequestNameValueCollection headers = new StoreRequestNameValueCollection();
             List<CompositeContinuationToken> compositeContinuationTokensFromSplit = new List<CompositeContinuationToken>
             {
                 new CompositeContinuationToken{ Token = "someToken", Range = new Range<string>("A", "B", true, false) },
@@ -466,7 +507,7 @@ namespace Microsoft.Azure.Cosmos.Tests
             )).Returns(Task.FromResult(overlappingRanges)).Verifiable();
 
             PartitionRoutingHelper partitionRoutingHelper = new PartitionRoutingHelper();
-            DictionaryNameValueCollection headers = new DictionaryNameValueCollection();
+            StoreRequestNameValueCollection headers = new StoreRequestNameValueCollection();
             bool result = await partitionRoutingHelper.TryAddPartitionKeyRangeToContinuationTokenAsync(
                 headers,
                 providedRanges,
@@ -495,7 +536,7 @@ namespace Microsoft.Azure.Cosmos.Tests
                 It.IsAny<Range<string>>(),
                 It.IsAny<bool>()
             )).Returns(Task.FromResult(overlappingRanges));
-            headers = new DictionaryNameValueCollection();
+            headers = new StoreRequestNameValueCollection();
 
             result = await partitionRoutingHelper.TryAddPartitionKeyRangeToContinuationTokenAsync(
                  headers,
@@ -564,7 +605,7 @@ namespace Microsoft.Azure.Cosmos.Tests
         [TestMethod]
         public async Task InvalidPartitionRetryPolicyWithNextRetryPolicy()
         {
-            CosmosClient client = MockCosmosUtil.CreateMockCosmosClient();
+            using CosmosClient client = MockCosmosUtil.CreateMockCosmosClient();
             Mock<IDocumentClientRetryPolicy> nextRetryPolicyMock = new Mock<IDocumentClientRetryPolicy>();
 
             nextRetryPolicyMock
@@ -593,7 +634,7 @@ namespace Microsoft.Azure.Cosmos.Tests
         [TestMethod]
         public async Task InvalidPartitionRetryPolicyWithoutNextRetryPolicy()
         {
-            CosmosClient client = MockCosmosUtil.CreateMockCosmosClient();
+            using CosmosClient client = MockCosmosUtil.CreateMockCosmosClient();
 
             InvalidPartitionExceptionRetryPolicy retryPolicyMock = new InvalidPartitionExceptionRetryPolicy( null);
 

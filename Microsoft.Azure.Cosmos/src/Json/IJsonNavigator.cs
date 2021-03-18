@@ -5,7 +5,6 @@ namespace Microsoft.Azure.Cosmos.Json
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.Azure.Cosmos.Query.Core;
 
     /// <summary>
     /// JsonNavigator interface for classes that can navigate jsons.
@@ -46,9 +45,9 @@ namespace Microsoft.Azure.Cosmos.Json
         /// Tries to get the buffered string value from a node.
         /// </summary>
         /// <param name="stringNode">The node to get the buffered string from.</param>
-        /// <param name="bufferedUtf8StringValue">The buffered string value if possible</param>
+        /// <param name="value">The buffered string value if possible</param>
         /// <returns><code>true</code> if the JsonNavigator successfully got the buffered string value; <code>false</code> if the JsonNavigator failed to get the buffered string value.</returns>
-        bool TryGetBufferedUtf8StringValue(IJsonNavigatorNode stringNode, out ReadOnlyMemory<byte> bufferedUtf8StringValue);
+        bool TryGetBufferedStringValue(IJsonNavigatorNode stringNode, out Utf8Memory value);
 
         /// <summary>
         /// Gets a string value from a node.
@@ -176,11 +175,17 @@ namespace Microsoft.Azure.Cosmos.Json
         IEnumerable<ObjectProperty> GetObjectProperties(IJsonNavigatorNode objectNode);
 
         /// <summary>
-        /// Tries to get the buffered raw json
+        /// Creates an <see cref="IJsonReader"/> that is able to read the supplied <see cref="IJsonNavigatorNode"/>.
         /// </summary>
-        /// <param name="jsonNode">The json node of interest</param>
-        /// <param name="bufferedRawJson">The raw json.</param>
-        /// <returns>True if bufferedRawJson was set. False otherwise.</returns>
-        bool TryGetBufferedRawJson(IJsonNavigatorNode jsonNode, out ReadOnlyMemory<byte> bufferedRawJson);
+        /// <param name="jsonNavigatorNode">The node to create a reader from..</param>
+        /// <returns>The <see cref="IJsonReader"/> that is able to read the supplied <see cref="IJsonNavigatorNode"/>.</returns>
+        public IJsonReader CreateReader(IJsonNavigatorNode jsonNavigatorNode);
+
+        /// <summary>
+        /// Writes a <see cref="IJsonNavigatorNode"/> to a <see cref="IJsonWriter"/>.
+        /// </summary>
+        /// <param name="jsonNavigatorNode">The <see cref="IJsonNavigatorNode"/> to write.</param>
+        /// <param name="jsonWriter">The <see cref="IJsonWriter"/> to write to.</param>
+        void WriteNode(IJsonNavigatorNode jsonNavigatorNode, IJsonWriter jsonWriter);
     }
 }

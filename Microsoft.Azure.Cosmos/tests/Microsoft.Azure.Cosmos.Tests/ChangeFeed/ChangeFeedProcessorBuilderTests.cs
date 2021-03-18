@@ -59,12 +59,10 @@ namespace Microsoft.Azure.Cosmos.ChangeFeed.Tests
             Action<DocumentServiceLeaseStoreManager,
                 Container,
                 string,
-                string,
                 ChangeFeedLeaseOptions,
                 ChangeFeedProcessorOptions,
                 Container> verifier = (DocumentServiceLeaseStoreManager leaseStoreManager,
                 Container leaseContainer,
-                string leaseContainerPrefix,
                 string instanceName,
                 ChangeFeedLeaseOptions changeFeedLeaseOptions,
                 ChangeFeedProcessorOptions changeFeedProcessorOptions,
@@ -89,12 +87,10 @@ namespace Microsoft.Azure.Cosmos.ChangeFeed.Tests
             Action<DocumentServiceLeaseStoreManager,
                 Container,
                 string,
-                string,
                 ChangeFeedLeaseOptions,
                 ChangeFeedProcessorOptions,
                 Container> verifier = (DocumentServiceLeaseStoreManager leaseStoreManager,
                 Container leaseContainer,
-                string leaseContainerPrefix,
                 string instanceName,
                 ChangeFeedLeaseOptions changeFeedLeaseOptions,
                 ChangeFeedProcessorOptions changeFeedProcessorOptions,
@@ -120,12 +116,10 @@ namespace Microsoft.Azure.Cosmos.ChangeFeed.Tests
             Action<DocumentServiceLeaseStoreManager,
                 Container,
                 string,
-                string,
                 ChangeFeedLeaseOptions,
                 ChangeFeedProcessorOptions,
                 Container> verifier = (DocumentServiceLeaseStoreManager leaseStoreManager,
                 Container leaseContainer,
-                string leaseContainerPrefix,
                 string instanceName,
                 ChangeFeedLeaseOptions changeFeedLeaseOptions,
                 ChangeFeedProcessorOptions changeFeedProcessorOptions,
@@ -157,12 +151,10 @@ namespace Microsoft.Azure.Cosmos.ChangeFeed.Tests
             Action<DocumentServiceLeaseStoreManager,
                 Container,
                 string,
-                string,
                 ChangeFeedLeaseOptions,
                 ChangeFeedProcessorOptions,
                 Container> verifier = (DocumentServiceLeaseStoreManager leaseStoreManager,
                 Container leaseContainer,
-                string leaseContainerPrefix,
                 string instanceName,
                 ChangeFeedLeaseOptions changeFeedLeaseOptions,
                 ChangeFeedProcessorOptions changeFeedProcessorOptions,
@@ -228,10 +220,10 @@ namespace Microsoft.Azure.Cosmos.ChangeFeed.Tests
             Assert.IsInstanceOfType(builder.Build(), typeof(ChangeFeedProcessor));
         }
 
-        private static ContainerInlineCore GetMockedContainer(string containerName = null)
+        private static ContainerInternal GetMockedContainer(string containerName = null)
         {
-            Mock<ContainerCore> mockedContainer = MockCosmosUtil.CreateMockContainer(containerName: containerName);
-            return new ContainerInlineCore(mockedContainer.Object);
+            Mock<ContainerInternal> mockedContainer = MockCosmosUtil.CreateMockContainer(containerName: containerName);
+            return mockedContainer.Object;
         }
 
         private static ChangeFeedProcessor GetMockedProcessor()
@@ -240,11 +232,10 @@ namespace Microsoft.Azure.Cosmos.ChangeFeed.Tests
             return mockedChangeFeedProcessor.Object;
         }
 
-        private static Action<DocumentServiceLeaseStoreManager, Container, string, string, ChangeFeedLeaseOptions, ChangeFeedProcessorOptions, Container> GetEmptyInitialization()
+        private static Action<DocumentServiceLeaseStoreManager, Container, string, ChangeFeedLeaseOptions, ChangeFeedProcessorOptions, Container> GetEmptyInitialization()
         {
             return (DocumentServiceLeaseStoreManager leaseStoreManager, 
                 Container leaseContainer, 
-                string leaseContainerPrefix, 
                 string instanceName, 
                 ChangeFeedLeaseOptions changeFeedLeaseOptions,
                 ChangeFeedProcessorOptions changeFeedProcessorOptions,

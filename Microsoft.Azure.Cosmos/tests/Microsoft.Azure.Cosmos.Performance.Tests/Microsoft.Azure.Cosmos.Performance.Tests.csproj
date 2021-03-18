@@ -2,18 +2,25 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Microsoft.Azure.Cosmos</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\Microsoft.Azure.Cosmos.Tests\Json\JsonTestUtils.cs" Link="JsonTestUtils.cs" />
+    <Compile Include="..\Microsoft.Azure.Cosmos.Tests\Json\JsonTokenInfo.cs" Link="Json\JsonTokenInfo.cs" />
+    <Compile Include="..\Microsoft.Azure.Cosmos.Tests\Poco\Person.cs" Link="Models\Person.cs" />
+    <Compile Include="..\Microsoft.Azure.Cosmos.Tests\Utils\TextFileConcatenation.cs" Link="TextFileConcatenation.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0" />
     <PackageReference Include="Moq" Version="4.13.1" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,9 +33,57 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="samplepayload.json">
+    <None Update="Contracts\BenchmarkResults.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Json\CuratedDocsBenchmark.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CuratedDocsBenchmark.cs</LastGenOutput>
+    </None>
+    <None Update="Json\Utf8vsUtf16StringBenchmark.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Utf8vsUtf16StringBenchmark.cs</LastGenOutput>
+    </None>
+    <None Update="Json\Utf8vsUtf16StringBenchmarkGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Utf8vsUtf16StringBenchmarkGenerator.cs</LastGenOutput>
+    </None>
+    <None Update="samplepayload.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="samplefeedpayload.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Microsoft.Azure.Cosmos.Tests\TestJsons\**\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>TestJsons\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </None>
+    <None Include="..\Microsoft.Azure.Cosmos.Tests\TestJsons\**\*.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>TestJsons\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Json\CuratedDocsBenchmark.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CuratedDocsBenchmark.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Json\Utf8vsUtf16StringBenchmark.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Utf8vsUtf16StringBenchmark.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Json\Utf8vsUtf16StringBenchmarkGenerator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Utf8vsUtf16StringBenchmarkGenerator.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <PropertyGroup>

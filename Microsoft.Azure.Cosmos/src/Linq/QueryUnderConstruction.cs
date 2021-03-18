@@ -8,10 +8,11 @@ namespace Microsoft.Azure.Cosmos.Linq
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Text;
-    using Microsoft.Azure.Cosmos.Sql;
+    using Microsoft.Azure.Cosmos.SqlObjects;
     using static FromParameterBindings;
     using static Microsoft.Azure.Cosmos.Linq.ExpressionToSql;
 
@@ -377,10 +378,10 @@ namespace Microsoft.Azure.Cosmos.Linq
                     return SqlSelectClause.Create(selValueReplacement, topSpec, selectClause.HasDistinct || inputSelectClause.HasDistinct);
                 }
 
-                throw new DocumentQueryException("Unexpected SQL select clause type: " + intoSpec.Kind);
+                throw new DocumentQueryException("Unexpected SQL select clause type: " + intoSpec.GetType());
             }
 
-            throw new DocumentQueryException("Unexpected SQL select clause type: " + selectSpec.Kind);
+            throw new DocumentQueryException("Unexpected SQL select clause type: " + selectSpec.GetType());
         }
 
         private SqlWhereClause Substitute(SqlSelectSpec spec, SqlIdentifier inputParam, SqlWhereClause whereClause)
@@ -407,7 +408,7 @@ namespace Microsoft.Azure.Cosmos.Linq
                 }
             }
 
-            throw new DocumentQueryException("Unexpected SQL select clause type: " + spec.Kind);
+            throw new DocumentQueryException("Unexpected SQL select clause type: " + spec.GetType());
         }
 
         private SqlOrderbyClause Substitute(SqlSelectSpec spec, SqlIdentifier inputParam, SqlOrderbyClause orderByClause)
@@ -426,7 +427,7 @@ namespace Microsoft.Azure.Cosmos.Linq
             if (selValue != null)
             {
                 SqlScalarExpression replaced = selValue.Expression;
-                SqlOrderByItem[] substitutedItems = new SqlOrderByItem[orderByClause.OrderbyItems.Count];
+                SqlOrderByItem[] substitutedItems = new SqlOrderByItem[orderByClause.OrderbyItems.Length];
                 for (int i = 0; i < substitutedItems.Length; ++i)
                 {
                     SqlScalarExpression substituted = SqlExpressionManipulation.Substitute(replaced, inputParam, orderByClause.OrderbyItems[i].Expression);
@@ -436,7 +437,7 @@ namespace Microsoft.Azure.Cosmos.Linq
                 return result;
             }
 
-            throw new DocumentQueryException("Unexpected SQL select clause type: " + spec.Kind);
+            throw new DocumentQueryException("Unexpected SQL select clause type: " + spec.GetType());
         }
 
         /// <summary>
@@ -584,7 +585,7 @@ namespace Microsoft.Azure.Cosmos.Linq
         {
             List<SqlOrderByItem> items = new List<SqlOrderByItem>(context.currentQuery.orderByClause.OrderbyItems);
             items.AddRange(thenBy.OrderbyItems);
-            context.currentQuery.orderByClause = SqlOrderbyClause.Create(items);
+            context.currentQuery.orderByClause = SqlOrderbyClause.Create(items.ToImmutableArray());
 
             foreach (Binding binding in context.CurrentSubqueryBinding.TakeBindings()) context.currentQuery.AddBinding(binding);
 

@@ -53,15 +53,17 @@ namespace Microsoft.Azure.Cosmos.Tests
                 requestCharge: requestCharge,
                 errorMessage: null,
                 method: HttpMethod.Post,
-                requestUri: new Uri("http://localhost.com"),
+                requestUri: "http://localhost.com",
                 requestSessionToken: null,
                 responseSessionToken: null));
             IReadOnlyCollection<QueryPageDiagnostics> diagnostics = new List<QueryPageDiagnostics>()
             {
-                new QueryPageDiagnostics("0",
-                "SomeQueryMetricText",
-                "SomeIndexUtilText",
-                diagnosticsContext)
+                new QueryPageDiagnostics(
+                    Guid.NewGuid(),
+                    "0",
+                    "SomeQueryMetricText",
+                    "SomeIndexUtilText",
+                    diagnosticsContext)
             };
 
             QueryResponseCore message = QueryResponseCore.CreateSuccess(
@@ -110,15 +112,17 @@ namespace Microsoft.Azure.Cosmos.Tests
                 requestCharge: 4,
                 errorMessage: null,
                 method: HttpMethod.Post,
-                requestUri: new Uri("http://localhost.com"),
+                requestUri: "http://localhost.com",
                 requestSessionToken: null,
                 responseSessionToken: null));
             IReadOnlyCollection<QueryPageDiagnostics> diagnostics = new List<QueryPageDiagnostics>()
             {
-                new QueryPageDiagnostics("0",
-                "SomeQueryMetricText",
-                "SomeIndexUtilText",
-                diagnosticsContext)
+                new QueryPageDiagnostics(
+                    Guid.NewGuid(),
+                    "0",
+                    "SomeQueryMetricText",
+                    "SomeIndexUtilText",
+                    diagnosticsContext)
             };
 
             QueryResponseCore message = QueryResponseCore.CreateSuccess(
@@ -153,15 +157,17 @@ namespace Microsoft.Azure.Cosmos.Tests
                 requestCharge: 10.4,
                 errorMessage: null,
                 method: HttpMethod.Post,
-                requestUri: new Uri("http://localhost.com"),
+                requestUri: "http://localhost.com",
                 requestSessionToken: null,
                 responseSessionToken: null));
             IReadOnlyCollection<QueryPageDiagnostics> diagnostics = new List<QueryPageDiagnostics>()
             {
-                new QueryPageDiagnostics("0",
-                "SomeQueryMetricText",
-                "SomeIndexUtilText",
-                diagnosticsContext)
+                new QueryPageDiagnostics(
+                    Guid.NewGuid(),
+                    "0",
+                    "SomeQueryMetricText",
+                    "SomeIndexUtilText",
+                    diagnosticsContext)
             };
 
             QueryResponseCore splitResponse = QueryResponseCore.CreateFailure(

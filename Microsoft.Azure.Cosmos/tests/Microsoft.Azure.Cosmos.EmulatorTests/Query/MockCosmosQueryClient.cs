@@ -4,17 +4,16 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Azure.Cosmos.Query.Core;
-    using Microsoft.Azure.Cosmos.Query.Core.Metrics;
-    using Microsoft.Azure.Cosmos.Query.Core.QueryClient;
     using Microsoft.Azure.Cosmos.Query.Core.QueryPlan;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Cosmos.Diagnostics;
+    using Microsoft.Azure.Cosmos.Query.Core.Monads;
+    using Microsoft.Azure.Cosmos.Query.Core.Pipeline;
 
     /// <summary>
     /// A helper that forces the SDK to use the gateway or the service interop for the query plan
     /// </summary>
-    internal class MockCosmosQueryClient : CosmosQueryClientCore
+    internal sealed class MockCosmosQueryClient : CosmosQueryClientCore
     {
         /// <summary>
         /// True it will use the gateway query plan.
@@ -24,7 +23,7 @@
 
         public MockCosmosQueryClient(
             CosmosClientContext clientContext,
-            ContainerCore cosmosContainerCore,
+            ContainerInternal cosmosContainerCore,
             bool forceQueryPlanGatewayElseServiceInterop) : base(
                 clientContext,
                 cosmosContainerCore)
@@ -34,13 +33,13 @@
 
         public int QueryPlanCalls { get; private set; }
 
-        internal override bool ByPassQueryParsing()
+        public override bool ByPassQueryParsing()
         {
             return this.forceQueryPlanGatewayElseServiceInterop;
         }
 
-        internal override Task<PartitionedQueryExecutionInfo> ExecuteQueryPlanRequestAsync(
-            Uri resourceUri,
+        public override Task<PartitionedQueryExecutionInfo> ExecuteQueryPlanRequestAsync(
+            string resourceUri,
             ResourceType resourceType,
             OperationType operationType,
             SqlQuerySpec sqlQuerySpec,
@@ -61,10 +60,11 @@
                 cancellationToken);
         }
 
-        internal override Task<QueryResponseCore> ExecuteItemQueryAsync(
-            Uri resourceUri,
+        public override Task<TryCatch<QueryPage>> ExecuteItemQueryAsync(
+            string resourceUri,
             ResourceType resourceType,
             OperationType operationType,
+            Guid clientQueryCorrelationId,
             QueryRequestOptions requestOptions,
             Action<QueryPageDiagnostics> queryPageDiagnostics,
             SqlQuerySpec sqlQuerySpec,
@@ -74,13 +74,11 @@
             int pageSize,
             CancellationToken cancellationToken)
         {
-            Assert.IsFalse(
-                this.forceQueryPlanGatewayElseServiceInterop && this.QueryPlanCalls == 0,
-                "Query Plan is force gateway mode, but no ExecuteQueryPlanRequestAsync have been called");
             return base.ExecuteItemQueryAsync(
                 resourceUri: resourceUri,
                 resourceType: resourceType,
                 operationType: operationType,
+                clientQueryCorrelationId: clientQueryCorrelationId,
                 requestOptions: requestOptions,
                 queryPageDiagnostics: queryPageDiagnostics,
                 sqlQuerySpec: sqlQuerySpec,

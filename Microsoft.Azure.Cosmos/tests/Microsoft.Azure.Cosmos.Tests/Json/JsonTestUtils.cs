@@ -8,32 +8,37 @@
 
     internal static class JsonTestUtils
     {
-        public static byte[] ConvertTextToBinary(string text, JsonStringDictionary jsonStringDictionary = null)
+        public static byte[] ConvertTextToBinary(string text)
         {
-            IJsonWriter binaryWriter = JsonWriter.Create(JsonSerializationFormat.Binary, jsonStringDictionary);
+            IJsonWriter binaryWriter = JsonWriter.Create(JsonSerializationFormat.Binary);
             IJsonReader textReader = JsonReader.Create(Encoding.UTF8.GetBytes(text));
-            binaryWriter.WriteAll(textReader);
+            textReader.WriteAll(binaryWriter);
             return binaryWriter.GetResult().ToArray();
         }
 
-        public static string ConvertBinaryToText(byte[] binary, JsonStringDictionary jsonStringDictionary = null)
+        public static string ConvertBinaryToText(ReadOnlyMemory<byte> binary)
         {
-            IJsonReader binaryReader = JsonReader.Create(binary, jsonStringDictionary);
+            IJsonReader binaryReader = JsonReader.Create(binary);
             IJsonWriter textWriter = JsonWriter.Create(JsonSerializationFormat.Text);
-            textWriter.WriteAll(binaryReader);
+            binaryReader.WriteAll(textWriter);
             return Encoding.UTF8.GetString(textWriter.GetResult().ToArray());
         }
 
-        public static string RandomSampleJson(string json)
+        public static string RandomSampleJson(
+            string json,
+            int? seed = null,
+            int maxNumberOfItems = 10)
         {
             Newtonsoft.Json.Linq.JToken root = (Newtonsoft.Json.Linq.JToken)Newtonsoft.Json.JsonConvert.DeserializeObject(json);
-            Random random = new Random();
+            Random random = seed.HasValue ? new Random(seed.Value) : new Random();
 
             string sampledJson;
             if(root.Type == Newtonsoft.Json.Linq.JTokenType.Array)
             {
                 Newtonsoft.Json.Linq.JArray array = (Newtonsoft.Json.Linq.JArray)root;
-                IEnumerable<Newtonsoft.Json.Linq.JToken> tokens = array.OrderBy(x => random.Next()).Take(1);
+                IEnumerable<Newtonsoft.Json.Linq.JToken> tokens = array
+                    .OrderBy(x => random.Next())
+                    .Take(random.Next(maxNumberOfItems));
                 Newtonsoft.Json.Linq.JArray newArray = new Newtonsoft.Json.Linq.JArray();
                 foreach (Newtonsoft.Json.Linq.JToken token in tokens)
                 {
@@ -48,7 +53,7 @@
                 IEnumerable<Newtonsoft.Json.Linq.JProperty> properties = jobject
                     .Properties()
                     .OrderBy(x => random.Next())
-                    .Take(1);
+                    .Take(maxNumberOfItems);
                 Newtonsoft.Json.Linq.JObject newObject = new Newtonsoft.Json.Linq.JObject();
                 foreach(Newtonsoft.Json.Linq.JProperty property in properties)
                 {

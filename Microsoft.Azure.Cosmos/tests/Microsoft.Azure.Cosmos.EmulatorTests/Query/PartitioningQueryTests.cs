@@ -1,6 +1,4 @@
-﻿
-
-namespace Microsoft.Azure.Cosmos.EmulatorTests.Query
+﻿namespace Microsoft.Azure.Cosmos.EmulatorTests.Query
 {
     using System;
     using System.Collections.Generic;
@@ -75,6 +73,7 @@ namespace Microsoft.Azure.Cosmos.EmulatorTests.Query
                         (@"SELECT TOP 10 VALUE r FROM Root r JOIN c IN r.shortArray WHERE c.a BETWEEN 5 and 7", expectedResult),
                         ($@"SELECT * FROM Root r WHERE r.id IN (""{expected[0]}"", ""{expected[1]}"", ""{expected[2]}"") ORDER BY r.prop", expectedOrderByResult),
                         (@"SELECT * FROM Root r WHERE r.prop BETWEEN 1 AND 3 ORDER BY r.prop", expectedOrderByResult),
+                        (@"SELECT DISTINCT * FROM Root r WHERE r.prop BETWEEN 1 AND 3 ORDER BY r.prop", expectedOrderByResult),
                         (@"SELECT VALUE r FROM Root r JOIN c IN r.shortArray WHERE c.a BETWEEN 5 and 7 ORDER BY r.prop", expectedOrderByResult),
                     };
 
@@ -139,19 +138,21 @@ namespace Microsoft.Azure.Cosmos.EmulatorTests.Query
             async Task ImplementationAsync(Container container, IReadOnlyList<CosmosObject> documents)
             {
                 // Query with partition key should be done in one round trip.
-                FeedIterator<dynamic> resultSetIterator = container.GetItemQueryIterator<dynamic>(
-                    "SELECT * FROM c WHERE c.pk = 'doc5'");
+                using (FeedIterator<dynamic> resultSetIterator = container.GetItemQueryIterator<dynamic>(
+                    "SELECT * FROM c WHERE c.pk = 'doc5'"))
+                {
+                    FeedResponse<dynamic> response = await resultSetIterator.ReadNextAsync();
+                    Assert.AreEqual(1, response.Count());
+                    Assert.IsNull(response.ContinuationToken);
+                }
 
-                FeedResponse<dynamic> response = await resultSetIterator.ReadNextAsync();
-                Assert.AreEqual(1, response.Count());
-                Assert.IsNull(response.ContinuationToken);
-
-                resultSetIterator = container.GetItemQueryIterator<dynamic>(
-                   "SELECT * FROM c WHERE c.pk = 'doc10'");
-
-                response = await resultSetIterator.ReadNextAsync();
-                Assert.AreEqual(0, response.Count());
-                Assert.IsNull(response.ContinuationToken);
+                using (FeedIterator<dynamic> resultSetIterator = container.GetItemQueryIterator<dynamic>(
+                       "SELECT * FROM c WHERE c.pk = 'doc10'"))
+                {
+                    FeedResponse<dynamic> response = await resultSetIterator.ReadNextAsync();
+                    Assert.AreEqual(0, response.Count());
+                    Assert.IsNull(response.ContinuationToken);
+                }
             }
         }
 
@@ -415,9 +416,9 @@ namespace Microsoft.Azure.Cosmos.EmulatorTests.Query
             public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, JsonSerializer serializer)
             {
                 int seconds;
-                if (value is DateTime)
+                if (value is DateTime time)
                 {
-                    seconds = DateTimeToEpoch((DateTime)value);
+                    seconds = DateTimeToEpoch(time);
                 }
                 else
                 {

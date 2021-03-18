@@ -14,26 +14,30 @@ namespace Microsoft.Azure.Cosmos
     using Microsoft.Azure.Cosmos.Common;
     using Microsoft.Azure.Cosmos.CosmosElements;
     using Microsoft.Azure.Cosmos.Diagnostics;
+    using Microsoft.Azure.Cosmos.Json;
     using Microsoft.Azure.Cosmos.Query.Core;
     using Microsoft.Azure.Cosmos.Query.Core.Monads;
+    using Microsoft.Azure.Cosmos.Query.Core.Pipeline;
     using Microsoft.Azure.Cosmos.Query.Core.QueryClient;
     using Microsoft.Azure.Cosmos.Query.Core.QueryPlan;
     using Microsoft.Azure.Cosmos.Routing;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Routing;
+    using Newtonsoft.Json;
     using static Microsoft.Azure.Documents.RuntimeConstants;
 
     internal class CosmosQueryClientCore : CosmosQueryClient
     {
+        private const string QueryExecutionInfoHeader = "x-ms-cosmos-query-execution-info";
+
         private readonly CosmosClientContext clientContext;
-        private readonly ContainerCore cosmosContainerCore;
+        private readonly ContainerInternal cosmosContainerCore;
         private readonly DocumentClient documentClient;
         private readonly SemaphoreSlim semaphore;
-        private QueryPartitionProvider queryPartitionProvider;
 
-        internal CosmosQueryClientCore(
+        public CosmosQueryClientCore(
             CosmosClientContext clientContext,
-            ContainerCore cosmosContainerCore)
+            ContainerInternal cosmosContainerCore)
         {
             this.clientContext = clientContext ?? throw new ArgumentException(nameof(clientContext));
             this.cosmosContainerCore = cosmosContainerCore;
@@ -41,22 +45,22 @@ namespace Microsoft.Azure.Cosmos
             this.semaphore = new SemaphoreSlim(1, 1);
         }
 
-        internal override Action<IQueryable> OnExecuteScalarQueryCallback => this.documentClient.OnExecuteScalarQueryCallback;
+        public override Action<IQueryable> OnExecuteScalarQueryCallback => this.documentClient.OnExecuteScalarQueryCallback;
 
-        internal override async Task<ContainerQueryProperties> GetCachedContainerQueryPropertiesAsync(
-            Uri containerLink,
+        public override async Task<ContainerQueryProperties> GetCachedContainerQueryPropertiesAsync(
+            string containerLink,
             PartitionKey? partitionKey,
             CancellationToken cancellationToken)
         {
             ContainerProperties containerProperties = await this.clientContext.GetCachedContainerPropertiesAsync(
-                containerLink.OriginalString,
+                containerLink,
                 cancellationToken);
 
             string effectivePartitionKeyString = null;
             if (partitionKey != null)
             {
                 // Dis-ambiguate the NonePK if used 
-                Documents.Routing.PartitionKeyInternal partitionKeyInternal = null;
+                PartitionKeyInternal partitionKeyInternal;
                 if (partitionKey.Value.IsNone)
                 {
                     partitionKeyInternal = containerProperties.GetNoneValue();
@@ -65,6 +69,7 @@ namespace Microsoft.Azure.Cosmos
                 {
                     partitionKeyInternal = partitionKey.Value.InternalKey;
                 }
+
                 effectivePartitionKeyString = partitionKeyInternal.GetEffectivePartitionKeyString(containerProperties.PartitionKey);
             }
 
@@ -74,7 +79,7 @@ namespace Microsoft.Azure.Cosmos
                 containerProperties.PartitionKey);
         }
 
-        internal override async Task<TryCatch<PartitionedQueryExecutionInfo>> TryGetPartitionedQueryExecutionInfoAsync(
+        public override async Task<TryCatch<PartitionedQueryExecutionInfo>> TryGetPartitionedQueryExecutionInfoAsync(
             SqlQuerySpec sqlQuerySpec,
             PartitionKeyDefinition partitionKeyDefinition,
             bool requireFormattableOrderByQuery,
@@ -83,26 +88,7 @@ namespace Microsoft.Azure.Cosmos
             bool hasLogicalPartitionKey,
             CancellationToken cancellationToken)
         {
-            if (this.queryPartitionProvider == null)
-            {
-                try
-                {
-                    await this.semaphore.WaitAsync(cancellationToken);
-
-                    if (this.queryPartitionProvider == null)
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-                        IDictionary<string, object> queryConfiguration = await this.documentClient.GetQueryEngineConfigurationAsync();
-                        this.queryPartitionProvider = new QueryPartitionProvider(queryConfiguration);
-                    }
-                }
-                finally
-                {
-                    this.semaphore.Release();
-                }
-            }
-
-            return this.queryPartitionProvider.TryGetPartitionedQueryExecutionInfo(
+            return (await this.documentClient.QueryPartitionProvider).TryGetPartitionedQueryExecutionInfo(
                 sqlQuerySpec,
                 partitionKeyDefinition,
                 requireFormattableOrderByQuery,
@@ -111,10 +97,11 @@ namespace Microsoft.Azure.Cosmos
                 hasLogicalPartitionKey);
         }
 
-        internal override async Task<QueryResponseCore> ExecuteItemQueryAsync(
-            Uri resourceUri,
+        public override async Task<TryCatch<QueryPage>> ExecuteItemQueryAsync(
+            string resourceUri,
             ResourceType resourceType,
             OperationType operationType,
+            Guid clientQueryCorrelationId,
             QueryRequestOptions requestOptions,
             Action<QueryPageDiagnostics> queryPageDiagnostics,
             SqlQuerySpec sqlQuerySpec,
@@ -149,7 +136,8 @@ namespace Microsoft.Azure.Cosmos
                 diagnosticsContext: null,
                 cancellationToken: cancellationToken);
 
-            return this.GetCosmosElementResponse(
+            return CosmosQueryClientCore.GetCosmosElementResponse(
+                clientQueryCorrelationId,
                 requestOptions,
                 resourceType,
                 message,
@@ -157,8 +145,8 @@ namespace Microsoft.Azure.Cosmos
                 queryPageDiagnostics);
         }
 
-        internal override async Task<PartitionedQueryExecutionInfo> ExecuteQueryPlanRequestAsync(
-            Uri resourceUri,
+        public override async Task<PartitionedQueryExecutionInfo> ExecuteQueryPlanRequestAsync(
+            string resourceUri,
             ResourceType resourceType,
             OperationType operationType,
             SqlQuerySpec sqlQuerySpec,
@@ -195,7 +183,7 @@ namespace Microsoft.Azure.Cosmos
             return partitionedQueryExecutionInfo;
         }
 
-        internal override Task<List<PartitionKeyRange>> GetTargetPartitionKeyRangesByEpkStringAsync(
+        public override Task<List<PartitionKeyRange>> GetTargetPartitionKeyRangesByEpkStringAsync(
             string resourceLink,
             string collectionResourceId,
             string effectivePartitionKeyString)
@@ -209,7 +197,22 @@ namespace Microsoft.Azure.Cosmos
                 });
         }
 
-        internal override async Task<List<PartitionKeyRange>> GetTargetPartitionKeyRangesAsync(
+        public override async Task<List<PartitionKeyRange>> GetTargetPartitionKeyRangeByFeedRangeAsync(
+            string resourceLink,
+            string collectionResourceId,
+            PartitionKeyDefinition partitionKeyDefinition,
+            FeedRangeInternal feedRangeInternal)
+        {
+            IRoutingMapProvider routingMapProvider = await this.GetRoutingMapProviderAsync();
+            List<Range<string>> ranges = await feedRangeInternal.GetEffectiveRangesAsync(routingMapProvider, collectionResourceId, partitionKeyDefinition);
+
+            return await this.GetTargetPartitionKeyRangesAsync(
+                resourceLink,
+                collectionResourceId,
+                ranges);
+        }
+
+        public override async Task<List<PartitionKeyRange>> GetTargetPartitionKeyRangesAsync(
             string resourceLink,
             string collectionResourceId,
             List<Range<string>> providedRanges)
@@ -248,18 +251,19 @@ namespace Microsoft.Azure.Cosmos
             return ranges;
         }
 
-        internal override bool ByPassQueryParsing()
+        public override bool ByPassQueryParsing()
         {
             return CustomTypeExtensions.ByPassQueryParsing();
         }
 
-        internal override void ClearSessionTokenCache(string collectionFullName)
+        public override void ClearSessionTokenCache(string collectionFullName)
         {
             ISessionContainer sessionContainer = this.clientContext.DocumentClient.sessionContainer;
             sessionContainer.ClearTokenByCollectionFullname(collectionFullName);
         }
 
-        private QueryResponseCore GetCosmosElementResponse(
+        private static TryCatch<QueryPage> GetCosmosElementResponse(
+            Guid clientQueryCorrelationId,
             QueryRequestOptions requestOptions,
             ResourceType resourceType,
             ResponseMessage cosmosResponseMessage,
@@ -269,6 +273,7 @@ namespace Microsoft.Azure.Cosmos
             using (cosmosResponseMessage)
             {
                 QueryPageDiagnostics queryPage = new QueryPageDiagnostics(
+                    clientQueryCorrelationId: clientQueryCorrelationId,
                     partitionKeyRangeId: partitionKeyRangeIdentity.PartitionKeyRangeId,
                     queryMetricText: cosmosResponseMessage.Headers.QueryMetricsText,
                     indexUtilizationText: cosmosResponseMessage.Headers[HttpConstants.HttpHeaders.IndexUtilization],
@@ -277,12 +282,22 @@ namespace Microsoft.Azure.Cosmos
 
                 if (!cosmosResponseMessage.IsSuccessStatusCode)
                 {
-                    return QueryResponseCore.CreateFailure(
-                        statusCode: cosmosResponseMessage.StatusCode,
-                        subStatusCodes: cosmosResponseMessage.Headers.SubStatusCode,
-                        cosmosException: cosmosResponseMessage.CosmosException,
-                        requestCharge: cosmosResponseMessage.Headers.RequestCharge,
-                        activityId: cosmosResponseMessage.Headers.ActivityId);
+                    CosmosException exception;
+                    if (cosmosResponseMessage.CosmosException != null)
+                    {
+                        exception = cosmosResponseMessage.CosmosException;
+                    }
+                    else
+                    {
+                        exception = new CosmosException(
+                            cosmosResponseMessage.ErrorMessage,
+                            cosmosResponseMessage.StatusCode,
+                            (int)cosmosResponseMessage.Headers.SubStatusCode,
+                            cosmosResponseMessage.Headers.ActivityId,
+                            cosmosResponseMessage.Headers.RequestCharge);
+                    }
+
+                    return TryCatch<QueryPage>.FromException(exception);
                 }
 
                 if (!(cosmosResponseMessage.Content is MemoryStream memoryStream))
@@ -292,19 +307,41 @@ namespace Microsoft.Azure.Cosmos
                 }
 
                 long responseLengthBytes = memoryStream.Length;
-                CosmosArray cosmosArray = CosmosElementSerializer.ToCosmosElements(
+                CosmosArray documents = CosmosQueryClientCore.ParseElementsFromRestStream(
                     memoryStream,
                     resourceType,
                     requestOptions.CosmosSerializationFormatOptions);
 
-                int itemCount = cosmosArray.Count;
-                return QueryResponseCore.CreateSuccess(
-                    result: cosmosArray,
-                    requestCharge: cosmosResponseMessage.Headers.RequestCharge,
-                    activityId: cosmosResponseMessage.Headers.ActivityId,
-                    responseLengthBytes: responseLengthBytes,
+                CosmosQueryExecutionInfo cosmosQueryExecutionInfo;
+                if (cosmosResponseMessage.Headers.TryGetValue(QueryExecutionInfoHeader, out string queryExecutionInfoString))
+                {
+                    cosmosQueryExecutionInfo = JsonConvert.DeserializeObject<CosmosQueryExecutionInfo>(queryExecutionInfoString);
+                }
+                else
+                {
+                    cosmosQueryExecutionInfo = default;
+                }
+
+                QueryState queryState;
+                if (cosmosResponseMessage.Headers.ContinuationToken != null)
+                {
+                    queryState = new QueryState(CosmosString.Create(cosmosResponseMessage.Headers.ContinuationToken));
+                }
+                else
+                {
+                    queryState = default;
+                }
+
+                QueryPage response = new QueryPage(
+                    documents,
+                    cosmosResponseMessage.Headers.RequestCharge,
+                    cosmosResponseMessage.Headers.ActivityId,
+                    responseLengthBytes,
+                    cosmosQueryExecutionInfo,
                     disallowContinuationTokenMessage: null,
-                    continuationToken: cosmosResponseMessage.Headers.ContinuationToken);
+                    queryState);
+
+                return TryCatch<QueryPage>.FromResult(response);
             }
         }
 
@@ -332,7 +369,7 @@ namespace Microsoft.Azure.Cosmos
             }
         }
 
-        internal override async Task ForceRefreshCollectionCacheAsync(string collectionLink, CancellationToken cancellationToken)
+        public override async Task ForceRefreshCollectionCacheAsync(string collectionLink, CancellationToken cancellationToken)
         {
             this.ClearSessionTokenCache(collectionLink);
 
@@ -348,7 +385,7 @@ namespace Microsoft.Azure.Cosmos
             }
         }
 
-        internal override async Task<IReadOnlyList<PartitionKeyRange>> TryGetOverlappingRangesAsync(
+        public override async Task<IReadOnlyList<PartitionKeyRange>> TryGetOverlappingRangesAsync(
             string collectionResourceId,
             Range<string> range,
             bool forceRefresh = false)
@@ -360,6 +397,87 @@ namespace Microsoft.Azure.Cosmos
         private Task<PartitionKeyRangeCache> GetRoutingMapProviderAsync()
         {
             return this.documentClient.GetPartitionKeyRangeCacheAsync();
+        }
+
+        /// <summary>
+        /// Converts a list of CosmosElements into a memory stream.
+        /// </summary>
+        /// <param name="memoryStream">The memory stream response for the query REST response Azure Cosmos</param>
+        /// <param name="resourceType">The resource type</param>
+        /// <param name="cosmosSerializationOptions">The custom serialization options. This allows custom serialization types like BSON, JSON, or other formats</param>
+        /// <returns>An array of CosmosElements parsed from the response body.</returns>
+        private static CosmosArray ParseElementsFromRestStream(
+            MemoryStream memoryStream,
+            ResourceType resourceType,
+            CosmosSerializationFormatOptions cosmosSerializationOptions)
+        {
+            if (!memoryStream.CanRead)
+            {
+                throw new InvalidDataException("Stream can not be read");
+            }
+
+            // Parse out the document from the REST response this:
+            // {
+            //    "_rid": "qHVdAImeKAQ=",
+            //    "Documents": [{
+            //        "id": "03230",
+            //        "_rid": "qHVdAImeKAQBAAAAAAAAAA==",
+            //        "_self": "dbs\/qHVdAA==\/colls\/qHVdAImeKAQ=\/docs\/qHVdAImeKAQBAAAAAAAAAA==\/",
+            //        "_etag": "\"410000b0-0000-0000-0000-597916b00000\"",
+            //        "_attachments": "attachments\/",
+            //        "_ts": 1501107886
+            //    }],
+            //    "_count": 1
+            // }
+            // You want to create a CosmosElement for each document in "Documents".
+
+            ReadOnlyMemory<byte> content;
+            if (memoryStream.TryGetBuffer(out ArraySegment<byte> buffer))
+            {
+                content = buffer;
+            }
+            else
+            {
+                content = memoryStream.ToArray();
+            }
+
+            IJsonNavigator jsonNavigator;
+            if (cosmosSerializationOptions != null)
+            {
+                // Use the users custom navigator
+                jsonNavigator = cosmosSerializationOptions.CreateCustomNavigatorCallback(content);
+                if (jsonNavigator == null)
+                {
+                    throw new InvalidOperationException("The CosmosSerializationOptions did not return a JSON navigator.");
+                }
+            }
+            else
+            {
+                jsonNavigator = JsonNavigator.Create(content);
+            }
+
+            string resourceName = resourceType switch
+            {
+                ResourceType.Collection => "DocumentCollections",
+                _ => resourceType.ToResourceTypeString() + "s",
+            };
+
+            if (!jsonNavigator.TryGetObjectProperty(
+                jsonNavigator.GetRootNode(),
+                resourceName,
+                out ObjectProperty objectProperty))
+            {
+                throw new InvalidOperationException($"Response Body Contract was violated. QueryResponse did not have property: {resourceName}");
+            }
+
+            if (!(CosmosElement.Dispatch(
+                jsonNavigator,
+                objectProperty.ValueNode) is CosmosArray cosmosArray))
+            {
+                throw new InvalidOperationException($"QueryResponse did not have an array of : {resourceName}");
+            }
+
+            return cosmosArray;
         }
     }
 }

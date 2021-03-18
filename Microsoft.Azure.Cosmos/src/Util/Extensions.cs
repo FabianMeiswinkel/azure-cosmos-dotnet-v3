@@ -5,7 +5,9 @@
 namespace Microsoft.Azure.Cosmos
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Net;
     using System.Net.Sockets;
     using System.Threading;
@@ -25,14 +27,45 @@ namespace Microsoft.Azure.Cosmos
             return ((int)httpStatusCode >= 200) && ((int)httpStatusCode <= 299);
         }
 
+        public static void Add(this INameValueCollection nameValueCollection, string headerName, IEnumerable<string> values)
+        {
+            if (headerName == null)
+            {
+                throw new ArgumentNullException(nameof(headerName));
+            }
+
+            if (values == null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            nameValueCollection.Add(headerName, string.Join(",", values));
+        }
+
+        public static T GetHeaderValue<T>(this INameValueCollection nameValueCollection, string key)
+        {
+            string value = nameValueCollection[key];
+
+            if (string.IsNullOrEmpty(value))
+            {
+                return default;
+            }
+
+            if (typeof(T) == typeof(double))
+            {
+                return (T)(object)double.Parse(value, CultureInfo.InvariantCulture);
+            }
+
+            return (T)(object)value;
+        }
+
         internal static ResponseMessage ToCosmosResponseMessage(this DocumentServiceResponse documentServiceResponse, RequestMessage requestMessage)
         {
             Debug.Assert(requestMessage != null, nameof(requestMessage));
-            Headers headers = documentServiceResponse.Headers.ToCosmosHeaders();
+            Headers headers = new Headers(documentServiceResponse.Headers);
 
             // Only record point operation stats if ClientSideRequestStats did not record the response.
-            CosmosClientSideRequestStatistics clientSideRequestStatistics = documentServiceResponse.RequestStats as CosmosClientSideRequestStatistics;
-            if (clientSideRequestStatistics == null ||
+            if (!(documentServiceResponse.RequestStats is CosmosClientSideRequestStatistics clientSideRequestStatistics) ||
                 (clientSideRequestStatistics.ContactedReplicas.Count == 0 && clientSideRequestStatistics.FailedReplicas.Count == 0))
             {
                 requestMessage.DiagnosticsContext.AddDiagnosticsInternal(new PointOperationStatistics(
@@ -43,7 +76,7 @@ namespace Microsoft.Azure.Cosmos
                     requestCharge: headers.RequestCharge,
                     errorMessage: null,
                     method: requestMessage?.Method,
-                    requestUri: requestMessage?.RequestUri,
+                    requestUri: requestMessage?.RequestUriString,
                     requestSessionToken: requestMessage?.Headers?.Session,
                     responseSessionToken: headers.Session));
             }
@@ -101,7 +134,7 @@ namespace Microsoft.Azure.Cosmos
                 requestCharge: cosmosException.Headers.RequestCharge,
                 errorMessage: documentClientException.ToString(),
                 method: requestMessage?.Method,
-                requestUri: requestMessage?.RequestUri,
+                requestUri: requestMessage?.RequestUriString,
                 requestSessionToken: requestMessage?.Headers?.Session,
                 responseSessionToken: cosmosException.Headers.Session);
 
@@ -125,21 +158,9 @@ namespace Microsoft.Azure.Cosmos
             return responseMessage;
         }
 
-        internal static Headers ToCosmosHeaders(this INameValueCollection nameValueCollection)
-        {
-            Headers headers = new Headers();
-            foreach (string key in nameValueCollection)
-            {
-                headers.Add(key, nameValueCollection[key]);
-            }
-
-            return headers;
-        }
-
         internal static void TraceException(Exception exception)
         {
-            AggregateException aggregateException = exception as AggregateException;
-            if (aggregateException != null)
+            if (exception is AggregateException aggregateException)
             {
                 foreach (Exception tempException in aggregateException.InnerExceptions)
                 {
@@ -154,10 +175,14 @@ namespace Microsoft.Azure.Cosmos
 
         public static async Task<IDisposable> UsingWaitAsync(
             this SemaphoreSlim semaphoreSlim,
+            CosmosDiagnosticsContext diagnosticsContext,
             CancellationToken cancellationToken)
         {
-            await semaphoreSlim.WaitAsync(cancellationToken).ConfigureAwait(false);
-            return new UsableSemaphoreWrapper(semaphoreSlim);
+            using (diagnosticsContext?.CreateScope(nameof(UsingWaitAsync)))
+            {
+                await semaphoreSlim.WaitAsync(cancellationToken).ConfigureAwait(false);
+                return new UsableSemaphoreWrapper(semaphoreSlim);
+            }
         }
 
         private static void TraceExceptionInternal(Exception exception)
@@ -166,8 +191,7 @@ namespace Microsoft.Azure.Cosmos
             {
                 Uri requestUri = null;
 
-                SocketException socketException = exception as SocketException;
-                if (socketException != null)
+                if (exception is SocketException socketException)
                 {
                     DefaultTrace.TraceWarning(
                         "Exception {0}: RequesteUri: {1}, SocketErrorCode: {2}, {3}, {4}",

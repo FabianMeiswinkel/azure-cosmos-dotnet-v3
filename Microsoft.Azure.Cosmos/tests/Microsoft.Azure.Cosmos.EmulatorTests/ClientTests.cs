@@ -5,9 +5,14 @@
 namespace Microsoft.Azure.Cosmos.SDK.EmulatorTests
 {
     using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Net.Http;
+    using System.Net.NetworkInformation;
+    using System.Reflection;
     using System.Threading.Tasks;
     using Microsoft.Azure.Cosmos.Query.Core;
     using Microsoft.Azure.Cosmos.Services.Management.Tests.LinqProviderTests;
@@ -15,6 +20,7 @@ namespace Microsoft.Azure.Cosmos.SDK.EmulatorTests
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Moq;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
@@ -29,13 +35,13 @@ namespace Microsoft.Azure.Cosmos.SDK.EmulatorTests
 
                 Database db = (await client.CreateDatabaseAsync(new Database() { Id = Guid.NewGuid().ToString() })).Resource;
                 DocumentCollection coll = await TestCommon.CreateCollectionAsync(client, db, new DocumentCollection()
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            PartitionKey = new PartitionKeyDefinition()
-                            {
-                                Paths = new System.Collections.ObjectModel.Collection<string>() { "/id" }
-                            }
-                        });
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    PartitionKey = new PartitionKeyDefinition()
+                    {
+                        Paths = new System.Collections.ObjectModel.Collection<string>() { "/id" }
+                    }
+                });
                 ResourceResponse<Document> doc = await client.CreateDocumentAsync(coll.SelfLink, new Document() { Id = Guid.NewGuid().ToString() });
 
                 Assert.AreEqual(doc.ResponseStream.Position, 0);
@@ -280,7 +286,8 @@ namespace Microsoft.Azure.Cosmos.SDK.EmulatorTests
                 }
             );
 
-            await Assert.ThrowsExceptionAsync<HttpRequestException>(async () => {
+            await Assert.ThrowsExceptionAsync<HttpRequestException>(async () =>
+            {
                 DatabaseResponse databaseResponse = await cosmosClient.CreateDatabaseAsync(Guid.NewGuid().ToString());
             });
 
@@ -297,9 +304,135 @@ namespace Microsoft.Azure.Cosmos.SDK.EmulatorTests
                 }
             );
 
-            await Assert.ThrowsExceptionAsync<HttpRequestException>(async () => {
+            await Assert.ThrowsExceptionAsync<HttpRequestException>(async () =>
+            {
                 DatabaseResponse databaseResponse = await cosmosClient.CreateDatabaseAsync(Guid.NewGuid().ToString());
             });
+        }
+
+        [TestMethod]
+        public async Task HttpClientFactorySmokeTest()
+        {
+            HttpClient client = new HttpClient();
+            Mock<Func<HttpClient>> factory = new Mock<Func<HttpClient>>();
+            factory.Setup(f => f()).Returns(client);
+            CosmosClient cosmosClient = new CosmosClient(
+                ConfigurationManager.AppSettings["GatewayEndpoint"],
+                ConfigurationManager.AppSettings["MasterKey"],
+                new CosmosClientOptions
+                {
+                    ApplicationName = "test",
+                    ConnectionMode = ConnectionMode.Gateway,
+                    ConnectionProtocol = Protocol.Https,
+                    HttpClientFactory = factory.Object
+                }
+            );
+
+            string someId = Guid.NewGuid().ToString();
+            Cosmos.Database database = null;
+            try
+            {
+                database = await cosmosClient.CreateDatabaseAsync(someId);
+                Cosmos.Container container = await database.CreateContainerAsync(Guid.NewGuid().ToString(), "/id");
+                await container.CreateItemAsync<dynamic>(new { id = someId });
+                await container.ReadItemAsync<dynamic>(someId, new Cosmos.PartitionKey(someId));
+                await container.DeleteItemAsync<dynamic>(someId, new Cosmos.PartitionKey(someId));
+                await container.DeleteContainerAsync();
+                Mock.Get(factory.Object).Verify(f => f(), Times.Once);
+            }
+            finally
+            {
+                if (database != null)
+                {
+                    await database.DeleteAsync();
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task HttpClientConnectionLimitTest()
+        {
+            int gatewayConnectionLimit = 1;
+
+            IReadOnlyList<string> excludeConnections = GetActiveConnections();
+            CosmosClient cosmosClient = new CosmosClient(
+                ConfigurationManager.AppSettings["GatewayEndpoint"],
+                ConfigurationManager.AppSettings["MasterKey"],
+                new CosmosClientOptions
+                {
+                    ApplicationName = "test",
+                    GatewayModeMaxConnectionLimit = gatewayConnectionLimit,
+                    ConnectionMode = ConnectionMode.Gateway,
+                    ConnectionProtocol = Protocol.Https
+                }
+            );
+
+            FieldInfo httpClient = cosmosClient.DocumentClient.GetType().GetField("httpClient", BindingFlags.NonPublic | BindingFlags.Instance);
+            CosmosHttpClient cosmosHttpClient = (CosmosHttpClient)httpClient.GetValue(cosmosClient.DocumentClient);
+            HttpClientHandler httpClientHandler = (HttpClientHandler)cosmosHttpClient.HttpMessageHandler;
+            Assert.AreEqual(gatewayConnectionLimit, httpClientHandler.MaxConnectionsPerServer);
+
+            Cosmos.Database database = await cosmosClient.CreateDatabaseAsync(Guid.NewGuid().ToString());
+            Container container = await database.CreateContainerAsync(
+                "TestConnections",
+                "/pk",
+                throughput: 20000);
+
+            List<Task> creates = new List<Task>();
+            for (int i = 0; i < 100; i++)
+            {
+                creates.Add(container.CreateItemAsync<dynamic>(new { id = Guid.NewGuid().ToString(), pk = Guid.NewGuid().ToString() }));
+            }
+
+            await Task.WhenAll(creates);
+
+            // Verify the handler still exists after client warm up
+            //Assert.AreEqual(gatewayConnectionLimit, httpClientHandler.MaxConnectionsPerServer);
+            IReadOnlyList<string> afterConnections = GetActiveConnections();
+
+            // Clean up the database and container
+            await database.DeleteAsync();
+
+            int connectionDiff = afterConnections.Count - excludeConnections.Count;
+            Assert.IsTrue(connectionDiff <= gatewayConnectionLimit, $"Connection before : {excludeConnections.Count}, after {afterConnections.Count}");
+        }
+
+        public static IReadOnlyList<string> GetActiveConnections()
+        {
+            string testPid = Process.GetCurrentProcess().Id.ToString();
+            using (Process p = new Process())
+            {
+                ProcessStartInfo ps = new ProcessStartInfo();
+                ps.Arguments = "-a -n -o";
+                ps.FileName = "netstat.exe";
+                ps.UseShellExecute = false;
+                ps.WindowStyle = ProcessWindowStyle.Hidden;
+                ps.RedirectStandardInput = true;
+                ps.RedirectStandardOutput = true;
+                ps.RedirectStandardError = true;
+
+                p.StartInfo = ps;
+                p.Start();
+
+                StreamReader stdOutput = p.StandardOutput;
+                StreamReader stdError = p.StandardError;
+
+                string content = stdOutput.ReadToEnd() + stdError.ReadToEnd();
+                string exitStatus = p.ExitCode.ToString();
+
+                if (exitStatus != "0")
+                {
+                    // Command Errored. Handle Here If Need Be
+                }
+
+                List<string> connections = content.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim())
+                    .Where(x => x.EndsWith(testPid)).ToList();
+
+                Assert.IsTrue(connections.Count > 0);
+
+                return connections;
+            }
         }
     }
 

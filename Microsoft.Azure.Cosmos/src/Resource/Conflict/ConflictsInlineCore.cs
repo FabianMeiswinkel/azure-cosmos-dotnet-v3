@@ -4,39 +4,38 @@
 
 namespace Microsoft.Azure.Cosmos
 {
-    using System;
     using System.Threading;
     using System.Threading.Tasks;
 
     // This class acts as a wrapper for environments that use SynchronizationContext.
-    internal sealed class ConflictsInlineCore : Conflicts
+    internal sealed class ConflictsInlineCore : ConflictsCore
     {
-        private readonly ConflictsCore conflicts;
-
-        internal ConflictsInlineCore(ConflictsCore conflicts)
+        internal ConflictsInlineCore(
+            CosmosClientContext clientContext,
+            ContainerInternal container)
+            : base(
+                  clientContext,
+                  container)
         {
-            if (conflicts == null)
-            {
-                throw new ArgumentNullException(nameof(conflicts));
-            }
-
-            this.conflicts = conflicts;
         }
 
         public override Task<ResponseMessage> DeleteAsync(
             ConflictProperties conflict,
             PartitionKey partitionKey,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
-            return TaskHelper.RunInlineIfNeededAsync(() => this.conflicts.DeleteAsync(conflict, partitionKey, cancellationToken));
+            return this.ClientContext.OperationHelperAsync(
+                operationName: nameof(DeleteAsync),
+                requestOptions: null,
+                task: (diagnostics) => base.DeleteAsync(diagnostics, conflict, partitionKey, cancellationToken));
         }
 
         public override FeedIterator GetConflictQueryStreamIterator(
-           string queryText = null,
-           string continuationToken = null,
-           QueryRequestOptions requestOptions = null)
+          string queryText = null,
+          string continuationToken = null,
+          QueryRequestOptions requestOptions = null)
         {
-            return new FeedIteratorInlineCore(this.conflicts.GetConflictQueryStreamIterator(
+            return new FeedIteratorInlineCore(base.GetConflictQueryStreamIterator(
                 queryText,
                 continuationToken,
                 requestOptions));
@@ -47,7 +46,7 @@ namespace Microsoft.Azure.Cosmos
             string continuationToken = null,
             QueryRequestOptions requestOptions = null)
         {
-            return new FeedIteratorInlineCore<T>(this.conflicts.GetConflictQueryIterator<T>(
+            return new FeedIteratorInlineCore<T>(base.GetConflictQueryIterator<T>(
                 queryText,
                 continuationToken,
                 requestOptions));
@@ -58,7 +57,7 @@ namespace Microsoft.Azure.Cosmos
             string continuationToken = null,
             QueryRequestOptions requestOptions = null)
         {
-            return new FeedIteratorInlineCore(this.conflicts.GetConflictQueryStreamIterator(
+            return new FeedIteratorInlineCore(base.GetConflictQueryStreamIterator(
                 queryDefinition,
                 continuationToken,
                 requestOptions));
@@ -69,7 +68,7 @@ namespace Microsoft.Azure.Cosmos
             string continuationToken = null,
             QueryRequestOptions requestOptions = null)
         {
-            return new FeedIteratorInlineCore<T>(this.conflicts.GetConflictQueryIterator<T>(
+            return new FeedIteratorInlineCore<T>(base.GetConflictQueryIterator<T>(
                 queryDefinition,
                 continuationToken,
                 requestOptions));
@@ -78,14 +77,17 @@ namespace Microsoft.Azure.Cosmos
         public override Task<ItemResponse<T>> ReadCurrentAsync<T>(
             ConflictProperties cosmosConflict,
             PartitionKey partitionKey,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
-            return TaskHelper.RunInlineIfNeededAsync(() => this.conflicts.ReadCurrentAsync<T>(cosmosConflict, partitionKey, cancellationToken));
+            return this.ClientContext.OperationHelperAsync(
+                operationName: nameof(ReadCurrentAsync),
+                requestOptions: null,
+                task: (diagnostics) => base.ReadCurrentAsync<T>(diagnostics, cosmosConflict, partitionKey, cancellationToken));
         }
 
         public override T ReadConflictContent<T>(ConflictProperties cosmosConflict)
         {
-            return this.conflicts.ReadConflictContent<T>(cosmosConflict);
+            return base.ReadConflictContent<T>(cosmosConflict);
         }
     }
 }

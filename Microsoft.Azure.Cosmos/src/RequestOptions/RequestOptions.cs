@@ -13,8 +13,6 @@ namespace Microsoft.Azure.Cosmos
     /// </summary>
     public class RequestOptions
     {
-        internal Dictionary<string, object> Properties { get; set; }
-
         /// <summary>
         /// Gets or sets the If-Match (ETag) associated with the request in the Azure Cosmos DB service.
         /// </summary>
@@ -31,6 +29,12 @@ namespace Microsoft.Azure.Cosmos
         /// Most commonly used to detect changes to the resource
         /// </remarks>
         public string IfNoneMatchEtag { get; set; }
+
+        /// <summary>
+        /// Application opted Cosmos request context that flow through with the <see cref="RequestMessage" />.
+        /// Context will be available through handlers.
+        /// </summary>
+        public IReadOnlyDictionary<string, object> Properties { get; set; }
 
         /// <summary>
         /// Gets or sets the boolean to use effective partition key routing in the cosmos db request.

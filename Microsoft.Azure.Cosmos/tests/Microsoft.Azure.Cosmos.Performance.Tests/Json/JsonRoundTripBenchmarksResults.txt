@@ -1,0 +1,8 @@
+﻿|            Method |       payload |         sourceFormat |    destinationFormat |         Mean |      Error |     StdDev |     Gen 0 |    Gen 1 |    Gen 2 |  Allocated |
+|------------------ |-------------- |--------------------- |--------------------- |-------------:|-----------:|-----------:|----------:|---------:|---------:|-----------:|
+| NavigatorToWriter | NutritionData |                 Text |                 Text |    205.74 us |   4.088 us |   4.374 us |  205.5664 | 205.0781 | 205.0781 | 1523.59 KB |
+| NavigatorToWriter | NutritionData |                 Text |               Binary | 34,552.14 us | 619.581 us | 579.557 us | 1000.0000 | 333.3333 |        - | 5572.44 KB |
+| NavigatorToWriter | NutritionData |                 Text |       NewtonsoftText | 21,874.70 us | 191.381 us | 179.018 us |  875.0000 | 437.5000 |        - | 5208.27 KB |
+| NavigatorToWriter | NutritionData |               Binary |                 Text | 10,266.70 us | 202.714 us | 216.902 us |  562.5000 | 296.8750 | 250.0000 | 2217.78 KB |
+| NavigatorToWriter | NutritionData |               Binary |               Binary |     31.93 us |   0.499 us |   0.467 us |   53.8635 |  53.5889 |  53.5889 |  246.35 KB |
+| NavigatorToWriter | NutritionData |               Binary |       NewtonsoftText | 11,165.81 us | 215.457 us | 190.997 us |  500.0000 | 234.3750 |        - | 3050.57 KB |

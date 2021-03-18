@@ -7,6 +7,7 @@ namespace Microsoft.Azure.Cosmos
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
+    using System.Net.Http;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
 
@@ -15,13 +16,13 @@ namespace Microsoft.Azure.Cosmos
     /// </summary>
     internal sealed class ConnectionPolicy
     {
-        internal UserAgentContainer UserAgentContainer;
         private const int defaultRequestTimeout = 10;
         // defaultMediaRequestTimeout is based upon the blob client timeout and the retry policy.
         private const int defaultMediaRequestTimeout = 300;
         private const int defaultMaxConcurrentFanoutRequests = 32;
         private const int defaultMaxConcurrentConnectionLimit = 50;
 
+        internal UserAgentContainer UserAgentContainer;
         private static ConnectionPolicy defaultPolicy;
 
         private Protocol connectionProtocol;
@@ -418,6 +419,15 @@ namespace Microsoft.Azure.Cosmos
         /// The default value is PortReuseMode.ReuseUnicastPort.
         /// </value>
         public PortReuseMode? PortReuseMode
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a delegate to use to obtain an HttpClient instance to be used for HTTPS communication.
+        /// </summary>
+        public Func<HttpClient> HttpClientFactory
         {
             get;
             set;

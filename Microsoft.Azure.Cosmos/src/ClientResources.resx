@@ -198,6 +198,9 @@
   <data name="FailedToEvaluateSpatialExpression" xml:space="preserve">
     <value>Expression tree cannot be processed because evaluation of Spatial expression failed.</value>
   </data>
+  <data name="FailedToGetAadToken" xml:space="preserve">
+    <value>Failed to get AAD token from the provided Azure.Core.TokenCredential.</value>
+  </data>
   <data name="InputIsNotIDocumentQuery" xml:space="preserve">
     <value>Input is not of type IDocumentQuery.</value>
   </data>
@@ -270,6 +273,9 @@
   <data name="StringCompareToInvalidOperator" xml:space="preserve">
     <value>Invalid operator for string.CompareTo(). Vaid operators are ('==', '&lt;', '&lt;=', '&gt;' or '&gt;=')</value>
   </data>
+  <data name="TokenRefreshInProgress" xml:space="preserve">
+    <value>Token refresh in progress.</value>
+  </data>
   <data name="TypeCheckExtensionFunctionsNotImplemented" xml:space="preserve">
     <value>Type check operations can be used in Linq expressions only and are evaluated in Azure CosmosDB server.</value>
   </data>
@@ -301,21 +307,15 @@
     <value>Encryption options may not be specified on this request.</value>
   </data>
   <data name="FeedToken_UnknownFormat" xml:space="preserve">
-    <value>The provided string does not represent any known FeedToken format.</value>
-  </data>
-  <data name="FeedToken_MaxTokensOutOfRange" xml:space="preserve">
-    <value>Provide a value greater than zero.</value>
+    <value>The provided string '{0}' does not represent any known format.</value>
   </data>
   <data name="FeedToken_UnrecognizedFeedToken" xml:space="preserve">
     <value>Unrecognized Feed Token type.</value>
   </data>
-  <data name="FeedToken_CannotParse" xml:space="preserve">
-    <value>Cannot parse '{0}' as a valid FeedToken.</value>
-  </data>
   <data name="FeedToken_EffectivePartitionKeyRouting" xml:space="preserve">
-    <value>Cannot define EffectivePartitionKeyRouting and FeedToken simultaneously.</value>
+    <value>Cannot define EffectivePartitionKeyRouting and FeedRange simultaneously.</value>
   </data>
-  <data name="FeedToken_InvalidImplementation" xml:space="preserve">
-    <value>Expected FeedTokenInternal instance.</value>
+  <data name="FeedToken_InvalidFeedTokenForContainer" xml:space="preserve">
+    <value>The continuation was generated for container {0} but current container is {1}.</value>
   </data>
 </root>

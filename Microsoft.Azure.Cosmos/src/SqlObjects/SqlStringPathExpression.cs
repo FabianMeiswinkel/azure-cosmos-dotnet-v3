@@ -1,29 +1,31 @@
 ﻿//------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------
-namespace Microsoft.Azure.Cosmos.Sql
+namespace Microsoft.Azure.Cosmos.SqlObjects
 {
     using System;
+    using Microsoft.Azure.Cosmos.SqlObjects.Visitors;
 
-    internal sealed class SqlStringPathExpression : SqlPathExpression
+#if INTERNAL
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements should be documented
+    public
+#else
+    internal
+#endif
+    sealed class SqlStringPathExpression : SqlPathExpression
     {
         private SqlStringPathExpression(SqlPathExpression parentPath, SqlStringLiteral value)
-            : base(SqlObjectKind.StringPathExpression, parentPath)
+            : base(parentPath)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
+            this.Value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        public SqlStringLiteral Value
-        {
-            get;
-        }
+        public SqlStringLiteral Value { get; }
 
-        public static SqlStringPathExpression Create(SqlPathExpression parentPath, SqlStringLiteral value)
+        public static SqlStringPathExpression Create(
+            SqlPathExpression parentPath,
+            SqlStringLiteral value)
         {
             return new SqlStringPathExpression(parentPath, value);
         }

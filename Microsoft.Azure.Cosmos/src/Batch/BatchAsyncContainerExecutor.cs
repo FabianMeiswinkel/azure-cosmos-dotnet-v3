@@ -9,10 +9,8 @@ namespace Microsoft.Azure.Cosmos
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Azure.Cosmos.Diagnostics;
     using Microsoft.Azure.Cosmos.Routing;
     using Microsoft.Azure.Documents;
 
@@ -28,16 +26,16 @@ namespace Microsoft.Azure.Cosmos
     internal class BatchAsyncContainerExecutor : IDisposable
     {
         private const int DefaultDispatchTimerInSeconds = 1;
-        private const int MinimumDispatchTimerInSeconds = 1;
+        private const int TimerWheelBucketCount = 20;
+        private static readonly TimeSpan TimerWheelResolution = TimeSpan.FromMilliseconds(50);
 
-        private readonly ContainerCore cosmosContainer;
+        private readonly ContainerInternal cosmosContainer;
         private readonly CosmosClientContext cosmosClientContext;
         private readonly int maxServerRequestBodyLength;
         private readonly int maxServerRequestOperationCount;
-        private readonly int dispatchTimerInSeconds;
         private readonly ConcurrentDictionary<string, BatchAsyncStreamer> streamersByPartitionKeyRange = new ConcurrentDictionary<string, BatchAsyncStreamer>();
         private readonly ConcurrentDictionary<string, SemaphoreSlim> limitersByPartitionkeyRange = new ConcurrentDictionary<string, SemaphoreSlim>();
-        private readonly TimerPool timerPool;
+        private readonly TimerWheel timerWheel;
         private readonly RetryOptions retryOptions;
         private readonly int defaultMaxDegreeOfConcurrency = 50;
 
@@ -49,11 +47,10 @@ namespace Microsoft.Azure.Cosmos
         }
 
         public BatchAsyncContainerExecutor(
-            ContainerCore cosmosContainer,
+            ContainerInternal cosmosContainer,
             CosmosClientContext cosmosClientContext,
             int maxServerRequestOperationCount,
-            int maxServerRequestBodyLength,
-            int dispatchTimerInSeconds = BatchAsyncContainerExecutor.DefaultDispatchTimerInSeconds)
+            int maxServerRequestBodyLength)
         {
             if (cosmosContainer == null)
             {
@@ -70,24 +67,18 @@ namespace Microsoft.Azure.Cosmos
                 throw new ArgumentOutOfRangeException(nameof(maxServerRequestBodyLength));
             }
 
-            if (dispatchTimerInSeconds < 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(dispatchTimerInSeconds));
-            }
-
             this.cosmosContainer = cosmosContainer;
             this.cosmosClientContext = cosmosClientContext;
             this.maxServerRequestBodyLength = maxServerRequestBodyLength;
             this.maxServerRequestOperationCount = maxServerRequestOperationCount;
-            this.dispatchTimerInSeconds = dispatchTimerInSeconds;
-            this.timerPool = new TimerPool(BatchAsyncContainerExecutor.MinimumDispatchTimerInSeconds);
+            this.timerWheel = TimerWheel.CreateTimerWheel(BatchAsyncContainerExecutor.TimerWheelResolution, BatchAsyncContainerExecutor.TimerWheelBucketCount);
             this.retryOptions = cosmosClientContext.ClientOptions.GetConnectionPolicy().RetryOptions;
         }
 
         public virtual async Task<TransactionalBatchOperationResult> AddAsync(
             ItemBatchOperation operation,
             ItemRequestOptions itemRequestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             if (operation == null)
             {
@@ -116,13 +107,13 @@ namespace Microsoft.Azure.Cosmos
                 limiter.Value.Dispose();
             }
 
-            this.timerPool.Dispose();
+            this.timerWheel.Dispose();
         }
 
         internal virtual async Task ValidateOperationAsync(
             ItemBatchOperation operation,
             ItemRequestOptions itemRequestOptions = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             if (itemRequestOptions != null)
             {
@@ -142,7 +133,7 @@ namespace Microsoft.Azure.Cosmos
                 Debug.Assert(BatchAsyncContainerExecutor.ValidateOperationEPK(operation, itemRequestOptions));
             }
 
-            await operation.EncryptAndMaterializeResourceAsync(this.cosmosClientContext.SerializerCore, cancellationToken);
+            await operation.MaterializeResourceAsync(this.cosmosClientContext.SerializerCore, cancellationToken);
         }
 
         private static IDocumentClientRetryPolicy GetRetryPolicy(RetryOptions retryOptions)
@@ -163,9 +154,8 @@ namespace Microsoft.Azure.Cosmos
                             | itemRequestOptions.Properties.TryGetValue(HttpConstants.HttpHeaders.PartitionKey, out object pkStringObj)))
             {
                 byte[] epk = epkObj as byte[];
-                string epkStr = epkStrObj as string;
                 string pkString = pkStringObj as string;
-                if ((epk == null && pkString == null) || epkStr == null)
+                if ((epk == null && pkString == null) || !(epkStrObj is string _))
                 {
                     throw new InvalidOperationException(string.Format(
                         ClientResources.EpkPropertiesPairingExpected,
@@ -186,6 +176,7 @@ namespace Microsoft.Azure.Cosmos
         {
             requestMessage.Headers.PartitionKeyRangeId = partitionKeyRangeId;
             requestMessage.Headers.Add(HttpConstants.HttpHeaders.ShouldBatchContinueOnError, bool.TrueString);
+            requestMessage.Headers.Add(HttpConstants.HttpHeaders.IsBatchAtomic, bool.FalseString);
             requestMessage.Headers.Add(HttpConstants.HttpHeaders.IsBatchRequest, bool.TrueString);
         }
 
@@ -229,11 +220,9 @@ namespace Microsoft.Azure.Cosmos
             CancellationToken cancellationToken)
         {
             CosmosDiagnosticsContext diagnosticsContext = new CosmosDiagnosticsContextCore();
-            CosmosDiagnosticScope limiterScope = diagnosticsContext.CreateScope("BatchAsyncContainerExecutor.Limiter");
             SemaphoreSlim limiter = this.GetOrAddLimiterForPartitionKeyRange(serverRequest.PartitionKeyRangeId);
-            using (await limiter.UsingWaitAsync(cancellationToken))
+            using (await limiter.UsingWaitAsync(diagnosticsContext, cancellationToken))
             {
-                limiterScope.Dispose();
                 using (Stream serverRequestPayload = serverRequest.TransferBodyStream())
                 {
                     Debug.Assert(serverRequestPayload != null, "Server request payload expected to be non-null");
@@ -256,7 +245,6 @@ namespace Microsoft.Azure.Cosmos
                             serverRequest,
                             this.cosmosClientContext.SerializerCore,
                             shouldPromoteOperationStatus: true,
-                            shouldPerformDecryption: false,
                             cancellationToken).ConfigureAwait(false);
 
                         return new PartitionKeyRangeBatchExecutionResult(serverRequest.PartitionKeyRangeId, serverRequest.Operations, serverResponse);
@@ -275,8 +263,7 @@ namespace Microsoft.Azure.Cosmos
             BatchAsyncStreamer newStreamer = new BatchAsyncStreamer(
                 this.maxServerRequestOperationCount,
                 this.maxServerRequestBodyLength,
-                this.dispatchTimerInSeconds,
-                this.timerPool,
+                this.timerWheel,
                 limiter,
                 this.defaultMaxDegreeOfConcurrency,
                 this.cosmosClientContext.SerializerCore,

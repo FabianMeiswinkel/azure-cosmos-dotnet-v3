@@ -10,6 +10,8 @@ namespace Microsoft.Azure.Cosmos
     using System.Data.Common;
     using System.Linq;
     using System.Net;
+    using System.Net.Http;
+    using System.Security.AccessControl;
     using Microsoft.Azure.Cosmos.Fluent;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
@@ -56,7 +58,7 @@ namespace Microsoft.Azure.Cosmos
         /// </summary>
         private int gatewayModeMaxConnectionLimit;
         private CosmosSerializationOptions serializerOptions;
-        private CosmosSerializer serializer;
+        private CosmosSerializer serializerInternal;
 
         private ConnectionMode connectionMode;
         private Protocol connectionProtocol;
@@ -66,6 +68,7 @@ namespace Microsoft.Azure.Cosmos
         private int? maxTcpConnectionsPerEndpoint;
         private PortReuseMode? portReuseMode;
         private IWebProxy webProxy;
+        private Func<HttpClient> httpClientFactory;
 
         /// <summary>
         /// Creates a new CosmosClientOptions
@@ -74,6 +77,7 @@ namespace Microsoft.Azure.Cosmos
         {
             this.GatewayModeMaxConnectionLimit = ConnectionPolicy.Default.MaxConnectionLimit;
             this.RequestTimeout = ConnectionPolicy.Default.RequestTimeout;
+            this.TokenCredentialBackgroundRefreshInterval = null;
             this.ConnectionMode = CosmosClientOptions.DefaultConnectionMode;
             this.ConnectionProtocol = CosmosClientOptions.DefaultProtocol;
             this.ApiType = CosmosClientOptions.DefaultApiType;
@@ -134,9 +138,9 @@ namespace Microsoft.Azure.Cosmos
                     throw new ArgumentOutOfRangeException(nameof(value));
                 }
 
-                if (this.ConnectionMode != ConnectionMode.Gateway)
+                if (this.HttpClientFactory != null && value != ConnectionPolicy.Default.MaxConnectionLimit )
                 {
-                    throw new ArgumentException("Max connection limit is only valid for ConnectionMode.Gateway.");
+                    throw new ArgumentException($"{nameof(this.httpClientFactory)} can not be set along with {nameof(this.GatewayModeMaxConnectionLimit)}. This must be set on the HttpClientHandler.MaxConnectionsPerServer property.");
                 }
 
                 this.gatewayModeMaxConnectionLimit = value;
@@ -150,6 +154,20 @@ namespace Microsoft.Azure.Cosmos
         /// <value>Default value is 1 minute.</value>
         /// <seealso cref="CosmosClientBuilder.WithRequestTimeout(TimeSpan)"/>
         public TimeSpan RequestTimeout { get; set; }
+
+        /// <summary>
+        /// The SDK does a background refresh based on the time interval set to refresh the token credentials.
+        /// This avoids latency issues because the old token is used until the new token is retrieved.
+        /// </summary>
+        /// <remarks>
+        /// The recommended minimum value is 5 minutes. The default value is 25% of the token expire time.
+        /// </remarks>
+#if PREVIEW
+        public
+#else
+        internal
+#endif
+        TimeSpan? TokenCredentialBackgroundRefreshInterval { get; set; }
 
         /// <summary>
         /// Gets the handlers run before the process
@@ -195,16 +213,53 @@ namespace Microsoft.Azure.Cosmos
         public ConsistencyLevel? ConsistencyLevel { get; set; }
 
         /// <summary>
-        /// Get or set the number of times client should retry on rate throttled requests.
+        /// Gets or sets the maximum number of retries in the case where the request fails
+        /// because the Azure Cosmos DB service has applied rate limiting on the client.
         /// </summary>
+        /// <value>
+        /// The default value is 9. This means in the case where the request is rate limited,
+        /// the same request will be issued for a maximum of 10 times to the server before
+        /// an error is returned to the application.
+        ///
+        /// If the value of this property is set to 0, there will be no automatic retry on rate
+        /// limiting requests from the client and the exception needs to be handled at the
+        /// application level.
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// When a client is sending requests faster than the allowed rate,
+        /// the service will return HttpStatusCode 429 (Too Many Requests) to rate limit the client. The current
+        /// implementation in the SDK will then wait for the amount of time the service tells it to wait and
+        /// retry after the time has elapsed.
+        /// </para>
+        /// <para>
+        /// For more information, see <see href="https://docs.microsoft.com/azure/cosmos-db/performance-tips#throughput">Handle rate limiting/request rate too large</see>.
+        /// </para>
+        /// </remarks>
         /// <seealso cref="CosmosClientBuilder.WithThrottlingRetryOptions(TimeSpan, int)"/>
         public int? MaxRetryAttemptsOnRateLimitedRequests { get; set; }
 
         /// <summary>
-        /// Get or set the max time to client is allowed to retry on rate throttled requests. 
+        /// Gets or sets the maximum retry time in seconds for the Azure Cosmos DB service.
         /// </summary>
+        /// <value>
+        /// The default value is 30 seconds. 
+        /// </value>
         /// <remarks>
+        /// <para>
         /// The minimum interval is seconds. Any interval that is smaller will be ignored.
+        /// </para>
+        /// <para>
+        /// When a request fails due to a rate limiting error, the service sends back a response that
+        /// contains a value indicating the client should not retry before the <see cref="Microsoft.Azure.Cosmos.CosmosException.RetryAfter"/> time period has
+        /// elapsed.
+        ///
+        /// This property allows the application to set a maximum wait time for all retry attempts.
+        /// If the cumulative wait time exceeds the this value, the client will stop retrying and return the error to the application.
+        /// </para>
+        /// <para>
+        /// For more information, see <see href="https://docs.microsoft.com/azure/cosmos-db/performance-tips#throughput">Handle rate limiting/request rate too large</see>.
+        /// </para>
         /// </remarks>
         /// <seealso cref="CosmosClientBuilder.WithThrottlingRetryOptions(TimeSpan, int)"/>
         public TimeSpan? MaxRetryWaitTimeOnRateLimitedRequests { get; set; }
@@ -316,11 +371,12 @@ namespace Microsoft.Azure.Cosmos
             get => this.webProxy;
             set
             {
-                this.webProxy = value;
-                if (this.ConnectionMode != ConnectionMode.Gateway)
+                if (value != null && this.HttpClientFactory != null)
                 {
-                    throw new ArgumentException($"{nameof(this.WebProxy)} requires {nameof(this.ConnectionMode)} to be set to {nameof(ConnectionMode.Gateway)}");
+                    throw new ArgumentException($"{nameof(this.WebProxy)} cannot be set along {nameof(this.HttpClientFactory)}");
                 }
+
+                this.webProxy = value;
             }
         }
 
@@ -371,7 +427,7 @@ namespace Microsoft.Azure.Cosmos
         [JsonConverter(typeof(ClientOptionJsonConverter))]
         public CosmosSerializer Serializer
         {
-            get => this.serializer;
+            get => this.serializerInternal;
             set
             {
                 if (this.SerializerOptions != null)
@@ -380,21 +436,9 @@ namespace Microsoft.Azure.Cosmos
                         $"{nameof(this.Serializer)} is not compatible with {nameof(this.SerializerOptions)}. Only one can be set.  ");
                 }
 
-                this.serializer = value;
+                this.serializerInternal = value;
             }
         }
-
-        /// <summary>
-        /// Provider that allows encrypting and decrypting data.
-        /// See https://aka.ms/CosmosClientEncryption for more information on client-side encryption support in Azure Cosmos DB.
-        /// </summary>
-        [JsonIgnore]
-#if PREVIEW
-        public
-#else
-        internal
-#endif
-        Encryptor Encryptor { get; set; }
 
         /// <summary>
         /// Limits the operations to the provided endpoint on the CosmosClient.
@@ -425,6 +469,40 @@ namespace Microsoft.Azure.Cosmos
         /// The default value is false
         /// </value>
         public bool EnableTcpConnectionEndpointRediscovery { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a delegate to use to obtain an HttpClient instance to be used for HTTPS communication.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// HTTPS communication is used when <see cref="ConnectionMode"/> is set to <see cref="ConnectionMode.Gateway"/> for all operations and when <see cref="ConnectionMode"/> is <see cref="ConnectionMode.Direct"/> (default) for metadata operations.
+        /// </para>
+        /// <para>
+        /// Useful in scenarios where the application is using a pool of HttpClient instances to be shared, like ASP.NET Core applications with IHttpClientFactory or Blazor WebAssembly applications.
+        /// </para>
+        /// <para>
+        /// For .NET core applications the default GatewayConnectionLimit will be ignored. It must be set on the HttpClientHandler.MaxConnectionsPerServer to limit the number of connections
+        /// </para>
+        /// </remarks>
+        [JsonIgnore]
+        public Func<HttpClient> HttpClientFactory
+        {
+            get => this.httpClientFactory;
+            set
+            {
+                if (value != null && this.WebProxy != null)
+                {
+                    throw new ArgumentException($"{nameof(this.HttpClientFactory)} cannot be set along {nameof(this.WebProxy)}");
+                }
+
+                if (this.GatewayModeMaxConnectionLimit != ConnectionPolicy.Default.MaxConnectionLimit)
+                {
+                    throw new ArgumentException($"{nameof(this.httpClientFactory)} can not be set along with {nameof(this.GatewayModeMaxConnectionLimit)}. This must be set on the HttpClientHandler.MaxConnectionsPerServer property.");
+                }
+
+                this.httpClientFactory = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the connection protocol when connecting to the Azure Cosmos service.
@@ -530,6 +608,14 @@ namespace Microsoft.Azure.Cosmos
         /// </summary>
         internal bool? EnableCpuMonitor { get; set; }
 
+        internal void SetSerializerIfNotConfigured(CosmosSerializer serializer)
+        {
+            if (this.serializerInternal == null)
+            {
+                this.serializerInternal = serializer ?? throw new ArgumentNullException(nameof(serializer));
+            }
+        }
+
         internal CosmosClientOptions Clone()
         {
             CosmosClientOptions cloneConfiguration = (CosmosClientOptions)this.MemberwiseClone();
@@ -556,7 +642,8 @@ namespace Microsoft.Azure.Cosmos
                 MaxTcpConnectionsPerEndpoint = this.MaxTcpConnectionsPerEndpoint,
                 EnableEndpointDiscovery = !this.LimitToEndpoint,
                 PortReuseMode = this.portReuseMode,
-                EnableTcpConnectionEndpointRediscovery = this.EnableTcpConnectionEndpointRediscovery
+                EnableTcpConnectionEndpointRediscovery = this.EnableTcpConnectionEndpointRediscovery,
+                HttpClientFactory = this.httpClientFactory,
             };
 
             if (this.ApplicationRegion != null)
@@ -737,6 +824,11 @@ namespace Microsoft.Azure.Cosmos
                 features |= CosmosClientOptionsFeatures.AllowBulkExecution;
             }
 
+            if (this.HttpClientFactory != null)
+            {
+                features |= CosmosClientOptionsFeatures.HttpClientFactory;
+            }
+
             if (features == CosmosClientOptionsFeatures.NoFeatures)
             {
                 return null;
@@ -761,8 +853,7 @@ namespace Microsoft.Azure.Cosmos
         {
             public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
             {
-                Collection<RequestHandler> handlers = value as Collection<RequestHandler>;
-                if (handlers != null)
+                if (value is Collection<RequestHandler> handlers)
                 {
                     writer.WriteValue(string.Join(":", handlers.Select(x => x.GetType())));
                     return;

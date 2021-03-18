@@ -4,8 +4,7 @@
 namespace Microsoft.Azure.Cosmos.Json
 {
     using System;
-    using System.Collections.Generic;
-    using Microsoft.Azure.Cosmos.Query.Core;
+    using Microsoft.Azure.Cosmos.Core.Utf8;
 
     /// <summary>
     /// Interface for all JsonWriters that know how to write jsons of a specific serialization format.
@@ -56,8 +55,8 @@ namespace Microsoft.Azure.Cosmos.Json
         /// <summary>
         /// Writes a UTF-8 field name to the internal buffer.
         /// </summary>
-        /// <param name="utf8FieldName"></param>
-        void WriteFieldName(ReadOnlySpan<byte> utf8FieldName);
+        /// <param name="fieldName"></param>
+        void WriteFieldName(Utf8Span fieldName);
 
         /// <summary>
         /// Writes a string to the internal buffer.
@@ -68,8 +67,8 @@ namespace Microsoft.Azure.Cosmos.Json
         /// <summary>
         /// Writes a UTF-8 string value to the internal buffer.
         /// </summary>
-        /// <param name="utf8StringValue"></param>
-        void WriteStringValue(ReadOnlySpan<byte> utf8StringValue);
+        /// <param name="value"></param>
+        void WriteStringValue(Utf8Span value);
 
         /// <summary>
         /// Writes a number to the internal buffer.
@@ -141,31 +140,6 @@ namespace Microsoft.Azure.Cosmos.Json
         /// </summary>
         /// <param name="value">The value of the bytes to write.</param>
         void WriteBinaryValue(ReadOnlySpan<byte> value);
-
-        /// <summary>
-        /// Writes current token from a json reader to the internal buffer.
-        /// </summary>
-        /// <param name="jsonReader">The JsonReader to the get the current token from.</param>
-        void WriteCurrentToken(IJsonReader jsonReader);
-
-        /// <summary>
-        /// Writes every token from the JsonReader to the internal buffer.
-        /// </summary>
-        /// <param name="jsonReader">The JsonReader to get the tokens from.</param>
-        void WriteAll(IJsonReader jsonReader);
-
-        /// <summary>
-        /// Writes a fragment of a json to the internal buffer
-        /// </summary>
-        /// <param name="jsonFragment">A section of a valid json</param>
-        void WriteJsonFragment(ReadOnlyMemory<byte> jsonFragment);
-
-        /// <summary>
-        /// Writes a json node to the internal buffer.
-        /// </summary>
-        /// <param name="jsonNavigator">The navigator to use to navigate the node</param>
-        /// <param name="jsonNavigatorNode">The node to write.</param>
-        void WriteJsonNode(IJsonNavigator jsonNavigator, IJsonNavigatorNode jsonNavigatorNode);
 
         /// <summary>
         /// Gets the result of the JsonWriter.
