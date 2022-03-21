@@ -17,6 +17,7 @@ namespace Microsoft.Azure.Cosmos
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Collections;
     using System.Threading.Tasks;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Tests for <see cref="SessionContainer"/> class.
@@ -24,10 +25,64 @@ namespace Microsoft.Azure.Cosmos
     [TestClass]
     public class SessionContainerTest
     {
-        /// <summary>
-        /// Simple test for <see cref="SessionContainer"/> class.
-        /// </summary>
         [TestMethod]
+        public async Task FabianmReadSessionNotAvailableReproAttempt()
+        {
+            using CosmosClient client = new CosmosClient(
+                "SomeAccountWithMultiMasterAndSingleRegion",
+                "AValidMasterKey");
+
+            Container container = client.GetContainer("DummyDB", "TestTable");
+
+            ContainerResponse containerResponse = await container.ReadContainerAsync();
+            Console.WriteLine("PKDefinition: {0}", containerResponse.Resource.PartitionKey);
+
+            for (int i = 10; i < 100; i++)
+            {
+                string json = "{\"BlobETag\":\"\\\"0x8D93E4357EC3A1A\\\"\",\"id\":\"" +
+                Guid.NewGuid().ToString() +
+                "\",\"SourceScopePath\":\"/ParallelC4Migration099d981d-d/c2/c3/c42\",\"DestinationScopePath\":\"/ParallelC4Migration099d981d-d/c2/c3/c42\",\"SourceScaleUnit\":\"prod-uscentraleuap-dm3-001\",\"DestinationScaleUnit\":\"prod-useast2euap-bn4-001\",\"RequestedTimeInUtc\":\"2021-07-03T16:47:17Z\",\"RequestedBy\":\"SOUTHAMERICA\\\\maro\",\"Approver\":\"SOUTHAMERICA\\\\maro\",\"Status\":\"Completed\",\"StatusDetails\":\"Scope migration completed.\",\"CreatedTimeInUtc\":\"2021-07-03T16:47:50.3056917Z\",\"StartedTimeInUtc\":\"2021-07-03T16:48:05.3982843Z\",\"CompletedTimeInUtc\":\"2021-07-03T16:55:20.8361604Z\",\"LastModifiedTimeInUtc\":\"2021-07-03T16:55:20.8411314Z\",\"SystemGenerated\":false,\"Version\":3,\"_rid\":\"vTIrAP-syucBAAAAAAAABA==\",\"_self\":\"dbs/vTIrAA==/colls/vTIrAP-syuc=/docs/vTIrAP-syucBAAAAAAAABA==/\",\"_etag\":\"\\\"00003c02 - 0000 - 3300 - 0000 - 61aa71eb0000\\\"\",\"_attachments\":\"attachments/\",\"_ts\":1638560235}";
+
+
+                JObject newItem = JObject.Parse(json);
+
+                container.UpsertItemAsync(newItem);
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                Console.WriteLine("QUERY ITERATION {0}", i);
+                using FeedIterator<JObject> feedIterator = container.GetItemQueryIterator<JObject>(
+                    "SELECT * FROM c",
+                    null,
+                    null);
+
+                int count = 0;
+                HashSet<string> pkValues = new HashSet<string>();
+                while (feedIterator.HasMoreResults)
+                {
+                    FeedResponse<JObject> page = await feedIterator.ReadNextAsync();
+                    foreach (JObject item in page)
+                    {
+                        pkValues.Add(item["_partitionKey"] != null ? item["_partitionKey"].ToString() : "null");
+                    }
+
+                    count += page.Count;
+                }
+
+                Console.WriteLine("PK VALUES");
+                foreach (String pkValue in pkValues)
+                {
+                    Console.WriteLine(pkValue);
+                }
+                Console.WriteLine("Count: {0}", count);
+            }
+        }
+
+            /// <summary>
+            /// Simple test for <see cref="SessionContainer"/> class.
+            /// </summary>
+            [TestMethod]
         public void TestSessionContainer()
         {
             SessionContainer sessionContainer = new SessionContainer("127.0.0.1");

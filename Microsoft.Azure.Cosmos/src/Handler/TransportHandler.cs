@@ -5,8 +5,10 @@
 namespace Microsoft.Azure.Cosmos.Handlers
 {
     using System;
+    using System.Collections.Specialized;
     using System.Diagnostics;
     using System.Linq;
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Azure.Cosmos.Resource.CosmosExceptions;
@@ -154,8 +156,31 @@ namespace Microsoft.Azure.Cosmos.Handlers
 
         private async Task<DocumentServiceResponse> ProcessUpsertAsync(IStoreModel storeProxy, DocumentServiceRequest serviceRequest, CancellationToken cancellationToken)
         {
+            string pkRangeIdBefore = serviceRequest.PartitionKeyRangeIdentity?.PartitionKeyRangeId;
+            OperationType operation = serviceRequest.OperationType;
+            ResourceType resource = serviceRequest.ResourceType;
             DocumentServiceResponse response = await storeProxy.ProcessMessageAsync(serviceRequest, cancellationToken);
-            this.client.DocumentClient.CaptureSessionToken(serviceRequest, response);
+            try
+            {
+                //if (response.StatusCode != (HttpStatusCode)429)
+                {
+                    this.client.DocumentClient.CaptureSessionToken(serviceRequest, response);
+                }
+            }
+            catch (ArgumentException)
+            {
+                Console.WriteLine("Operation: {0} Resource: {1}", operation, resource);
+                Console.WriteLine("PKRangeId (before request): {0}", pkRangeIdBefore);
+                Console.WriteLine("PKRangeId: {0}", serviceRequest.PartitionKeyRangeIdentity?.PartitionKeyRangeId);
+                Console.WriteLine("StatusCode: {0}", response.StatusCode);
+                Console.WriteLine("SubStatusCode: {0}", response.SubStatusCode);
+                Console.WriteLine("Response SessionToken: {0}", response.Headers[HttpConstants.HttpHeaders.SessionToken]);
+                Console.WriteLine("Response PartitionKeyRangeId: {0}", response.Headers[HttpConstants.HttpHeaders.PartitionKeyRangeId]);
+                Console.WriteLine("Response PartitionKey: {0}", response.Headers[HttpConstants.HttpHeaders.PartitionKey]);
+                Console.WriteLine("Request SessionToken: {0}", serviceRequest.Headers[HttpConstants.HttpHeaders.SessionToken]);
+                Console.WriteLine("Request PartitionKeyRangeId: {0}", serviceRequest.Headers[HttpConstants.HttpHeaders.PartitionKeyRangeId]);
+                Console.WriteLine("Request PartitionKey: {0}", serviceRequest.Headers[HttpConstants.HttpHeaders.PartitionKey]);
+            }
             return response;
         }
     }

@@ -6,6 +6,7 @@ namespace Microsoft.Azure.Cosmos.Common
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Text;
     using System.Threading;
     using Microsoft.Azure.Cosmos.Core.Trace;
@@ -307,19 +308,27 @@ namespace Microsoft.Azure.Cosmos.Common
         {
             string partitionKeyRangeId;
             ISessionToken token;
+            bool throwError = false;
             if (VersionUtility.IsLaterThan(HttpConstants.Versions.CurrentVersion, HttpConstants.VersionDates.v2015_12_16))
             {
                 string[] tokenParts = encodedToken.Split(':');
                 partitionKeyRangeId = tokenParts[0];
                 token = SessionTokenHelper.Parse(tokenParts[1], HttpConstants.Versions.CurrentVersion);
+
+                if (partitionKeyRangeId == "0" && token.LSN > 100)
+                {
+                    throwError = true;
+                }
             }
             else
             {
+                Console.WriteLine("WHAT THE HELL????????");
                 //todo: elasticcollections remove after first upgrade.
                 partitionKeyRangeId = "0";
                 token = SessionTokenHelper.Parse(encodedToken, HttpConstants.Versions.CurrentVersion);
             }
 
+            Console.WriteLine("Update Session token {0} {1} {2} {3}", resourceId.UniqueDocumentCollectionId, collectionName, token, encodedToken);
             DefaultTrace.TraceVerbose("Update Session token {0} {1} {2}", resourceId.UniqueDocumentCollectionId, collectionName, token);
 
             bool isKnownCollection = false;
@@ -363,6 +372,11 @@ namespace Microsoft.Azure.Cosmos.Common
                     self.rwlock.ExitWriteLock();
                 }
             }
+
+            if (throwError)
+            {
+                throw new ArgumentOutOfRangeException("PKRangeId");
+            }
         }
 
         private static void AddSessionToken(SessionContainerState self, ulong rid, string partitionKeyRangeId, ISessionToken token)
@@ -382,10 +396,31 @@ namespace Microsoft.Azure.Cosmos.Common
                 }
             }
 
+            if (partitionKeyRangeId != "0")
+            {
+                Console.WriteLine("ADD SESSION TOKEN - PKRangeId: {0}, New LSN: {1}, New Session token: {2}", partitionKeyRangeId, token.LSN, token.ConvertToString());
+            }
+            else
+            {
+                Console.WriteLine("ADD SESSION TOKEN - PKRangeId: {0}, New LSN: {1}, New Session token: {2}, Callstack: {3}", partitionKeyRangeId, token.LSN, token.ConvertToString(), new StackTrace().ToString());
+            }
+
             tokens.AddOrUpdate(
                 key: partitionKeyRangeId,
                 addValue: token,
-                updateValueFactory: (existingPartitionKeyRangeId, existingToken) => existingToken.Merge(token));
+                updateValueFactory: (existingPartitionKeyRangeId, existingToken) =>
+                {
+                    Console.WriteLine(
+                        "UPDATE EXISTING SESSION TOKEN - PKRangeId: {0}, Existing PKRangeId: {1}, New LSN: {2}, Existing LSN: {3}, New Session token: {4}, Existing Session Token: {5}",
+                        partitionKeyRangeId,
+                        existingPartitionKeyRangeId,
+                        token.LSN,
+                        existingToken.LSN,
+                        token.ConvertToString(),
+                        existingToken.ConvertToString());
+
+                    return existingToken.Merge(token);
+                });
         }
 
         private static string GetSessionTokenString(ConcurrentDictionary<string, ISessionToken> partitionKeyRangeIdToTokenMap)
