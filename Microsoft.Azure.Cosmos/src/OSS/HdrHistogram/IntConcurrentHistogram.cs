@@ -85,7 +85,7 @@ namespace HdrHistogram
         public override long TotalCount
         {
             get {return Interlocked.Read(ref _totalCount);}
-            protected set { Interlocked.Exchange(ref _totalCount, value); }
+            internal set { Interlocked.Exchange(ref _totalCount, value); }
         }
 
         /// <summary>
@@ -227,6 +227,11 @@ namespace HdrHistogram
             {
                 target[i] = _counts[i];
             }
+        }
+
+        protected override void ReleaseArrays()
+        {
+            this._counts.ReleaseArrays();
         }
     }
 }

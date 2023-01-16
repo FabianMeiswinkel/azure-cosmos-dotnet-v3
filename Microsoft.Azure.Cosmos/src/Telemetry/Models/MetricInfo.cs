@@ -7,8 +7,10 @@ namespace Microsoft.Azure.Cosmos.Telemetry.Models
     using System;
     using System.Collections.Generic;
     using HdrHistogram;
+    using Microsoft.Azure.Cosmos.Query.Core.Metrics;
     using Microsoft.Azure.Cosmos.Telemetry;
     using Microsoft.Azure.Cosmos.Util;
+    using Microsoft.Azure.Documents;
     using Newtonsoft.Json;
 
     [Serializable]
@@ -60,13 +62,16 @@ namespace Microsoft.Azure.Cosmos.Telemetry.Models
         /// <summary>
         /// It will set the current object with the aggregated values from the given histogram
         /// </summary>
-        /// <param name="histogram"></param>
+        /// <param name="concurrentHistogram"></param>
         /// <param name="adjustment"></param>
         /// <returns>MetricInfo</returns>
-        internal MetricInfo SetAggregators(LongConcurrentHistogram histogram, double adjustment = 1)
+        internal MetricInfo SetAggregators(LongConcurrentHistogram concurrentHistogram, double adjustment = 1)
         {
-            if (histogram != null)
+            if (concurrentHistogram != null)
             {
+                HistogramBase histogram = concurrentHistogram.ToNonConcurrent(); //concurrentHistogram;
+
+                ValueStopwatch watch = ValueStopwatch.StartNew();
                 this.Count = histogram.TotalCount;
                 this.Max = histogram.GetMaxValue() / adjustment;
                 this.Min = histogram.GetMinValue() / adjustment;
@@ -80,6 +85,12 @@ namespace Microsoft.Azure.Cosmos.Telemetry.Models
                     { ClientTelemetryOptions.Percentile999, histogram.GetValueAtPercentile(ClientTelemetryOptions.Percentile999) / adjustment }
                 };
                 this.Percentiles = percentile;
+                watch.Stop();
+                Console.WriteLine(
+                    "SetAggregators ({0}): {1}ms",
+                    this.MetricsName,
+                    watch.Elapsed.TotalMilliseconds);
+                histogram.Dispose();
             }
             return this;
         }

@@ -11,12 +11,21 @@ namespace Microsoft.Azure.Cosmos.Performance.Tests
     using BenchmarkDotNet.Configs;
     using BenchmarkDotNet.Reports;
     using BenchmarkDotNet.Running;
+    using Microsoft.Azure.Cosmos.Performance.Tests.Benchmarks;
+    using Microsoft.Azure.Cosmos.Performance.Tests.BenchmarkStrategies;
     using Newtonsoft.Json;
 
     class Program
     {
         static int Main(string[] args)
         {
+            _ = args != null ? new List<string>(args) : new List<string>();
+
+            IConfig config = ManualConfig.Create(DefaultConfig.Instance);//.WithOptions(ConfigOptions.DisableOptimizationsValidator);
+            BenchmarkRunner.Run<ClientTelemetryReadCollectorsBenchmark>(config);
+            return -1;
+
+
             //CosmosDBConfiguration environmentConfiguration = ConfigurationService.Configuration;
             //Console.WriteLine($"Starting benchmark and dropping results on {environmentConfiguration.ReportsPath}.");
             //BenchmarkRunner.Run<ItemBenchmark>(new CustomBenchmarkConfiguration(environmentConfiguration));

@@ -12,6 +12,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using HdrHistogram.Utilities;
+using Microsoft.Azure.Cosmos;
 
 namespace HdrHistogram
 {
@@ -85,8 +86,8 @@ namespace HdrHistogram
         /// </summary>
         public override long TotalCount
         {
-            get {return Interlocked.Read(ref _totalCount);}
-            protected set { Interlocked.Exchange(ref _totalCount, value); }
+            get { return Interlocked.Read(ref _totalCount); }
+            internal set { Interlocked.Exchange(ref _totalCount, value); }
         }
 
         /// <summary>
@@ -206,7 +207,7 @@ namespace HdrHistogram
             {
                 _wrp.ReaderLock();
                 Debug.Assert(CountsArrayLength == _counts.Length);
-                for (int i = 0; i<_counts.Length; i++)
+                for (int i = 0; i < _counts.Length; i++)
                 {
                     _counts[i] = 0;
                 }
@@ -224,10 +225,32 @@ namespace HdrHistogram
         /// <param name="target">The array to write each count value into.</param>
         protected override void CopyCountsInto(long[] target)
         {
-            for (int i = 0; i<target.Length; i++)
+            for (int i = 0; i < target.Length; i++)
             {
                 target[i] = _counts[i];
             }
+        }
+
+        protected override void ReleaseArrays()
+        {
+            this._counts.ReleaseArrays();
+        }
+
+        public LongHistogram ToNonConcurrent()
+        {
+            Console.WriteLine(this._counts);
+            Console.WriteLine(this._counts.RawValues.Length);
+
+            LongHistogram returnValue = new LongHistogram(
+                this._counts.RawValues,
+                this.InstanceId,
+                this.LowestTrackableValue,
+                this.HighestTrackableValue,
+                this.NumberOfSignificantValueDigits);
+            returnValue.TotalCount = this.TotalCount;
+
+            returnValue.FreezeValues();
+            return returnValue;
         }
     }
 }

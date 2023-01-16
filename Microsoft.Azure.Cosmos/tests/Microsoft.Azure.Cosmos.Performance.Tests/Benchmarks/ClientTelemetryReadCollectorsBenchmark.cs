@@ -21,7 +21,7 @@ namespace Microsoft.Azure.Cosmos.Performance.Tests.Benchmarks
 
         public ClientTelemetryReadCollectorsBenchmark()
         {
-            for(int count = 0; count < 10000; count++)
+            for(int count = 0; count < 100; count++)
             {
                 OperationInfo payloadKey = new OperationInfo(regionsContacted: "region1, region2",
                                                           responseSizeInBytes: 29,

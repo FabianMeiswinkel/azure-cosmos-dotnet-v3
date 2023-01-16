@@ -30,10 +30,12 @@ namespace HdrHistogram.Utilities
 
         public AtomicLongArray(int arrayLength)
         {
-            _counts = new long[arrayLength];
+            _counts = ArrayProvider<long>.ForArrayOfLenght(arrayLength).Rent();
         }
 
         public int Length => _counts.Length;
+
+        public long[] RawValues => this._counts;
 
         public long this[int index]
         {
@@ -92,6 +94,11 @@ namespace HdrHistogram.Utilities
             // An operation that’s closely related to Interlocked methods is Thread.MemoryBarrier, which can be thought of as a dummy Interlocked operation. 
             // Just like an Interlocked method, Thread.Memory­Barrier can’t be reordered with any prior or subsequent memory operations. Unlike an Interlocked 
             // method, though, Thread.MemoryBarrier has no side effect; it simply constrains memory reorderings.
+        }
+
+        public void ReleaseArrays()
+        {
+            ArrayProvider<long>.ForArrayOfLenght(_counts.Length).Return(_counts);
         }
     }
 }

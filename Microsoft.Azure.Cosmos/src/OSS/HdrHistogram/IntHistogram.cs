@@ -17,6 +17,7 @@
  */
 
 using System;
+using HdrHistogram.Utilities;
 
 namespace HdrHistogram
 {
@@ -74,7 +75,7 @@ namespace HdrHistogram
         public IntHistogram(long lowestTrackableValue, long highestTrackableValue, int numberOfSignificantValueDigits)
             : base(lowestTrackableValue, highestTrackableValue, numberOfSignificantValueDigits)
         {
-            _counts = new int[CountsArrayLength];
+            _counts = ArrayProvider<int>.ForArrayOfLenght(CountsArrayLength).Rent();
         }
 
         /// <summary>
@@ -110,7 +111,7 @@ namespace HdrHistogram
         /// <summary>
         /// Gets the total number of recorded values.
         /// </summary>
-        public override long TotalCount { get { return _totalCount; } protected set { _totalCount = value; } }
+        public override long TotalCount { get { return _totalCount; } internal set { _totalCount = value; } }
 
         /// <summary>
         /// Returns the word size of this implementation
@@ -194,5 +195,11 @@ namespace HdrHistogram
                 target[i] = _counts[i];
             }
         }
+
+        protected override void ReleaseArrays()
+        {
+            ArrayProvider<int>.ForArrayOfLenght(CountsArrayLength).Return(this._counts);
+        }
+
     }
 }

@@ -17,6 +17,10 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using HdrHistogram.Iteration;
+using HdrHistogram.Utilities;
 
 namespace HdrHistogram
 {
@@ -44,6 +48,9 @@ namespace HdrHistogram
     {
         private readonly long[] _counts;
         private long _totalCount;
+        private HistogramIterationValue[] allValues = null;
+        private HistogramIterationValue[] recordedValues = null;
+        bool frozen = false;
 
         /// <summary>
         /// Construct a Histogram given the highest value to be tracked and a number of significant decimal digits. 
@@ -74,9 +81,15 @@ namespace HdrHistogram
         /// </param>
         public LongHistogram(long lowestTrackableValue, long highestTrackableValue,
                          int numberOfSignificantValueDigits)
+            : this(null, lowestTrackableValue, highestTrackableValue, numberOfSignificantValueDigits)
+        {
+        }
+
+        public LongHistogram(long[] counts, long lowestTrackableValue, long highestTrackableValue,
+                         int numberOfSignificantValueDigits)
             : base(lowestTrackableValue, highestTrackableValue, numberOfSignificantValueDigits)
         {
-            _counts = new long[CountsArrayLength];
+            _counts = counts ?? ArrayProvider<long>.ForArrayOfLenght(CountsArrayLength).Rent();
         }
 
         /// <summary>
@@ -102,16 +115,22 @@ namespace HdrHistogram
         /// </remarks>
         public LongHistogram(long instanceId, long lowestTrackableValue, long highestTrackableValue,
                          int numberOfSignificantValueDigits)
+            : this(null, instanceId, lowestTrackableValue, highestTrackableValue, numberOfSignificantValueDigits)
+        {
+        }
+
+        public LongHistogram(long[] counts, long instanceId, long lowestTrackableValue, long highestTrackableValue,
+                         int numberOfSignificantValueDigits)
             : base(instanceId, lowestTrackableValue, highestTrackableValue, numberOfSignificantValueDigits)
         {
-            _counts = new long[CountsArrayLength];
+            _counts = counts ?? ArrayProvider<long>.ForArrayOfLenght(CountsArrayLength).Rent();
         }
 
 
         /// <summary>
         /// Gets the total number of recorded values.
         /// </summary>
-        public override long TotalCount { get { return _totalCount; } protected set { _totalCount = value; } }
+        public override long TotalCount { get { return _totalCount; } internal set { _totalCount = value; } }
 
         /// <summary>
         /// Returns the word size of this implementation
@@ -191,6 +210,50 @@ namespace HdrHistogram
         protected override void CopyCountsInto(long[] target)
         {
             Array.Copy(_counts, target, target.Length);
+        }
+
+        protected override void ReleaseArrays()
+        {
+            ArrayProvider<long>.ForArrayOfLenght(CountsArrayLength).Return(this._counts);
+        }
+
+        public void FreezeValues()
+        {
+            this.frozen = true;
+        }
+
+        public override IEnumerable<HistogramIterationValue> RecordedValues()
+        {
+            if (!frozen)
+            {
+                return base.RecordedValues();
+            }
+
+            if (this.recordedValues != null)
+            {
+                Console.WriteLine("Using Cached recorded values");
+                return this.recordedValues;
+            }
+
+            Console.WriteLine("Caching recorded values");
+            return this.recordedValues = base.RecordedValues().ToArray();
+        }
+
+        public override IEnumerable<HistogramIterationValue> AllValues()
+        {
+            if (!frozen)
+            {
+                return base.AllValues();
+            }
+
+            if (this.allValues != null)
+            {
+                Console.WriteLine("Using Cached all values");
+                return this.allValues;
+            }
+
+            Console.WriteLine("Caching all values");
+            return this.allValues = base.AllValues().ToArray();
         }
     }
 }
