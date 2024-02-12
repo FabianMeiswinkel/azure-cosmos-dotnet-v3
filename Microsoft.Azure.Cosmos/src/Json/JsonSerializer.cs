@@ -12,17 +12,33 @@ namespace Microsoft.Azure.Cosmos.Json
     using Microsoft.Azure.Cosmos.CosmosElements;
     using Microsoft.Azure.Cosmos.Query.Core.Monads;
 
-    internal static class JsonSerializer
+    /// <summary>
+    /// JsonSerializer class
+    /// </summary>
+    public static class JsonSerializer
     {
+        /// <summary>
+        /// This is a test
+        /// </summary>
+        /// <param name="value">some value</param>
+        /// <param name="jsonSerializationFormat">some format</param>
+        /// <returns></returns>
         public static ReadOnlyMemory<byte> Serialize(
             object value,
-            JsonSerializationFormat jsonSerializationFormat = JsonSerializationFormat.Text)
+            JsonSerializationFormat jsonSerializationFormat = JsonSerializationFormat.Text, bool referenceStringsEnabled = true)
         {
-            IJsonWriter jsonWriter = JsonWriter.Create(jsonSerializationFormat);
+            IJsonWriter jsonWriter = JsonWriter.Create(jsonSerializationFormat, enableEncodedStrings: referenceStringsEnabled);
             JsonSerializer.SerializeInternal(value, jsonWriter);
             return jsonWriter.GetResult();
         }
 
+        /// <summary>
+        /// internal serilaization method
+        /// </summary>
+        /// <param name="value">the to be serialized value</param>
+        /// <param name="jsonWriter">the output writer</param>
+        /// <exception cref="ArgumentNullException">Thrown when value or writer is null</exception>
+        /// <exception cref="ArgumentOutOfRangeException">thrown when invalid numeric types are used</exception>
         public static void SerializeInternal(
             object value,
             IJsonWriter jsonWriter)
@@ -122,6 +138,12 @@ namespace Microsoft.Azure.Cosmos.Json
             }
         }
 
+        /// <summary>
+        /// deserialization method
+        /// </summary>
+        /// <typeparam name="T">the generic type</typeparam>
+        /// <param name="buffer">some buffer</param>
+        /// <returns>the deserialized object</returns>
         public static T Deserialize<T>(ReadOnlyMemory<byte> buffer)
         {
             TryCatch<T> tryDeserialize = JsonSerializer.Monadic.Deserialize<T>(buffer);
@@ -129,7 +151,7 @@ namespace Microsoft.Azure.Cosmos.Json
             return tryDeserialize.Result;
         }
 
-        public static class Monadic
+        internal static class Monadic
         {
             public static TryCatch<T> Deserialize<T>(ReadOnlyMemory<byte> buffer)
             {
@@ -167,6 +189,13 @@ namespace Microsoft.Azure.Cosmos.Json
             }
         }
 
+        /// <summary>
+        /// Exceptionless attempt to deserialize
+        /// </summary>
+        /// <typeparam name="T">The generic type</typeparam>
+        /// <param name="buffer">Some buffer</param>
+        /// <param name="result">Inidcating whether deserialization was successful</param>
+        /// <returns></returns>
         public static bool TryDeserialize<T>(ReadOnlyMemory<byte> buffer, out T result)
         {
             TryCatch<T> tryDeserialize = JsonSerializer.Monadic.Deserialize<T>(buffer);

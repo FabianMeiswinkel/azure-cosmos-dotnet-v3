@@ -1,0 +1,943 @@
+{
+    "userAgent": "azsdk-java-cosmos/4.29.0 Linux/5.15.0-1051-azure JRE/1.8.0_382",
+    "activityId": "7a29dc15-c5b5-11ee-8afa-7303ac325f23",
+    "requestLatencyInMs": 60198,
+    "requestStartTimeUTC": "2024-02-07T12:36:12.438Z",
+    "requestEndTimeUTC": "2024-02-07T12:37:12.636Z",
+    "responseStatisticsList": [
+        {
+            "storeResult": {
+                "storePhysicalAddress": "rntbd://cdb-ms-prod-australiaeast1-be39.documents.azure.com:14356/apps/69a02f99-26fb-4c44-8449-aa1e7e8642da/services/8e4acf32-c01d-4240-8583-fa7cb201762a/partitions/414496ce-0f8b-4913-82d2-2912a4110d99/replicas/133505106398882459p/",
+                "lsn": 0,
+                "globalCommittedLsn": -1,
+                "partitionKeyRangeId": null,
+                "isValid": true,
+                "statusCode": 410,
+                "subStatusCode": 0,
+                "isGone": true,
+                "isNotFound": false,
+                "isInvalidPartition": false,
+                "isThroughputControlRequestRateTooLarge": false,
+                "requestCharge": 0.0,
+                "itemLSN": -1,
+                "sessionToken": null,
+                "backendLatencyInMs": null,
+                "exception": null,
+                "transportRequestTimeline": [
+                    {
+                        "eventName": "created",
+                        "startTimeUTC": "2024-02-07T12:36:12.438Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "queued",
+                        "startTimeUTC": "2024-02-07T12:36:12.438Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "channelAcquisitionStarted",
+                        "startTimeUTC": "2024-02-07T12:36:12.438Z",
+                        "durationInMicroSec": 3000
+                    },
+                    {
+                        "eventName": "pipelined",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "transitTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "decodeTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "received",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "completed",
+                        "startTimeUTC": "2024-02-07T12:36:12.441Z",
+                        "durationInMicroSec": 0
+                    }
+                ],
+                "rntbdRequestLengthInBytes": -1,
+                "rntbdResponseLengthInBytes": -1,
+                "requestPayloadLengthInBytes": 83225,
+                "responsePayloadLengthInBytes": null,
+                "channelTaskQueueSize": 0,
+                "pendingRequestsCount": 0,
+                "serviceEndpointStatistics": {
+                    "availableChannels": 0,
+                    "acquiredChannels": 0,
+                    "executorTaskQueueSize": 0,
+                    "inflightRequests": 1,
+                    "lastSuccessfulRequestTime": "2024-02-07T09:15:36.682Z",
+                    "lastRequestTime": "2024-02-07T12:36:12.426Z",
+                    "createdTime": "2024-02-07T09:15:36.683Z",
+                    "isClosed": false
+                }
+            },
+            "requestResponseTimeUTC": "2024-02-07T12:36:12.441Z",
+            "requestResourceType": "Document",
+            "requestOperationType": "Batch"
+        },
+        {
+            "storeResult": {
+                "storePhysicalAddress": "rntbd://cdb-ms-prod-australiaeast1-be39.documents.azure.com:14356/apps/69a02f99-26fb-4c44-8449-aa1e7e8642da/services/8e4acf32-c01d-4240-8583-fa7cb201762a/partitions/414496ce-0f8b-4913-82d2-2912a4110d99/replicas/133505106398882459p/",
+                "lsn": 0,
+                "globalCommittedLsn": -1,
+                "partitionKeyRangeId": null,
+                "isValid": true,
+                "statusCode": 410,
+                "subStatusCode": 0,
+                "isGone": true,
+                "isNotFound": false,
+                "isInvalidPartition": false,
+                "isThroughputControlRequestRateTooLarge": false,
+                "requestCharge": 0.0,
+                "itemLSN": -1,
+                "sessionToken": null,
+                "backendLatencyInMs": null,
+                "exception": null,
+                "transportRequestTimeline": [
+                    {
+                        "eventName": "created",
+                        "startTimeUTC": "2024-02-07T12:36:12.447Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "queued",
+                        "startTimeUTC": "2024-02-07T12:36:12.447Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "channelAcquisitionStarted",
+                        "startTimeUTC": "2024-02-07T12:36:12.447Z",
+                        "durationInMicroSec": 4000
+                    },
+                    {
+                        "eventName": "pipelined",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "transitTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "decodeTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "received",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "completed",
+                        "startTimeUTC": "2024-02-07T12:36:12.451Z",
+                        "durationInMicroSec": 0
+                    }
+                ],
+                "rntbdRequestLengthInBytes": -1,
+                "rntbdResponseLengthInBytes": -1,
+                "requestPayloadLengthInBytes": 83225,
+                "responsePayloadLengthInBytes": null,
+                "channelTaskQueueSize": 0,
+                "pendingRequestsCount": 0,
+                "serviceEndpointStatistics": {
+                    "availableChannels": 0,
+                    "acquiredChannels": 0,
+                    "executorTaskQueueSize": 0,
+                    "inflightRequests": 1,
+                    "lastSuccessfulRequestTime": "2024-02-07T09:15:36.682Z",
+                    "lastRequestTime": "2024-02-07T12:36:12.437Z",
+                    "createdTime": "2024-02-07T09:15:36.683Z",
+                    "isClosed": false
+                }
+            },
+            "requestResponseTimeUTC": "2024-02-07T12:36:12.451Z",
+            "requestResourceType": "Document",
+            "requestOperationType": "Batch"
+        },
+        {
+            "storeResult": {
+                "storePhysicalAddress": "rntbd://cdb-ms-prod-australiaeast1-be39.documents.azure.com:14356/apps/69a02f99-26fb-4c44-8449-aa1e7e8642da/services/8e4acf32-c01d-4240-8583-fa7cb201762a/partitions/414496ce-0f8b-4913-82d2-2912a4110d99/replicas/133505106398882459p/",
+                "lsn": 0,
+                "globalCommittedLsn": -1,
+                "partitionKeyRangeId": null,
+                "isValid": true,
+                "statusCode": 410,
+                "subStatusCode": 0,
+                "isGone": true,
+                "isNotFound": false,
+                "isInvalidPartition": false,
+                "isThroughputControlRequestRateTooLarge": false,
+                "requestCharge": 0.0,
+                "itemLSN": -1,
+                "sessionToken": null,
+                "backendLatencyInMs": null,
+                "exception": null,
+                "transportRequestTimeline": [
+                    {
+                        "eventName": "created",
+                        "startTimeUTC": "2024-02-07T12:36:13.459Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "queued",
+                        "startTimeUTC": "2024-02-07T12:36:13.459Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "channelAcquisitionStarted",
+                        "startTimeUTC": "2024-02-07T12:36:13.459Z",
+                        "durationInMicroSec": 3000
+                    },
+                    {
+                        "eventName": "pipelined",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "transitTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "decodeTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "received",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "completed",
+                        "startTimeUTC": "2024-02-07T12:36:13.462Z",
+                        "durationInMicroSec": 1000
+                    }
+                ],
+                "rntbdRequestLengthInBytes": -1,
+                "rntbdResponseLengthInBytes": -1,
+                "requestPayloadLengthInBytes": 83225,
+                "responsePayloadLengthInBytes": null,
+                "channelTaskQueueSize": 0,
+                "pendingRequestsCount": 0,
+                "serviceEndpointStatistics": {
+                    "availableChannels": 0,
+                    "acquiredChannels": 0,
+                    "executorTaskQueueSize": 0,
+                    "inflightRequests": 1,
+                    "lastSuccessfulRequestTime": "2024-02-07T09:15:36.682Z",
+                    "lastRequestTime": "2024-02-07T12:36:12.446Z",
+                    "createdTime": "2024-02-07T09:15:36.683Z",
+                    "isClosed": false
+                }
+            },
+            "requestResponseTimeUTC": "2024-02-07T12:36:13.463Z",
+            "requestResourceType": "Document",
+            "requestOperationType": "Batch"
+        },
+        {
+            "storeResult": {
+                "storePhysicalAddress": "rntbd://cdb-ms-prod-australiaeast1-be39.documents.azure.com:14356/apps/69a02f99-26fb-4c44-8449-aa1e7e8642da/services/8e4acf32-c01d-4240-8583-fa7cb201762a/partitions/414496ce-0f8b-4913-82d2-2912a4110d99/replicas/133505106398882459p/",
+                "lsn": 0,
+                "globalCommittedLsn": -1,
+                "partitionKeyRangeId": null,
+                "isValid": true,
+                "statusCode": 410,
+                "subStatusCode": 0,
+                "isGone": true,
+                "isNotFound": false,
+                "isInvalidPartition": false,
+                "isThroughputControlRequestRateTooLarge": false,
+                "requestCharge": 0.0,
+                "itemLSN": -1,
+                "sessionToken": null,
+                "backendLatencyInMs": null,
+                "exception": null,
+                "transportRequestTimeline": [
+                    {
+                        "eventName": "created",
+                        "startTimeUTC": "2024-02-07T12:36:15.469Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "queued",
+                        "startTimeUTC": "2024-02-07T12:36:15.469Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "channelAcquisitionStarted",
+                        "startTimeUTC": "2024-02-07T12:36:15.469Z",
+                        "durationInMicroSec": 4000
+                    },
+                    {
+                        "eventName": "pipelined",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "transitTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "decodeTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "received",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "completed",
+                        "startTimeUTC": "2024-02-07T12:36:15.473Z",
+                        "durationInMicroSec": 0
+                    }
+                ],
+                "rntbdRequestLengthInBytes": -1,
+                "rntbdResponseLengthInBytes": -1,
+                "requestPayloadLengthInBytes": 83225,
+                "responsePayloadLengthInBytes": null,
+                "channelTaskQueueSize": 0,
+                "pendingRequestsCount": 0,
+                "serviceEndpointStatistics": {
+                    "availableChannels": 0,
+                    "acquiredChannels": 0,
+                    "executorTaskQueueSize": 0,
+                    "inflightRequests": 1,
+                    "lastSuccessfulRequestTime": "2024-02-07T09:15:36.682Z",
+                    "lastRequestTime": "2024-02-07T12:36:13.458Z",
+                    "createdTime": "2024-02-07T09:15:36.683Z",
+                    "isClosed": false
+                }
+            },
+            "requestResponseTimeUTC": "2024-02-07T12:36:15.473Z",
+            "requestResourceType": "Document",
+            "requestOperationType": "Batch"
+        },
+        {
+            "storeResult": {
+                "storePhysicalAddress": "rntbd://cdb-ms-prod-australiaeast1-be39.documents.azure.com:14356/apps/69a02f99-26fb-4c44-8449-aa1e7e8642da/services/8e4acf32-c01d-4240-8583-fa7cb201762a/partitions/414496ce-0f8b-4913-82d2-2912a4110d99/replicas/133505106398882459p/",
+                "lsn": 0,
+                "globalCommittedLsn": -1,
+                "partitionKeyRangeId": null,
+                "isValid": true,
+                "statusCode": 410,
+                "subStatusCode": 0,
+                "isGone": true,
+                "isNotFound": false,
+                "isInvalidPartition": false,
+                "isThroughputControlRequestRateTooLarge": false,
+                "requestCharge": 0.0,
+                "itemLSN": -1,
+                "sessionToken": null,
+                "backendLatencyInMs": null,
+                "exception": null,
+                "transportRequestTimeline": [
+                    {
+                        "eventName": "created",
+                        "startTimeUTC": "2024-02-07T12:36:19.515Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "queued",
+                        "startTimeUTC": "2024-02-07T12:36:19.515Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "channelAcquisitionStarted",
+                        "startTimeUTC": "2024-02-07T12:36:19.515Z",
+                        "durationInMicroSec": 9000
+                    },
+                    {
+                        "eventName": "pipelined",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "transitTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "decodeTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "received",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "completed",
+                        "startTimeUTC": "2024-02-07T12:36:19.524Z",
+                        "durationInMicroSec": 0
+                    }
+                ],
+                "rntbdRequestLengthInBytes": -1,
+                "rntbdResponseLengthInBytes": -1,
+                "requestPayloadLengthInBytes": 83225,
+                "responsePayloadLengthInBytes": null,
+                "channelTaskQueueSize": 0,
+                "pendingRequestsCount": 0,
+                "serviceEndpointStatistics": {
+                    "availableChannels": 0,
+                    "acquiredChannels": 0,
+                    "executorTaskQueueSize": 0,
+                    "inflightRequests": 1,
+                    "lastSuccessfulRequestTime": "2024-02-07T09:15:36.682Z",
+                    "lastRequestTime": "2024-02-07T12:36:15.468Z",
+                    "createdTime": "2024-02-07T09:15:36.683Z",
+                    "isClosed": false
+                }
+            },
+            "requestResponseTimeUTC": "2024-02-07T12:36:19.524Z",
+            "requestResourceType": "Document",
+            "requestOperationType": "Batch"
+        },
+        {
+            "storeResult": {
+                "storePhysicalAddress": "rntbd://cdb-ms-prod-australiaeast1-be39.documents.azure.com:14356/apps/69a02f99-26fb-4c44-8449-aa1e7e8642da/services/8e4acf32-c01d-4240-8583-fa7cb201762a/partitions/414496ce-0f8b-4913-82d2-2912a4110d99/replicas/133505106398882459p/",
+                "lsn": 0,
+                "globalCommittedLsn": -1,
+                "partitionKeyRangeId": null,
+                "isValid": true,
+                "statusCode": 410,
+                "subStatusCode": 0,
+                "isGone": true,
+                "isNotFound": false,
+                "isInvalidPartition": false,
+                "isThroughputControlRequestRateTooLarge": false,
+                "requestCharge": 0.0,
+                "itemLSN": -1,
+                "sessionToken": null,
+                "backendLatencyInMs": null,
+                "exception": null,
+                "transportRequestTimeline": [
+                    {
+                        "eventName": "created",
+                        "startTimeUTC": "2024-02-07T12:36:27.530Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "queued",
+                        "startTimeUTC": "2024-02-07T12:36:27.530Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "channelAcquisitionStarted",
+                        "startTimeUTC": "2024-02-07T12:36:27.530Z",
+                        "durationInMicroSec": 4000
+                    },
+                    {
+                        "eventName": "pipelined",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "transitTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "decodeTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "received",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "completed",
+                        "startTimeUTC": "2024-02-07T12:36:27.534Z",
+                        "durationInMicroSec": 0
+                    }
+                ],
+                "rntbdRequestLengthInBytes": -1,
+                "rntbdResponseLengthInBytes": -1,
+                "requestPayloadLengthInBytes": 83225,
+                "responsePayloadLengthInBytes": null,
+                "channelTaskQueueSize": 0,
+                "pendingRequestsCount": 0,
+                "serviceEndpointStatistics": {
+                    "availableChannels": 0,
+                    "acquiredChannels": 0,
+                    "executorTaskQueueSize": 0,
+                    "inflightRequests": 1,
+                    "lastSuccessfulRequestTime": "2024-02-07T09:15:36.682Z",
+                    "lastRequestTime": "2024-02-07T12:36:19.514Z",
+                    "createdTime": "2024-02-07T09:15:36.683Z",
+                    "isClosed": false
+                }
+            },
+            "requestResponseTimeUTC": "2024-02-07T12:36:27.534Z",
+            "requestResourceType": "Document",
+            "requestOperationType": "Batch"
+        },
+        {
+            "storeResult": {
+                "storePhysicalAddress": "rntbd://cdb-ms-prod-australiaeast1-be39.documents.azure.com:14356/apps/69a02f99-26fb-4c44-8449-aa1e7e8642da/services/8e4acf32-c01d-4240-8583-fa7cb201762a/partitions/414496ce-0f8b-4913-82d2-2912a4110d99/replicas/133505106398882459p/",
+                "lsn": 0,
+                "globalCommittedLsn": -1,
+                "partitionKeyRangeId": null,
+                "isValid": true,
+                "statusCode": 410,
+                "subStatusCode": 0,
+                "isGone": true,
+                "isNotFound": false,
+                "isInvalidPartition": false,
+                "isThroughputControlRequestRateTooLarge": false,
+                "requestCharge": 0.0,
+                "itemLSN": -1,
+                "sessionToken": null,
+                "backendLatencyInMs": null,
+                "exception": null,
+                "transportRequestTimeline": [
+                    {
+                        "eventName": "created",
+                        "startTimeUTC": "2024-02-07T12:36:42.542Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "queued",
+                        "startTimeUTC": "2024-02-07T12:36:42.542Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "channelAcquisitionStarted",
+                        "startTimeUTC": "2024-02-07T12:36:42.542Z",
+                        "durationInMicroSec": 7000
+                    },
+                    {
+                        "eventName": "pipelined",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "transitTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "decodeTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "received",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "completed",
+                        "startTimeUTC": "2024-02-07T12:36:42.549Z",
+                        "durationInMicroSec": 0
+                    }
+                ],
+                "rntbdRequestLengthInBytes": -1,
+                "rntbdResponseLengthInBytes": -1,
+                "requestPayloadLengthInBytes": 83225,
+                "responsePayloadLengthInBytes": null,
+                "channelTaskQueueSize": 0,
+                "pendingRequestsCount": 0,
+                "serviceEndpointStatistics": {
+                    "availableChannels": 0,
+                    "acquiredChannels": 0,
+                    "executorTaskQueueSize": 0,
+                    "inflightRequests": 1,
+                    "lastSuccessfulRequestTime": "2024-02-07T09:15:36.682Z",
+                    "lastRequestTime": "2024-02-07T12:36:27.529Z",
+                    "createdTime": "2024-02-07T09:15:36.683Z",
+                    "isClosed": false
+                }
+            },
+            "requestResponseTimeUTC": "2024-02-07T12:36:42.549Z",
+            "requestResourceType": "Document",
+            "requestOperationType": "Batch"
+        },
+        {
+            "storeResult": {
+                "storePhysicalAddress": "rntbd://cdb-ms-prod-australiaeast1-be39.documents.azure.com:14356/apps/69a02f99-26fb-4c44-8449-aa1e7e8642da/services/8e4acf32-c01d-4240-8583-fa7cb201762a/partitions/414496ce-0f8b-4913-82d2-2912a4110d99/replicas/133505106398882459p/",
+                "lsn": 0,
+                "globalCommittedLsn": -1,
+                "partitionKeyRangeId": null,
+                "isValid": true,
+                "statusCode": 410,
+                "subStatusCode": 0,
+                "isGone": true,
+                "isNotFound": false,
+                "isInvalidPartition": false,
+                "isThroughputControlRequestRateTooLarge": false,
+                "requestCharge": 0.0,
+                "itemLSN": -1,
+                "sessionToken": null,
+                "backendLatencyInMs": null,
+                "exception": null,
+                "transportRequestTimeline": [
+                    {
+                        "eventName": "created",
+                        "startTimeUTC": "2024-02-07T12:36:57.612Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "queued",
+                        "startTimeUTC": "2024-02-07T12:36:57.612Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "channelAcquisitionStarted",
+                        "startTimeUTC": "2024-02-07T12:36:57.612Z",
+                        "durationInMicroSec": 6000
+                    },
+                    {
+                        "eventName": "pipelined",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "transitTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "decodeTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "received",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "completed",
+                        "startTimeUTC": "2024-02-07T12:36:57.618Z",
+                        "durationInMicroSec": 0
+                    }
+                ],
+                "rntbdRequestLengthInBytes": -1,
+                "rntbdResponseLengthInBytes": -1,
+                "requestPayloadLengthInBytes": 83225,
+                "responsePayloadLengthInBytes": null,
+                "channelTaskQueueSize": 0,
+                "pendingRequestsCount": 0,
+                "serviceEndpointStatistics": {
+                    "availableChannels": 0,
+                    "acquiredChannels": 0,
+                    "executorTaskQueueSize": 0,
+                    "inflightRequests": 1,
+                    "lastSuccessfulRequestTime": "2024-02-07T09:15:36.682Z",
+                    "lastRequestTime": "2024-02-07T12:36:42.541Z",
+                    "createdTime": "2024-02-07T09:15:36.683Z",
+                    "isClosed": false
+                }
+            },
+            "requestResponseTimeUTC": "2024-02-07T12:36:57.618Z",
+            "requestResourceType": "Document",
+            "requestOperationType": "Batch"
+        },
+        {
+            "storeResult": {
+                "storePhysicalAddress": "rntbd://cdb-ms-prod-australiaeast1-be39.documents.azure.com:14356/apps/69a02f99-26fb-4c44-8449-aa1e7e8642da/services/8e4acf32-c01d-4240-8583-fa7cb201762a/partitions/414496ce-0f8b-4913-82d2-2912a4110d99/replicas/133505106398882459p/",
+                "lsn": 0,
+                "globalCommittedLsn": -1,
+                "partitionKeyRangeId": null,
+                "isValid": true,
+                "statusCode": 410,
+                "subStatusCode": 0,
+                "isGone": true,
+                "isNotFound": false,
+                "isInvalidPartition": false,
+                "isThroughputControlRequestRateTooLarge": false,
+                "requestCharge": 0.0,
+                "itemLSN": -1,
+                "sessionToken": null,
+                "backendLatencyInMs": null,
+                "exception": null,
+                "transportRequestTimeline": [
+                    {
+                        "eventName": "created",
+                        "startTimeUTC": "2024-02-07T12:37:12.628Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "queued",
+                        "startTimeUTC": "2024-02-07T12:37:12.628Z",
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "channelAcquisitionStarted",
+                        "startTimeUTC": "2024-02-07T12:37:12.628Z",
+                        "durationInMicroSec": 8000
+                    },
+                    {
+                        "eventName": "pipelined",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "transitTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "decodeTime",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "received",
+                        "startTimeUTC": null,
+                        "durationInMicroSec": 0
+                    },
+                    {
+                        "eventName": "completed",
+                        "startTimeUTC": "2024-02-07T12:37:12.636Z",
+                        "durationInMicroSec": 0
+                    }
+                ],
+                "rntbdRequestLengthInBytes": -1,
+                "rntbdResponseLengthInBytes": -1,
+                "requestPayloadLengthInBytes": 83225,
+                "responsePayloadLengthInBytes": null,
+                "channelTaskQueueSize": 0,
+                "pendingRequestsCount": 0,
+                "serviceEndpointStatistics": {
+                    "availableChannels": 0,
+                    "acquiredChannels": 0,
+                    "executorTaskQueueSize": 0,
+                    "inflightRequests": 1,
+                    "lastSuccessfulRequestTime": "2024-02-07T09:15:36.682Z",
+                    "lastRequestTime": "2024-02-07T12:36:57.611Z",
+                    "createdTime": "2024-02-07T09:15:36.683Z",
+                    "isClosed": false
+                }
+            },
+            "requestResponseTimeUTC": "2024-02-07T12:37:12.636Z",
+            "requestResourceType": "Document",
+            "requestOperationType": "Batch"
+        }
+    ],
+    "supplementalResponseStatisticsList": [],
+    "addressResolutionStatistics": {
+        "8327ccff-c5b5-11ee-8afa-7303ac325f23": {
+            "startTimeUTC": "2024-02-07T12:36:27.524Z",
+            "endTimeUTC": "2024-02-07T12:36:27.530Z",
+            "targetEndpoint": "https://mrkt-mdm-01-prd-cdb-aue-australiaeast.documents.azure.com:443/addresses/?$resolveFor=dbs%2FHBpFAA%3D%3D%2Fcolls%2FHBpFAO8LmCQ%3D%2Fdocs&$filter=protocol%20eq%20rntbd&$partitionKeyRangeIds=1113",
+            "errorMessage": null,
+            "forceRefresh": true,
+            "forceCollectionRoutingMapRefresh": false,
+            "inflightRequest": false
+        },
+        "9e089965-c5b5-11ee-8afa-7303ac325f23": {
+            "startTimeUTC": "2024-02-07T12:37:12.618Z",
+            "endTimeUTC": "2024-02-07T12:37:12.628Z",
+            "targetEndpoint": "https://mrkt-mdm-01-prd-cdb-aue-australiaeast.documents.azure.com:443/addresses/?$resolveFor=dbs%2FHBpFAA%3D%3D%2Fcolls%2FHBpFAO8LmCQ%3D%2Fdocs&$filter=protocol%20eq%20rntbd&$partitionKeyRangeIds=1113",
+            "errorMessage": null,
+            "forceRefresh": true,
+            "forceCollectionRoutingMapRefresh": true,
+            "inflightRequest": false
+        },
+        "8c1a4c31-c5b5-11ee-8afa-7303ac325f23": {
+            "startTimeUTC": "2024-02-07T12:36:42.535Z",
+            "endTimeUTC": "2024-02-07T12:36:42.542Z",
+            "targetEndpoint": "https://mrkt-mdm-01-prd-cdb-aue-australiaeast.documents.azure.com:443/addresses/?$resolveFor=dbs%2FHBpFAA%3D%3D%2Fcolls%2FHBpFAO8LmCQ%3D%2Fdocs&$filter=protocol%20eq%20rntbd&$partitionKeyRangeIds=1113",
+            "errorMessage": null,
+            "forceRefresh": true,
+            "forceCollectionRoutingMapRefresh": true,
+            "inflightRequest": false
+        },
+        "7e5b77dd-c5b5-11ee-8afa-7303ac325f23": {
+            "startTimeUTC": "2024-02-07T12:36:19.474Z",
+            "endTimeUTC": "2024-02-07T12:36:19.515Z",
+            "targetEndpoint": "https://mrkt-mdm-01-prd-cdb-aue-australiaeast.documents.azure.com:443/addresses/?$resolveFor=dbs%2FHBpFAA%3D%3D%2Fcolls%2FHBpFAO8LmCQ%3D%2Fdocs&$filter=protocol%20eq%20rntbd&$partitionKeyRangeIds=1113",
+            "errorMessage": null,
+            "forceRefresh": true,
+            "forceCollectionRoutingMapRefresh": false,
+            "inflightRequest": false
+        },
+        "7bf7702b-c5b5-11ee-8afa-7303ac325f23": {
+            "startTimeUTC": "2024-02-07T12:36:15.463Z",
+            "endTimeUTC": "2024-02-07T12:36:15.469Z",
+            "targetEndpoint": "https://mrkt-mdm-01-prd-cdb-aue-australiaeast.documents.azure.com:443/addresses/?$resolveFor=dbs%2FHBpFAA%3D%3D%2Fcolls%2FHBpFAO8LmCQ%3D%2Fdocs&$filter=protocol%20eq%20rntbd&$partitionKeyRangeIds=1113",
+            "errorMessage": null,
+            "forceRefresh": true,
+            "forceCollectionRoutingMapRefresh": false,
+            "inflightRequest": false
+        },
+        "7a2a5147-c5b5-11ee-8afa-7303ac325f23": {
+            "startTimeUTC": "2024-02-07T12:36:12.441Z",
+            "endTimeUTC": "2024-02-07T12:36:12.447Z",
+            "targetEndpoint": "https://mrkt-mdm-01-prd-cdb-aue-australiaeast.documents.azure.com:443/addresses/?$resolveFor=dbs%2FHBpFAA%3D%3D%2Fcolls%2FHBpFAO8LmCQ%3D%2Fdocs&$filter=protocol%20eq%20rntbd&$partitionKeyRangeIds=1113",
+            "errorMessage": null,
+            "forceRefresh": true,
+            "forceCollectionRoutingMapRefresh": false,
+            "inflightRequest": false
+        },
+        "7ac46e69-c5b5-11ee-8afa-7303ac325f23": {
+            "startTimeUTC": "2024-02-07T12:36:13.452Z",
+            "endTimeUTC": "2024-02-07T12:36:13.458Z",
+            "targetEndpoint": "https://mrkt-mdm-01-prd-cdb-aue-australiaeast.documents.azure.com:443/addresses/?$resolveFor=dbs%2FHBpFAA%3D%3D%2Fcolls%2FHBpFAO8LmCQ%3D%2Fdocs&$filter=protocol%20eq%20rntbd&$partitionKeyRangeIds=1113",
+            "errorMessage": null,
+            "forceRefresh": true,
+            "forceCollectionRoutingMapRefresh": false,
+            "inflightRequest": false
+        },
+        "950d67a3-c5b5-11ee-8afa-7303ac325f23": {
+            "startTimeUTC": "2024-02-07T12:36:57.550Z",
+            "endTimeUTC": "2024-02-07T12:36:57.612Z",
+            "targetEndpoint": "https://mrkt-mdm-01-prd-cdb-aue-australiaeast.documents.azure.com:443/addresses/?$resolveFor=dbs%2FHBpFAA%3D%3D%2Fcolls%2FHBpFAO8LmCQ%3D%2Fdocs&$filter=protocol%20eq%20rntbd&$partitionKeyRangeIds=1113",
+            "errorMessage": null,
+            "forceRefresh": true,
+            "forceCollectionRoutingMapRefresh": true,
+            "inflightRequest": false
+        }
+    },
+    "regionsContacted": [
+        "australia east"
+    ],
+    "retryContext": {
+        "statusAndSubStatusCodes": [
+            [
+                410,
+                0
+            ],
+            [
+                410,
+                0
+            ],
+            [
+                410,
+                0
+            ],
+            [
+                410,
+                0
+            ],
+            [
+                410,
+                0
+            ],
+            [
+                410,
+                0
+            ],
+            [
+                410,
+                0
+            ],
+            [
+                410,
+                0
+            ],
+            [
+                410,
+                0
+            ],
+            [
+                503,
+                0
+            ]
+        ],
+        "retryCount": 10,
+        "retryLatency": 60196
+    },
+    "metadataDiagnosticsContext": {
+        "metadataDiagnosticList": [
+            {
+                "metaDataName": "SERVER_ADDRESS_LOOKUP",
+                "startTimeUTC": "2024-02-07T12:36:12.441Z",
+                "endTimeUTC": "2024-02-07T12:36:12.447Z",
+                "durationinMS": 6
+            },
+            {
+                "metaDataName": "SERVER_ADDRESS_LOOKUP",
+                "startTimeUTC": "2024-02-07T12:36:13.452Z",
+                "endTimeUTC": "2024-02-07T12:36:13.458Z",
+                "durationinMS": 6
+            },
+            {
+                "metaDataName": "SERVER_ADDRESS_LOOKUP",
+                "startTimeUTC": "2024-02-07T12:36:15.463Z",
+                "endTimeUTC": "2024-02-07T12:36:15.469Z",
+                "durationinMS": 6
+            },
+            {
+                "metaDataName": "SERVER_ADDRESS_LOOKUP",
+                "startTimeUTC": "2024-02-07T12:36:19.474Z",
+                "endTimeUTC": "2024-02-07T12:36:19.515Z",
+                "durationinMS": 41
+            },
+            {
+                "metaDataName": "SERVER_ADDRESS_LOOKUP",
+                "startTimeUTC": "2024-02-07T12:36:27.524Z",
+                "endTimeUTC": "2024-02-07T12:36:27.530Z",
+                "durationinMS": 6
+            },
+            {
+                "metaDataName": "SERVER_ADDRESS_LOOKUP",
+                "startTimeUTC": "2024-02-07T12:36:42.535Z",
+                "endTimeUTC": "2024-02-07T12:36:42.542Z",
+                "durationinMS": 7
+            },
+            {
+                "metaDataName": "SERVER_ADDRESS_LOOKUP",
+                "startTimeUTC": "2024-02-07T12:36:57.550Z",
+                "endTimeUTC": "2024-02-07T12:36:57.612Z",
+                "durationinMS": 62
+            },
+            {
+                "metaDataName": "SERVER_ADDRESS_LOOKUP",
+                "startTimeUTC": "2024-02-07T12:37:12.618Z",
+                "endTimeUTC": "2024-02-07T12:37:12.628Z",
+                "durationinMS": 10
+            }
+        ]
+    },
+    "serializationDiagnosticsContext": {
+        "serializationDiagnosticsList": [
+            {
+                "serializationType": "ITEM_SERIALIZATION",
+                "startTimeUTC": "2024-02-07T12:36:12.438Z",
+                "endTimeUTC": "2024-02-07T12:36:12.438Z",
+                "durationInMicroSec": 0
+            }
+        ]
+    },
+    "gatewayStatistics": null,
+    "systemInformation": {
+        "usedMemory": "21498006 KB",
+        "availableMemory": "21297002 KB",
+        "systemCpuLoad": "(2024-02-07T12:36:46.874Z 0.5%), (2024-02-07T12:36:51.874Z 0.5%), (2024-02-07T12:36:56.874Z 0.6%), (2024-02-07T12:37:01.874Z 0.4%), (2024-02-07T12:37:06.874Z 0.4%), (2024-02-07T12:37:11.874Z 0.5%)",
+        "availableProcessors": 16
+    },
+    "clientCfgs": {
+        "id": 1,
+        "machineId": "vmId:c5533618-0cbf-4d77-bbbc-46ccf7e922c2",
+        "connectionMode": "DIRECT",
+        "numberOfClients": 1,
+        "connCfg": {
+            "rntbd": "(cto:PT10S, nrto:PT10S, icto:PT0S, ieto:PT1H, mcpe:130, mrpc:30, cer:false)",
+            "gw": "(cps:1000, nrto:PT1M, icto:PT1M, p:false)",
+            "other": "(ed: true, cs: false)"
+        },
+        "consistencyCfg": "(consistency: Eventual, mm: true, prgns: [])"
+    }
+}
