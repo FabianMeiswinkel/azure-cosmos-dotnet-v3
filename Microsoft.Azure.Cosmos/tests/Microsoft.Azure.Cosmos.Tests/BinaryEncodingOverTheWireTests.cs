@@ -8,9 +8,12 @@ namespace Microsoft.Azure.Cosmos.Tests
     using System;
     using System.Collections.Generic;
     using System.Configuration;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Azure.Cosmos.Json;
+    using Microsoft.Azure.Cosmos.Json.Interop;
+    using Microsoft.Azure.Cosmos.Tests.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
@@ -56,11 +59,27 @@ namespace Microsoft.Azure.Cosmos.Tests
             {
                 JToken item = JToken.Parse(serializedItem);
                 item["id"] = Guid.NewGuid().ToString();
-                JToken createdItem = await container.CreateItemAsync<JToken>(item, new PartitionKey(item["id"].ToString()));
-                insertedDocuments.Add(createdItem);
+                ResponseMessage response = await container
+                    .CreateItemStreamAsync(ToBinaryEncodedStream(item), new PartitionKey(item["id"].ToString()));
+                response.EnsureSuccessStatusCode();
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    response.Content.CopyTo(memoryStream);
+                    memoryStream.Position = 0;
+                    String jsonAsText = JsonTestUtils.ConvertBinaryToText(memoryStream.ToArray());
+                    JToken createdItem = JsonConvert.DeserializeObject<JToken>(jsonAsText);
+                    insertedDocuments.Add(createdItem);
+                }
             }
 
             return new Tuple<Container, List<JToken>>(container, insertedDocuments);
+        }
+
+        private static Stream ToBinaryEncodedStream(JToken token)
+        {
+            using CosmosDBToNewtonsoftWriter writer = new CosmosDBToNewtonsoftWriter(JsonSerializationFormat.Binary);
+            token.WriteTo(writer);
+            return new MemoryStream(writer.GetResult().ToArray());
         }
 
         internal delegate Task Query(CosmosClient cosmosClient, Container container, List<JToken> items);
