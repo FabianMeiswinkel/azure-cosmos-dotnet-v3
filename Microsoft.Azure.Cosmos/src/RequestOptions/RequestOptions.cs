@@ -126,6 +126,11 @@ namespace Microsoft.Azure.Cosmos
             }
 
             this.AddRequestHeaders?.Invoke(request.Headers);
+
+            if (request.Headers["x-ms-cosmos-supported-serialization-formats"] != null)
+            {
+                request.Headers.CosmosMessageHeaders.SupportedSerializationFormats = request.Headers["x-ms-cosmos-supported-serialization-formats"];
+            }
         }
 
         /// <summary>

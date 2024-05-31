@@ -1,143 +1,484 @@
 ﻿namespace CosmosBinEncoder
 {
+    using System.Diagnostics;
     using System.IO;
-    using Microsoft.Azure.Cosmos.CosmosElements;
+    using System.Text;
+    using Microsoft.Azure.Cosmos;
     using Microsoft.Azure.Cosmos.Json;
+    using Microsoft.Azure.Cosmos.Json.Interop;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    using CosmosJson = Microsoft.Azure.Cosmos.Json;
 
     internal class Program
     {
-        static List<TranscodingResult> results = new List<TranscodingResult>();
+        private static string oldDbName = "fabianm";
+        private static bool stopTests = false;
+        private static List<Tuple<String, int>> testCases = new List<Tuple<String, int>>()
+        {
+            Tuple.Create("BingDocs", 5000),
+            Tuple.Create("DevTestDoc", 5000),
+            Tuple.Create("InsertSimple10trm2048Kb", 1000),
+            Tuple.Create("InsertSimple10trm1024Kb", 2000),
+            Tuple.Create("InsertSimple10trm512Kb", 3000),
+            Tuple.Create("InsertSimple10trm256Kb", 5000),
+            Tuple.Create("InsertSimple10trm128Kb", 5000),
+            Tuple.Create("InsertSimple10trm64Kb", 5000),
+            Tuple.Create("InsertSimple10trm32Kb", 10000),
+            Tuple.Create("InsertSimple10trm16Kb", 10000),
+            Tuple.Create("InsertSimple10trm8Kb", 10000),
+            Tuple.Create("InsertSimple10trm4Kb", 10000),
+            Tuple.Create("InsertSimple10trm2Kb", 10000),
+            Tuple.Create("InsertSimple10trm1Kb", 10000),
+            Tuple.Create("InsertComplexIndexing", 5000),
+            Tuple.Create("LastFm", 10000),
+            Tuple.Create("MillionSongDoc", 10000),
+            Tuple.Create("Nutrition", 10000),
+            Tuple.Create("PerfComplex", 10000),
+            Tuple.Create("PerfSimple", 10000),
+        };
+
         static void Main(string[] args)
         {
-            try
+            foreach (Tuple<string, int> testCase in testCases)
             {
-                MainAsync(args).Wait();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("EXCEPTION: {0}", ex);
+                try
+                {
+                    Console.WriteLine("================================================================");
+                    Console.WriteLine($" STARTING {testCase.Item1} with {testCase.Item2} iterations");
+                    Console.WriteLine("================================================================");
+                    MainAsync(args, testCase).Wait();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("EXCEPTION: {0}", ex);
+                }
+                finally
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("================================================================");
+                    Console.WriteLine($" FINISHED {testCase.Item1} with {testCase.Item2} iterations");
+                    Console.WriteLine("================================================================");
+                    Console.WriteLine();
+                    Console.WriteLine();
+                }
             }
 
             Console.WriteLine("Press any key to quit...");
             Console.ReadKey();
         }
 
-        static async Task MainAsync(string[] args)
+        static async Task MainAsync(string[] args, Tuple<string, int> testCase)
         {
-            if (args.Length == 0 || String.IsNullOrWhiteSpace(args[0]))
+            if (args.Length != 2 || String.IsNullOrWhiteSpace(args[0]) || String.IsNullOrWhiteSpace(args[1]))
             {
-                throw new ArgumentException("First command line argument needs to be the read-only connection string.", "args[0]");
+                throw new ArgumentException("Command line arguments need to be the write-enabled connection strings for Text and Binary.", nameof(args));
             }
 
-            if (!File.Exists(args[0]) && !Directory.Exists(args[0]))
+            String textConnectionString = args[0];
+            String binaryConnectionString = args[1];
+            CosmosClientOptions clientOptions = new CosmosClientOptions
             {
-                throw new ArgumentException($"File or Folder '{args[0]}' does not exist.", "args[0]");
-            }
+                EnableContentResponseOnWrite = true
+            };
 
-            FileInfo statsFile;
-            if (File.Exists(args[0]))
-            {
-                FileInfo fileInfo = new FileInfo(args[0]);
-                await TranscodeFile(fileInfo);
+            using CosmosClient textClient = new CosmosClient(textConnectionString, clientOptions);
+            using CosmosClient binaryClient = new CosmosClient(binaryConnectionString, clientOptions);
+            
+            string testCaseName = testCase.Item1;
+            string inputFileName = testCaseName + ".json";
+            string dbName = "fabianm_" + testCaseName;
+            int maxIterationCount = testCase.Item2;
 
-                statsFile = new FileInfo(Path.Combine(fileInfo.Directory.FullName, fileInfo.Name + ".stats.csv"));
-            }
-            else
+            await CreateTestContainer(textClient, "TextToTextWithResponse", dbName);
+            await CreateTestContainer(textClient, "TextToTextNoResponse", dbName);
+            await CreateTestContainer(binaryClient, "TextToBinaryWithResponse", dbName);
+            await CreateTestContainer(binaryClient, "TextToBinaryNoResponse", dbName);
+            await CreateTestContainer(binaryClient, "BinaryToBinaryWithResponse", dbName);
+            await CreateTestContainer(binaryClient, "BinaryToBinaryNoResponse", dbName);
+
+            List<Task> tasks = new List<Task>();
+
+            TestCase textToText = new TestCase(
+                "Text-To-Text",
+                textClient.GetDatabase(dbName).GetContainer("TextToTextWithResponse"),
+                textClient.GetDatabase(dbName).GetContainer("TextToTextNoResponse"),
+                false,
+                maxIterationCount,
+                inputFileName);
+            tasks.Add(textToText.ExecuteAsync());
+
+            TestCase textToBinary = new TestCase(
+                "Text-To-Binary",
+                binaryClient.GetDatabase(dbName).GetContainer("TextToBinaryWithResponse"),
+                binaryClient.GetDatabase(dbName).GetContainer("TextToBinaryNoResponse"),
+                false,
+                maxIterationCount,
+                inputFileName);
+            tasks.Add(textToBinary.ExecuteAsync());
+
+            TestCase binaryToBinary = new TestCase(
+                "Binary-To-Binary",
+                binaryClient.GetDatabase(dbName).GetContainer("BinaryToBinaryWithResponse"),
+                binaryClient.GetDatabase(dbName).GetContainer("BinaryToBinaryNoResponse"),
+                true,
+                maxIterationCount,
+                inputFileName);
+            tasks.Add(binaryToBinary.ExecuteAsync());
+
+            await Task.WhenAll(tasks);
+
+            Console.WriteLine("Finished");
+        }
+
+        static async Task CreateTestContainer(CosmosClient client, String name, string dbName)
+        {
+            if (oldDbName != null)
             {
-                foreach(String path in Directory.GetFiles(args[0], "*.json", SearchOption.AllDirectories))
+                ResponseMessage deleteResponse = await client.GetDatabase(oldDbName).DeleteStreamAsync();
+                if (deleteResponse.StatusCode != System.Net.HttpStatusCode.NotFound)
                 {
-                    FileInfo fileInfo = new FileInfo(path);
-                    await TranscodeFile(fileInfo);
+                    deleteResponse.EnsureSuccessStatusCode();
+                    await Task.Delay(5000);
                 }
-                statsFile = new FileInfo(Path.Combine(new DirectoryInfo(args[0]).FullName, "stats.csv"));
+
+                oldDbName = null;
             }
 
-            long totalInputSize = 0;
-            long totalNormalizedSize = 0;
-            long totalBinaryWithRefStringsSize = 0;
-            long totalBinaryWithoutRefStringsSize = 0;
+            await client.CreateDatabaseIfNotExistsAsync(dbName);
 
-            if (statsFile.Exists)
+            ContainerProperties containerProperties = new ContainerProperties
             {
-                statsFile.Delete();
-            }
-
-            using (StreamWriter statsWriter = statsFile.CreateText())
-            {
-                statsWriter.WriteLine("InputJsonSize;NormalizedJsonSize;BinaryWithRefStringsSize;BinaryNoRefStringsSize;BinaryWithRefStringsPercent;BinaryNoRefStringsPercent");
-                foreach(TranscodingResult result in results)
+                Id = name,
+                PartitionKeyPath = "/id",
+                //DefaultTimeToLive = -1,
+                IndexingPolicy = new IndexingPolicy
                 {
-                    statsWriter.WriteLine($"{result.InputJsonSize};{result.NormalizedJsonSize};{result.BinaryEncodingSizeWithRefStrings};{result.BinaryEncodingSizeWithoutRefStrings};{(double)result.BinaryEncodingSizeWithRefStrings / result.NormalizedJsonSize:##0.00 %};{(double)result.BinaryEncodingSizeWithoutRefStrings / result.NormalizedJsonSize:##0.00 %}");
-                    totalInputSize += result.InputJsonSize;
-                    totalNormalizedSize += result.NormalizedJsonSize;
-                    totalBinaryWithRefStringsSize += result.BinaryEncodingSizeWithRefStrings;
-                    totalBinaryWithoutRefStringsSize += result.BinaryEncodingSizeWithoutRefStrings;
+                    IndexingMode = IndexingMode.Consistent,
+                    Automatic = true,
+                    // IncludedPaths =
+                    // {
+                    //     new IncludedPath { Path = "/category/*" }
+                    // },
+                    ExcludedPaths =
+                                {
+                                    new ExcludedPath { Path = "/*" }
+                                }
                 }
-            }
-            Console.WriteLine($"Total Input Size: {totalInputSize}, Normalized Sized: {totalNormalizedSize}, Binary (With ref strings): {totalBinaryWithRefStringsSize} --> {(double)totalBinaryWithRefStringsSize / totalNormalizedSize:##0.00 %}, Binary (no ref strings): {totalBinaryWithoutRefStringsSize} --> {(double)totalBinaryWithoutRefStringsSize / totalNormalizedSize:##0.00 %}");
+            };
+
+            await client
+                .GetDatabase(dbName)
+                .CreateContainerIfNotExistsAsync(
+                    containerProperties,
+                    ThroughputProperties.CreateManualThroughput(10000));
         }
 
-        static async Task TranscodeFile(FileInfo fileInfo)
+        private class TestCase
         {
-            TranscodingResult result = new TranscodingResult();
-            String jsonRawInput = String.Empty;
-            using (StreamReader reader = File.OpenText(fileInfo.FullName))
+            private readonly string jsonTemplate;
+            private readonly String name;
+            private readonly Container withResponseContainer;
+            private readonly Container noResponseContainer;
+            private readonly bool emitBinary;
+            private readonly String[] withResponseExistingIds = new String[10];
+            private readonly String[] noResponseExistingIds = new String[10];
+            private long withResponseExistingIdsCount = 0;
+            private long noResponseExistingIdsCount = 0;
+            private readonly int maxIterationCount;
+            private static readonly Random rnd = new Random();
+
+            public object SupportedSerializationFormats { get; private set; }
+
+            public TestCase(String name, Container withResponseContainer, Container noResponseContainer, bool emitBinary, int maxIterationCount, string inputFileName)
             {
-                jsonRawInput = reader.ReadToEnd();
-                result.InputJsonSize = reader.BaseStream.Position;
+                this.name = name;
+                this.withResponseContainer = withResponseContainer;
+                this.noResponseContainer = noResponseContainer;
+                this.emitBinary = emitBinary;
+                this.maxIterationCount = maxIterationCount;
+                this.jsonTemplate = File.ReadAllText(inputFileName);
             }
 
-            JObject jObject = JsonConvert.DeserializeObject<JObject>(jsonRawInput);
-            String jsonInput = JsonConvert.SerializeObject(jObject, Formatting.None);
-
-            CosmosElement cosmosElement = CosmosElement.Parse(jsonInput);
-
-            IJsonWriter writer = CosmosJson.JsonWriter.Create(JsonSerializationFormat.Text);
-            cosmosElement.WriteTo(writer);
-            result.NormalizedJsonSize= WriteToFile(
-            new FileInfo(Path.Combine(fileInfo.Directory.FullName, fileInfo.Name + ".cosmostextjson.txt")),
-            writer.GetResult());
-
-            writer = CosmosJson.JsonWriter.Create(JsonSerializationFormat.Binary, enableEncodedStrings: true);
-            cosmosElement.WriteTo(writer);
-            result.BinaryEncodingSizeWithRefStrings = WriteToFile(
-            new FileInfo(Path.Combine(fileInfo.Directory.FullName, fileInfo.Name + ".binaryWithReferenceStrings.bin")),
-            writer.GetResult());
-
-            writer = CosmosJson.JsonWriter.Create(JsonSerializationFormat.Binary, enableEncodedStrings: false);
-            cosmosElement.WriteTo(writer);
-            result.BinaryEncodingSizeWithoutRefStrings = WriteToFile(
-            new FileInfo(Path.Combine(fileInfo.Directory.FullName, fileInfo.Name + ".binaryNoReferenceStrings.bin")),
-            writer.GetResult());
-
-            results.Add(result);
-        }
-
-        static long WriteToFile(FileInfo fileInfo, ReadOnlyMemory<byte> payload)
-        {
-            if (fileInfo.Exists)
+            public async Task ExecuteAsync()
             {
-                fileInfo.Delete();
+                List<Task> workloads = new List<Task>
+                {
+                    this.StartCreateWorkload(shouldExpectResponse: true),
+                    this.StartCreateWorkload(shouldExpectResponse: false),
+                    this.StartUpsertWorkload(existing: false, shouldExpectResponse: true),
+                    this.StartUpsertWorkload(existing: false, shouldExpectResponse: false),
+                    this.StartUpsertWorkload(existing: true, shouldExpectResponse: true),
+                    this.StartUpsertWorkload(existing: true, shouldExpectResponse: false),
+                    this.StartReadWorkload()
+                };
+
+                await Task.WhenAll(workloads);
             }
 
-            using (FileStream file = fileInfo.Create())
+            private async Task StartCreateWorkload(bool shouldExpectResponse)
             {
-                file.Write(payload.Span);
-                file.Flush();
+                Console.WriteLine($"{this.name}: Create workload (expect response: {shouldExpectResponse}) started.");
+                int i = 0;
+                ItemRequestOptions requestOptions = new ItemRequestOptions()
+                {
+                    EnableContentResponseOnWrite = shouldExpectResponse,
+                };
+
+                Container container = shouldExpectResponse ? this.withResponseContainer : this.noResponseContainer;
+
+                while (!stopTests && i < this.maxIterationCount)
+                {
+                    try
+                    {
+                        JObject item = this.CreatePayload();
+
+                        using (Stream inputStream = this.emitBinary ? serializeToBinary(item) : serializeToText(item))
+                        {
+                            string id = item["id"].Value<string>();
+                            ResponseMessage response = await container.CreateItemStreamAsync(
+                                inputStream,
+                                new PartitionKey(id),
+                                requestOptions);
+                            response.EnsureSuccessStatusCode();
+                            if (shouldExpectResponse)
+                            {
+                                byte[] responseBlob;
+                                using (MemoryStream responseStream = new MemoryStream())
+                                {
+                                    response.Content.CopyTo(responseStream);
+                                    responseBlob = responseStream.ToArray();
+                                }
+                                Debug.Assert(responseBlob.Length > 1);
+                                bool responseIsBinary = responseBlob[0] == (byte)JsonSerializationFormat.Binary;
+                                Debug.Assert(responseIsBinary == this.emitBinary);
+                            }
+                            else
+                            {
+                                Debug.Assert(response.Content == null);
+                            }
+                            long existingIdsCountSnapshot = shouldExpectResponse 
+                                ? Interlocked.Increment(ref this.withResponseExistingIdsCount)
+                                : Interlocked.Increment(ref this.noResponseExistingIdsCount);
+                            if (existingIdsCountSnapshot <= 10)
+                            {
+                                if (shouldExpectResponse)
+                                {
+                                    this.withResponseExistingIds[existingIdsCountSnapshot - 1] = id;
+                                } 
+                                else
+                                {
+                                    this.noResponseExistingIds[existingIdsCountSnapshot - 1] = id;
+                                }
+                            }
+                        }
+
+                        i++;
+                        if (i % 100 == 0)
+                        {
+                            Console.WriteLine($"{this.name} - Create workload (expect response: {shouldExpectResponse}) Iterations: {i}");
+                        }
+                    }
+                    catch (CosmosException cosmosError)
+                    {
+                        Console.WriteLine($"{this.name} - Create workload (expect response: {shouldExpectResponse}) Exception: {cosmosError}");
+                        await Task.Delay(100);
+                    }
+                }
+
+                Console.WriteLine($"{this.name}: Create workload (expect response: {shouldExpectResponse}) finished.");
             }
 
-            return payload.Length;
-        }
+            private async Task StartUpsertWorkload(bool existing, bool shouldExpectResponse)
+            {
+                Console.WriteLine($"{this.name}: Upsert workload (existing: {existing}, expect resonse: {shouldExpectResponse}) started.");
 
-        struct TranscodingResult
-        {
-            public long InputJsonSize;
-            public long NormalizedJsonSize;
-            public long BinaryEncodingSizeWithoutRefStrings;
-            public long BinaryEncodingSizeWithRefStrings;
+                int i = 0;
+                ItemRequestOptions requestOptions = new ItemRequestOptions()
+                {
+                    EnableContentResponseOnWrite = shouldExpectResponse,
+                };
+
+                Container container = shouldExpectResponse ? this.withResponseContainer : this.noResponseContainer;
+
+                while (!stopTests && i < this.maxIterationCount)
+                {
+                    try
+                    {
+                        JObject item = CreatePayload();
+                        if (existing)
+                        {
+                            if (shouldExpectResponse)
+                            {
+                                while (this.withResponseExistingIdsCount < 10)
+                                {
+                                    await Task.Delay(100);
+                                }
+
+                                item["id"] = this.withResponseExistingIds[rnd.Next(this.withResponseExistingIds.Length - 1)];
+                            } else
+                            {
+                                while (this.noResponseExistingIdsCount < 10)
+                                {
+                                    await Task.Delay(100);
+                                }
+
+                                item["id"] = this.noResponseExistingIds[rnd.Next(this.noResponseExistingIds.Length - 1)];
+                            }
+                        }
+
+                        using (Stream inputStream = this.emitBinary ? serializeToBinary(item) : serializeToText(item))
+                        {
+                            string id = item["id"].Value<string>();
+                            ResponseMessage response = await container.UpsertItemStreamAsync(
+                                inputStream,
+                                new PartitionKey(id),
+                                requestOptions);
+                            response.EnsureSuccessStatusCode();
+                            bool createdNewItem = response.StatusCode == System.Net.HttpStatusCode.Created;
+                            Debug.Assert(createdNewItem == !existing);
+                            if (shouldExpectResponse)
+                            {
+                                byte[] responseBlob;
+                                using (MemoryStream responseStream = new MemoryStream())
+                                {
+                                    response.Content.CopyTo(responseStream);
+                                    responseBlob = responseStream.ToArray();
+                                }
+                                Debug.Assert(responseBlob.Length > 1);
+                                Boolean responseIsBinary = responseBlob[0] == (byte)JsonSerializationFormat.Binary;
+                                Debug.Assert(responseIsBinary == this.emitBinary);
+                            }
+                            else
+                            {
+                                Debug.Assert(response.Content == null);
+                            }
+                            if (!existing)
+                            {
+                                long existingIdsCountSnapshot = shouldExpectResponse
+                                ? Interlocked.Increment(ref this.withResponseExistingIdsCount)
+                                : Interlocked.Increment(ref this.noResponseExistingIdsCount);
+                                if (existingIdsCountSnapshot <= 10)
+                                {
+                                    if (shouldExpectResponse)
+                                    {
+                                        this.withResponseExistingIds[existingIdsCountSnapshot - 1] = id;
+                                    }
+                                    else
+                                    {
+                                        this.noResponseExistingIds[existingIdsCountSnapshot - 1] = id;
+                                    }
+                                }
+                            }
+                        }
+
+                        i++;
+                        if (i % 100 == 0)
+                        {
+                            Console.WriteLine($"{this.name} - Upsert workload (existing: {existing}, expect resonse: {shouldExpectResponse}) Iterations: {i}");
+                        }
+                    }
+                    catch (CosmosException cosmosError)
+                    {
+                        Console.WriteLine($"{this.name} - Upsert workload (existing: {existing}, expect resonse: {shouldExpectResponse}) Exception: {cosmosError}");
+                        await Task.Delay(100);
+                    }
+                }
+
+                Console.WriteLine($"{this.name}: Upsert workload (existing: {existing}) finished.");
+            }
+
+            private async Task StartReadWorkload()
+            {
+                Console.WriteLine($"{this.name}: Read workload started.");
+
+                int i = 0;
+                while (!stopTests && i < this.maxIterationCount)
+                {
+                    try
+                    {
+                        String id;
+                        while (this.withResponseExistingIdsCount < 10)
+                        {
+                            await Task.Delay(100);
+                        }
+
+                        id = this.withResponseExistingIds[rnd.Next(this.withResponseExistingIds.Length - 1)];
+
+                        ItemRequestOptions requestOptions = new ItemRequestOptions
+                        {
+                            AddRequestHeaders = (headers) =>
+                            {
+                                headers["x-ms-cosmos-supported-serialization-formats"] = this.emitBinary ? "CosmosBinary" : "JsonText";
+                                headers["x-ms-documentdb-content-serialization-format"] = this.emitBinary ? "CosmosBinary" : "JsonText";
+                            }
+                        };
+                        ResponseMessage response = await this.withResponseContainer.ReadItemStreamAsync(
+                            id,
+                            new PartitionKey(id),
+                            requestOptions);
+                        response.EnsureSuccessStatusCode();
+                        byte[] responseBlob;
+                        using (MemoryStream responseStream = new MemoryStream())
+                        {
+                            response.Content.CopyTo(responseStream);
+                            responseBlob = responseStream.ToArray();
+                        }
+                        Debug.Assert(responseBlob.Length > 1);
+                        Boolean responseIsBinary = responseBlob[0] == (byte)JsonSerializationFormat.Binary;
+                        Debug.Assert(responseIsBinary == this.emitBinary);
+
+                        i++;
+                        if (i % 100 == 0)
+                        {
+                            Console.WriteLine($"{this.name} - Read workload Iterations: {i}");
+                        }
+                    }
+                    catch (CosmosException cosmosError)
+                    {
+                        Console.WriteLine($"{this.name} - Read workload Exception: {cosmosError}");
+                        await Task.Delay(100);
+                    }
+                }
+
+                Console.WriteLine($"{this.name}: Read workload finished.");
+            }
+
+            private static Stream serializeToBinary(JObject item)
+            {
+                using CosmosDBToNewtonsoftWriter writer = new CosmosDBToNewtonsoftWriter(JsonSerializationFormat.Binary);
+                item.WriteTo(writer);
+                return new MemoryStream(writer.GetResult().ToArray());
+            }
+
+            private static Stream serializeToText(JObject item)
+            {
+                MemoryStream stream = new MemoryStream();
+                using (StreamWriter writer = new StreamWriter(
+                    stream,
+                    new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true),
+                    1024,
+                    leaveOpen: true))
+                {
+                    writer.WriteLine(item.ToString(Formatting.Indented));
+                    writer.Flush();
+                    stream.Flush();
+                }
+
+                stream.Position = 0;
+
+                return stream;
+            }
+
+            private JObject CreatePayload()
+            {
+                JObject json = JObject.Parse(jsonTemplate);
+                StringBuilder sb = new StringBuilder();
+                json["id"] = Guid.NewGuid().ToString();
+                json["mutableId"] = Guid.NewGuid().ToString();
+
+                return json;
+            }
+
         }
     }
 }

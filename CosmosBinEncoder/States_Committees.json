@@ -1,0 +1,61 @@
+{
+  "members": [
+    {
+      "leg_id": "WAL000089",
+      "role": "chair",
+      "name": "Sam Hunt"
+    },
+    {
+      "leg_id": "WAL000172",
+      "role": "vice chair",
+      "name": "Steve Bergquist"
+    },
+    {
+      "leg_id": "WAL000179",
+      "role": "ranking minority member",
+      "name": "Jeff Holy"
+    },
+    {
+      "leg_id": "WAL000226",
+      "role": "assistant ranking minority member",
+      "name": "Luanne Van Werven"
+    },
+    {
+      "leg_id": "WAL000054",
+      "role": "member",
+      "name": "Sherry Appleton"
+    },
+    {
+      "leg_id": "WAL000219",
+      "role": "member",
+      "name": "Carol Gregory"
+    },
+    {
+      "leg_id": "WAL000177",
+      "role": "member",
+      "name": "Brad Hawkins"
+    }
+  ],
+  "created_at": "2015-02-11 04:06:58",
+  "all_ids": [
+    "WAC000071"
+  ],
+  "updated_at": "2015-07-02 02:51:20",
+  "+office_phone": "(360) 786-7126",
+  "state": "wa",
+  "sources": [
+    {
+      "url": "http://wslwebservices.leg.wa.gov/CommitteeService.asmx/GetActiveCommittees?biennium=2015-16"
+    }
+  ],
+  "parent_id": null,
+  "committee": "State Government",
+  "chamber": "lower",
+  "id": "WAC000071",
+  "subcommittee": null,
+  "_rid": "ZmZ-ANx2tgBIDQAAAAAAAA==",
+  "_ts": 1437349367,
+  "_self": "dbs/ZmZ-AA==/colls/ZmZ-ANx2tgA=/docs/ZmZ-ANx2tgBIDQAAAAAAAA==/",
+  "_etag": "\"0000520d-0000-0000-0000-55ac35f70000\"",
+  "_attachments": "attachments/"
+}

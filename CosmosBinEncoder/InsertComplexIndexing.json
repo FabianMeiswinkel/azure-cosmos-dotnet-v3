@@ -1,0 +1,3770 @@
+{
+     "id": "",
+     "mutableId":  "",
+    "title": "Product A",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut magna vestibulum, vestibulum nisi ut, fringilla neque.",
+    "category": {
+        "name": "Electronics",
+        "subcategories": [
+            {
+                "name": "1",
+                "products": [
+                    {
+                        "name": "1",
+                        "price": 999.99,
+                        "specs": {
+                            "display": "6.2 inch AMOLED",
+                            "processor": "Exynos 2100",
+                            "storage": "128GB",
+                            "camera": "Triple rear camera",
+                            "battery": "4000mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User1",
+                                "rating": 4,
+                                "comment": "Great phone, but battery life could be better"
+                            },
+                            {
+                                "user": "User2",
+                                "rating": 5,
+                                "comment": "Best phone I've ever used! Amazing camera"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "2",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "3",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "4",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "5",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "6",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "7",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "8",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "9",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "10",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "11",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "12",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "13",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "14",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "15",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "2",
+                "products": [
+                    {
+                        "name": "1",
+                        "price": 1299.99,
+                        "specs": {
+                            "display": "13.4 inch 4K Ultra HD",
+                            "processor": "Intel Core i7",
+                            "memory": "16GB RAM",
+                            "storage": "512GB SSD",
+                            "graphics": "Intel Iris Xe Graphics"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User5",
+                                "rating": 5,
+                                "comment": "Awesome laptop for productivity and multimedia"
+                            },
+                            {
+                                "user": "User6",
+                                "rating": 4,
+                                "comment": "Great performance, but battery life could be better"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "2",
+                        "price": 1199.99,
+                        "specs": {
+                            "display": "13.3 inch Full HD",
+                            "processor": "Intel Core i5",
+                            "memory": "8GB RAM",
+                            "storage": "256GB SSD",
+                            "graphics": "Intel Iris Xe Graphics"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User7",
+                                "rating": 4,
+                                "comment": "Sleek design and good performance, but display could be better"
+                            },
+                            {
+                                "user": "User8",
+                                "rating": 5,
+                                "comment": "Love the versatility of this 2-in-1 laptop"
+                            }
+                        ]
+                    },
+					{
+                        "name": "3",
+                        "price": 1199.99,
+                        "specs": {
+                            "display": "13.3 inch Full HD",
+                            "processor": "Intel Core i5",
+                            "memory": "8GB RAM",
+                            "storage": "256GB SSD",
+                            "graphics": "Intel Iris Xe Graphics"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User7",
+                                "rating": 4,
+                                "comment": "Sleek design and good performance, but display could be better"
+                            },
+                            {
+                                "user": "User8",
+                                "rating": 5,
+                                "comment": "Love the versatility of this 2-in-1 laptop"
+                            }
+                        ]
+                    },
+					{
+                        "name": "4",
+                        "price": 1199.99,
+                        "specs": {
+                            "display": "13.3 inch Full HD",
+                            "processor": "Intel Core i5",
+                            "memory": "8GB RAM",
+                            "storage": "256GB SSD",
+                            "graphics": "Intel Iris Xe Graphics"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User7",
+                                "rating": 4,
+                                "comment": "Sleek design and good performance, but display could be better"
+                            },
+                            {
+                                "user": "User8",
+                                "rating": 5,
+                                "comment": "Love the versatility of this 2-in-1 laptop"
+                            }
+                        ]
+                    },
+					{
+                        "name": "5",
+                        "price": 1199.99,
+                        "specs": {
+                            "display": "13.3 inch Full HD",
+                            "processor": "Intel Core i5",
+                            "memory": "8GB RAM",
+                            "storage": "256GB SSD",
+                            "graphics": "Intel Iris Xe Graphics"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User7",
+                                "rating": 4,
+                                "comment": "Sleek design and good performance, but display could be better"
+                            },
+                            {
+                                "user": "User8",
+                                "rating": 5,
+                                "comment": "Love the versatility of this 2-in-1 laptop"
+                            }
+                        ]
+                    },
+					{
+                        "name": "6",
+                        "price": 1199.99,
+                        "specs": {
+                            "display": "13.3 inch Full HD",
+                            "processor": "Intel Core i5",
+                            "memory": "8GB RAM",
+                            "storage": "256GB SSD",
+                            "graphics": "Intel Iris Xe Graphics"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User7",
+                                "rating": 4,
+                                "comment": "Sleek design and good performance, but display could be better"
+                            },
+                            {
+                                "user": "User8",
+                                "rating": 5,
+                                "comment": "Love the versatility of this 2-in-1 laptop"
+                            }
+                        ]
+                    },
+					{
+                        "name": "7",
+                        "price": 1199.99,
+                        "specs": {
+                            "display": "13.3 inch Full HD",
+                            "processor": "Intel Core i5",
+                            "memory": "8GB RAM",
+                            "storage": "256GB SSD",
+                            "graphics": "Intel Iris Xe Graphics"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User7",
+                                "rating": 4,
+                                "comment": "Sleek design and good performance, but display could be better"
+                            },
+                            {
+                                "user": "User8",
+                                "rating": 5,
+                                "comment": "Love the versatility of this 2-in-1 laptop"
+                            }
+                        ]
+                    },
+					{
+                        "name": "8",
+                        "price": 1199.99,
+                        "specs": {
+                            "display": "13.3 inch Full HD",
+                            "processor": "Intel Core i5",
+                            "memory": "8GB RAM",
+                            "storage": "256GB SSD",
+                            "graphics": "Intel Iris Xe Graphics"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User7",
+                                "rating": 4,
+                                "comment": "Sleek design and good performance, but display could be better"
+                            },
+                            {
+                                "user": "User8",
+                                "rating": 5,
+                                "comment": "Love the versatility of this 2-in-1 laptop"
+                            }
+                        ]
+                    },
+					{
+                        "name": "9",
+                        "price": 1199.99,
+                        "specs": {
+                            "display": "13.3 inch Full HD",
+                            "processor": "Intel Core i5",
+                            "memory": "8GB RAM",
+                            "storage": "256GB SSD",
+                            "graphics": "Intel Iris Xe Graphics"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User7",
+                                "rating": 4,
+                                "comment": "Sleek design and good performance, but display could be better"
+                            },
+                            {
+                                "user": "User8",
+                                "rating": 5,
+                                "comment": "Love the versatility of this 2-in-1 laptop"
+                            }
+                        ]
+                    },
+					{
+                        "name": "10",
+                        "price": 1199.99,
+                        "specs": {
+                            "display": "13.3 inch Full HD",
+                            "processor": "Intel Core i5",
+                            "memory": "8GB RAM",
+                            "storage": "256GB SSD",
+                            "graphics": "Intel Iris Xe Graphics"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User7",
+                                "rating": 4,
+                                "comment": "Sleek design and good performance, but display could be better"
+                            },
+                            {
+                                "user": "User8",
+                                "rating": 5,
+                                "comment": "Love the versatility of this 2-in-1 laptop"
+                            }
+                        ]
+                    },
+					{
+                        "name": "11",
+                        "price": 1199.99,
+                        "specs": {
+                            "display": "13.3 inch Full HD",
+                            "processor": "Intel Core i5",
+                            "memory": "8GB RAM",
+                            "storage": "256GB SSD",
+                            "graphics": "Intel Iris Xe Graphics"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User7",
+                                "rating": 4,
+                                "comment": "Sleek design and good performance, but display could be better"
+                            },
+                            {
+                                "user": "User8",
+                                "rating": 5,
+                                "comment": "Love the versatility of this 2-in-1 laptop"
+                            }
+                        ]
+                    }
+                ]
+			},
+			{
+                "name": "3",
+                "products": [
+                    {
+                        "name": "1",
+                        "price": 999.99,
+                        "specs": {
+                            "display": "6.2 inch AMOLED",
+                            "processor": "Exynos 2100",
+                            "storage": "128GB",
+                            "camera": "Triple rear camera",
+                            "battery": "4000mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User1",
+                                "rating": 4,
+                                "comment": "Great phone, but battery life could be better"
+                            },
+                            {
+                                "user": "User2",
+                                "rating": 5,
+                                "comment": "Best phone I've ever used! Amazing camera"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "2",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "3",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "4",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "5",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "6",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "7",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "8",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "9",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "10",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "11",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "12",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "13",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "14",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "15",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    }
+                ]
+            },
+			{
+                "name": "4",
+                "products": [
+                    {
+                        "name": "1",
+                        "price": 999.99,
+                        "specs": {
+                            "display": "6.2 inch AMOLED",
+                            "processor": "Exynos 2100",
+                            "storage": "128GB",
+                            "camera": "Triple rear camera",
+                            "battery": "4000mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User1",
+                                "rating": 4,
+                                "comment": "Great phone, but battery life could be better"
+                            },
+                            {
+                                "user": "User2",
+                                "rating": 5,
+                                "comment": "Best phone I've ever used! Amazing camera"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "2",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "3",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "4",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "5",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "6",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "7",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "8",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "9",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "10",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "11",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "12",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "13",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "14",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "15",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    }
+                ]
+            },
+			{
+                "name": "5",
+                "products": [
+                    {
+                        "name": "1",
+                        "price": 999.99,
+                        "specs": {
+                            "display": "6.2 inch AMOLED",
+                            "processor": "Exynos 2100",
+                            "storage": "128GB",
+                            "camera": "Triple rear camera",
+                            "battery": "4000mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User1",
+                                "rating": 4,
+                                "comment": "Great phone, but battery life could be better"
+                            },
+                            {
+                                "user": "User2",
+                                "rating": 5,
+                                "comment": "Best phone I've ever used! Amazing camera"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "2",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "3",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "4",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "5",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "6",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "7",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "8",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "9",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "10",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "11",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "12",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "13",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "14",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "15",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    }
+                ]
+            },
+			{
+                "name": "6",
+                "products": [
+                    {
+                        "name": "1",
+                        "price": 999.99,
+                        "specs": {
+                            "display": "6.2 inch AMOLED",
+                            "processor": "Exynos 2100",
+                            "storage": "128GB",
+                            "camera": "Triple rear camera",
+                            "battery": "4000mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User1",
+                                "rating": 4,
+                                "comment": "Great phone, but battery life could be better"
+                            },
+                            {
+                                "user": "User2",
+                                "rating": 5,
+                                "comment": "Best phone I've ever used! Amazing camera"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "2",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "3",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "4",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "5",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "6",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "7",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "8",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "9",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "10",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "11",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "12",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "13",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "14",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "15",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    }
+                ]
+            },
+			{
+                "name": "7",
+                "products": [
+                    {
+                        "name": "1",
+                        "price": 999.99,
+                        "specs": {
+                            "display": "6.2 inch AMOLED",
+                            "processor": "Exynos 2100",
+                            "storage": "128GB",
+                            "camera": "Triple rear camera",
+                            "battery": "4000mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User1",
+                                "rating": 4,
+                                "comment": "Great phone, but battery life could be better"
+                            },
+                            {
+                                "user": "User2",
+                                "rating": 5,
+                                "comment": "Best phone I've ever used! Amazing camera"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "2",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "3",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "4",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "5",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "6",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "7",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "8",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "9",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "10",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "11",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "12",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "13",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "14",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "15",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    }
+                ]
+            },
+			{
+                "name": "8",
+                "products": [
+                    {
+                        "name": "1",
+                        "price": 999.99,
+                        "specs": {
+                            "display": "6.2 inch AMOLED",
+                            "processor": "Exynos 2100",
+                            "storage": "128GB",
+                            "camera": "Triple rear camera",
+                            "battery": "4000mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User1",
+                                "rating": 4,
+                                "comment": "Great phone, but battery life could be better"
+                            },
+                            {
+                                "user": "User2",
+                                "rating": 5,
+                                "comment": "Best phone I've ever used! Amazing camera"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "2",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "3",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "4",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "5",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "6",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "7",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "8",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "9",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "10",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "11",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "12",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "13",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "14",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "15",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    }
+                ]
+            },
+			{
+                "name": "9",
+                "products": [
+                    {
+                        "name": "1",
+                        "price": 999.99,
+                        "specs": {
+                            "display": "6.2 inch AMOLED",
+                            "processor": "Exynos 2100",
+                            "storage": "128GB",
+                            "camera": "Triple rear camera",
+                            "battery": "4000mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User1",
+                                "rating": 4,
+                                "comment": "Great phone, but battery life could be better"
+                            },
+                            {
+                                "user": "User2",
+                                "rating": 5,
+                                "comment": "Best phone I've ever used! Amazing camera"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "2",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "3",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "4",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "5",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "6",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "7",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "8",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "9",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "10",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "11",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "12",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "13",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "14",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "15",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    }
+                ]
+            },
+			{
+                "name": "10",
+                "products": [
+                    {
+                        "name": "1",
+                        "price": 999.99,
+                        "specs": {
+                            "display": "6.2 inch AMOLED",
+                            "processor": "Exynos 2100",
+                            "storage": "128GB",
+                            "camera": "Triple rear camera",
+                            "battery": "4000mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User1",
+                                "rating": 4,
+                                "comment": "Great phone, but battery life could be better"
+                            },
+                            {
+                                "user": "User2",
+                                "rating": 5,
+                                "comment": "Best phone I've ever used! Amazing camera"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "2",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "3",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "4",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "5",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "6",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "7",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "8",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "9",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "10",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "11",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "12",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "13",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "14",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "15",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    }
+                ]
+            },
+			{
+                "name": "11",
+                "products": [
+                    {
+                        "name": "1",
+                        "price": 999.99,
+                        "specs": {
+                            "display": "6.2 inch AMOLED",
+                            "processor": "Exynos 2100",
+                            "storage": "128GB",
+                            "camera": "Triple rear camera",
+                            "battery": "4000mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User1",
+                                "rating": 4,
+                                "comment": "Great phone, but battery life could be better"
+                            },
+                            {
+                                "user": "User2",
+                                "rating": 5,
+                                "comment": "Best phone I've ever used! Amazing camera"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "2",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "3",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "4",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "5",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "6",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "7",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "8",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "9",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "10",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "11",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "12",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "13",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "14",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    },
+					{
+                        "name": "15",
+                        "price": 1099.99,
+                        "specs": {
+                            "display": "6.1 inch Super Retina XDR",
+                            "processor": "A14 Bionic",
+                            "storage": "256GB",
+                            "camera": "Dual rear camera",
+                            "battery": "2815mAh"
+                        },
+                        "reviews": [
+                            {
+                                "user": "User3",
+                                "rating": 5,
+                                "comment": "Love the design and performance of this phone"
+                            },
+                            {
+                                "user": "User4",
+                                "rating": 4,
+                                "comment": "Great phone, but quite expensive"
+                            }
+                        ]
+                    }
+                ]
+            }
+		]
+	}
+}
+

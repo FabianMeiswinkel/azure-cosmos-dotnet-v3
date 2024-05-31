@@ -1,0 +1,277 @@
+{
+  "id": "36d2aa0a-1754-4854-bcb4-10682f3ecba8",
+  "_self": "dbs/NPVaAA==/colls/NPVaALRO5AA=/docs/NPVaALRO5ACiAAAAAAAAAA==/",
+  "RunState": "InProgress",
+  "RunResult": "Failed",
+  "FederationName": "by3prdddc01-docdb-release-2",
+  "EnvironmentName": "Stage",
+  "StartTime": "2014-12-03T18:55:00",
+  "CompletedTime": "2014-12-04T11:07:00",
+  "DocumentServices": [],
+  "Events": [],
+  "Metrics": [
+    {
+      "MetricName": "Crash Dumps",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageCrashDumpsBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=Tenant+%3d+%22by3prdddc01-docdb-release-2%22",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Trace Criticals",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageCommonDebugBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=Tenant+%3d+%22by3prdddc01-docdb-release-2%22",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Gateway Requests",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageRequestAlertBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=Tenant+%3d+%22by3prdddc01-docdb-release-2%22+%26%26+(StatusCode+%3e+499+%7c%7c+StatusCode+%3d+408)",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Backend Requests",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageBaseBackendEndRequest5MBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=Tenant+%3d+%22by3prdddc01-docdb-release-2%22+%26%26+(StatusCode+%3e+499+%7c%7c+StatusCode+%3d+408)",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Read Throughput",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageBaseBackendEndRequest5MBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=where+Tenant+%3d+%22by3prdddc01-docdb-release-2%22+%26%26+StatusCode+%3d+200+groupby+TIMESTAMP+let+count+%3d+Sum(SampleCount)",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Write Throughput",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageBaseBackendEndRequest5MBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=where+Tenant+%3d+%22by3prdddc01-docdb-release-2%22+%26%26+StatusCode+%3d+201+groupby+TIMESTAMP+let+count+%3d+Sum(SampleCount)",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Throttle Levels",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageReplicaCounterFiveMinuteRoleInstanceEventBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=where+Tenant+%3d+%22by3prdddc01-docdb-release-2%22+%26%26+CounterName.Contains(%22Current+Throttle+Level%22)+%26%26+percentile99+%3e+0+groupby+role%2c+percentile99+let+count+%3d+Count()+let+minTime+%3d+Min(TIMESTAMP)+let+maxTime+%3d+Max(TIMESTAMP)",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Frontend Critical Events",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageFrontendEventBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=Tenant+%3d+%22by3prdddc01-docdb-release-2%22+and+Level+%3d+1",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Replica Health Event",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageReplicaHealthEventBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=Tenant+%3d+%22by3prdddc01-docdb-release-2%22",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "WinFab Machine Watchdog",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageWinFabMachineWatchdogBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=Tenant+%3d+%22by3prdddc01-docdb-release-2%22+and+Level%3d1",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Windows Fabric Errors",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageWinFabricErrorsBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=where+Tenant+%3d+%22by3prdddc01-docdb-release-2%22+and+Level+%3d+1",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Load Balancing Quota",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageBase15MReportQuotaInfoBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=Tenant+%3d+%22by3prdddc01-docdb-release-2%22+and+ResourceType+%3d+2",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Replica Alerts",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageAlertReplicaEventBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=where+Tenant+%3d+%22by3prdddc01-docdb-release-2%22+groupby+DatabaseAccount%2c+Component%2c+SubEvent+let+count+%3d+Count()",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "CTL Client Traces",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDBStageCTLServiceRequestInfo5MDBF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=where+Tenant+%3d+%22CTLEU%22+%26%26+databaseAccount.Contains(%22by3prdddc01-docdb-release-2%22)+%26%26+responseCode+%3e+499+groupby+TIMESTAMP%2c+responseCode%2c+connectionMode%2c+connectionProtocol%2c+databaseAccount+let+total+%3d+Sum(SampleCount)",
+      "Notes": null,
+      "Result": "Failed",
+      "Details": [
+        {
+          "StatusCode": 500,
+          "ConnectionMode": "Direct",
+          "ConnectionProtocol": "Https",
+          "DatabaseAccount": "restorelargecollection-by3prdddc01-docdb-release-2",
+          "Count": 13334,
+          "First": "2014-12-04T09:40:00",
+          "Last": "2014-12-04T10:05:00"
+        },
+        {
+          "StatusCode": 500,
+          "ConnectionMode": "Gateway",
+          "ConnectionProtocol": "Https",
+          "DatabaseAccount": "restorelargecollection-by3prdddc01-docdb-release-2",
+          "Count": 13024,
+          "First": "2014-12-04T09:40:00",
+          "Last": "2014-12-04T10:05:00"
+        },
+        {
+          "StatusCode": 500,
+          "ConnectionMode": "Direct",
+          "ConnectionProtocol": "Tcp",
+          "DatabaseAccount": "restorelargecollection-by3prdddc01-docdb-release-2",
+          "Count": 30470,
+          "First": "2014-12-04T09:40:00",
+          "Last": "2014-12-04T10:05:00"
+        },
+        {
+          "StatusCode": 503,
+          "ConnectionMode": "Direct",
+          "ConnectionProtocol": "Https",
+          "DatabaseAccount": "readheavy-by3prdddc01-docdb-release-2",
+          "Count": 382,
+          "First": "2014-12-03T20:25:00",
+          "Last": "2014-12-04T10:35:00"
+        },
+        {
+          "StatusCode": 503,
+          "ConnectionMode": "Direct",
+          "ConnectionProtocol": "Https",
+          "DatabaseAccount": "writeheavy-by3prdddc01-docdb-release-2",
+          "Count": 1406,
+          "First": "2014-12-03T21:05:00",
+          "Last": "2014-12-04T10:40:00"
+        },
+        {
+          "StatusCode": 503,
+          "ConnectionMode": "Direct",
+          "ConnectionProtocol": "Tcp",
+          "DatabaseAccount": "writeheavy-by3prdddc01-docdb-release-2",
+          "Count": 2547,
+          "First": "2014-12-03T20:15:00",
+          "Last": "2014-12-04T10:35:00"
+        },
+        {
+          "StatusCode": 503,
+          "ConnectionMode": "Gateway",
+          "ConnectionProtocol": "Https",
+          "DatabaseAccount": "writeheavy-by3prdddc01-docdb-release-2",
+          "Count": 64,
+          "First": "2014-12-04T04:00:00",
+          "Last": "2014-12-04T05:05:00"
+        },
+        {
+          "StatusCode": 503,
+          "ConnectionMode": "Direct",
+          "ConnectionProtocol": "Tcp",
+          "DatabaseAccount": "restorefrombasebuild-by3prdddc01-docdb-release-2",
+          "Count": 378,
+          "First": "2014-12-03T20:15:00",
+          "Last": "2014-12-04T10:40:00"
+        },
+        {
+          "StatusCode": 503,
+          "ConnectionMode": "Direct",
+          "ConnectionProtocol": "Https",
+          "DatabaseAccount": "restorefrombasebuild-by3prdddc01-docdb-release-2",
+          "Count": 188,
+          "First": "2014-12-03T21:05:00",
+          "Last": "2014-12-04T10:35:00"
+        },
+        {
+          "StatusCode": 503,
+          "ConnectionMode": "Direct",
+          "ConnectionProtocol": "Tcp",
+          "DatabaseAccount": "restorelargecollection-by3prdddc01-docdb-release-2",
+          "Count": 7554,
+          "First": "2014-12-03T21:10:00",
+          "Last": "2014-12-04T10:15:00"
+        },
+        {
+          "StatusCode": 503,
+          "ConnectionMode": "Direct",
+          "ConnectionProtocol": "Https",
+          "DatabaseAccount": "restorelargecollection-by3prdddc01-docdb-release-2",
+          "Count": 3415,
+          "First": "2014-12-03T22:10:00",
+          "Last": "2014-12-04T10:15:00"
+        },
+        {
+          "StatusCode": 503,
+          "ConnectionMode": "Gateway",
+          "ConnectionProtocol": "Https",
+          "DatabaseAccount": "restorelargecollection-by3prdddc01-docdb-release-2",
+          "Count": 57,
+          "First": "2014-12-04T09:45:00",
+          "Last": "2014-12-04T09:45:00"
+        },
+        {
+          "StatusCode": 503,
+          "ConnectionMode": "Direct",
+          "ConnectionProtocol": "Tcp",
+          "DatabaseAccount": "readheavy-by3prdddc01-docdb-release-2",
+          "Count": 31,
+          "First": "2014-12-04T05:50:00",
+          "Last": "2014-12-04T09:50:00"
+        }
+      ]
+    },
+    {
+      "MetricName": "Write Latency",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageBaseBackendEndRequest5MBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=where+Tenant+%3d+%22by3prdddc01-docdb-release-2%22+%26%26+OperationType+%3d+0+%26%26+ResourceType+%3d+2+%26%26+StatusCode+%3d+201+select+timestamp%2c+roleinstance%2c+percentile99%2f10000.0+as+per99",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Query Document Metric",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageBaseBackendEndRequest5MBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=where+Tenant+%3d+%22by3prdddc01-docdb-release-2%22+%26%26+OperationType+%3d+14+%26%26+ResourceType+%3d+2+groupby+TIMESTAMP%2c+StatusCode+let+count+%3d+Sum(SampleCount)",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Create Document Metric",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageBaseBackendEndRequest5MBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=where+Tenant+%3d+%22by3prdddc01-docdb-release-2%22+%26%26+OperationType+%3d+0+%26%26+ResourceType+%3d+2+groupby+TIMESTAMP%2c+StatusCode+let+count+%3d+Sum(SampleCount)",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Update Document Metric",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageBaseBackendEndRequest5MBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=where+Tenant+%3d+%22by3prdddc01-docdb-release-2%22+%26%26+OperationType+%3d+5+%26%26+ResourceType+%3d+2+groupby+TIMESTAMP%2c+StatusCode+let+count+%3d+Sum(SampleCount)",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Delete Document Metric",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageBaseBackendEndRequest5MBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=where+Tenant+%3d+%22by3prdddc01-docdb-release-2%22+%26%26+OperationType+%3d+4+%26%26+ResourceType+%3d+2+groupby+TIMESTAMP%2c+StatusCode+let+count+%3d+Sum(SampleCount)",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    },
+    {
+      "MetricName": "Execute Stored Procedure Metric",
+      "Link": "https://production.diagnostics.monitoring.core.windows.net/content/search/search.html?table=DocDbStageBaseBackendEndRequest5MBYF2Ver1v0&start=2014-12-04+02%3a55%3a00Z&end=2014-12-04+19%3a07%3a00Z&query=where+Tenant+%3d+%22by3prdddc01-docdb-release-2%22+%26%26+OperationType+%3d+9+%26%26+ResourceType+%3d+109+groupby+TIMESTAMP%2c+StatusCode+let+count+%3d+Sum(SampleCount)",
+      "Notes": null,
+      "Result": "Inconclusive",
+      "Details": []
+    }
+  ],
+  "Alerts": [],
+  "_rid": "NPVaALRO5ACiAAAAAAAAAA==",
+  "_ts": 1417719923,
+  "_etag": "\"0000c532-0000-0000-0000-5480b0730000\"",
+  "_attachments": "attachments/"
+}

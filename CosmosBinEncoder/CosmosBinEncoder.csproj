@@ -9,17 +9,122 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="BingDocs.json" />
+    <None Remove="DevTestDoc.json" />
     <None Remove="Input.json" />
+    <None Remove="InsertComplexIndexing.json" />
+    <None Remove="InsertSimple10trm1024Kb.json" />
+    <None Remove="InsertSimple10trm128Kb.json" />
+    <None Remove="InsertSimple10trm16Kb.json" />
+    <None Remove="InsertSimple10trm1Kb.json" />
+    <None Remove="InsertSimple10trm2048Kb.json" />
+    <None Remove="InsertSimple10trm256Kb.json" />
+    <None Remove="InsertSimple10trm2Kb.json" />
+    <None Remove="InsertSimple10trm32Kb.json" />
+    <None Remove="InsertSimple10trm4Kb.json" />
+    <None Remove="InsertSimple10trm512Kb.json" />
+    <None Remove="InsertSimple10trm64Kb.json" />
+    <None Remove="InsertSimple10trm8Kb.json" />
+    <None Remove="LastFm.json" />
+    <None Remove="MillionSongDoc.json" />
+    <None Remove="Nutrition.json" />
+    <None Remove="PerfComplex.json" />
+    <None Remove="PerfSimple.json" />
+    <None Remove="ProgramOld.cs.txt" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ProgramOld.cs.txt" />
+    <None Remove="States_Committees.json" />
+    <None Remove="States_Legislatures.json" />
+    <None Remove="TestRunJson.json" />
+    <None Remove="TicinoErrorBuckets.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="BingDocs.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DevTestDoc.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Input.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InsertComplexIndexing.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InsertSimple10trm1024Kb.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InsertSimple10trm128Kb.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InsertSimple10trm16Kb.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InsertSimple10trm1Kb.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InsertSimple10trm2048Kb.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InsertSimple10trm256Kb.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InsertSimple10trm2Kb.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InsertSimple10trm32Kb.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InsertSimple10trm4Kb.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InsertSimple10trm512Kb.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InsertSimple10trm64Kb.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InsertSimple10trm8Kb.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="LastFm.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MillionSongDoc.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Nutrition.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PerfComplex.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PerfSimple.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="States_Committees.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="States_Legislatures.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestRunJson.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TicinoErrorBuckets.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="InsertComplexIndexing.json" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,143 @@
+﻿namespace CosmosBinEncoder
+{
+    using System.IO;
+    using Microsoft.Azure.Cosmos.CosmosElements;
+    using Microsoft.Azure.Cosmos.Json;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+    using CosmosJson = Microsoft.Azure.Cosmos.Json;
+
+    internal class ProgramOld
+    {
+        static List<TranscodingResult> results = new List<TranscodingResult>();
+        static void Main(string[] args)
+        {
+            try
+            {
+                MainAsync(args).Wait();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("EXCEPTION: {0}", ex);
+            }
+
+            Console.WriteLine("Press any key to quit...");
+            Console.ReadKey();
+        }
+
+        static async Task MainAsync(string[] args)
+        {
+            if (args.Length == 0 || String.IsNullOrWhiteSpace(args[0]))
+            {
+                throw new ArgumentException("First command line argument needs to be the read-only connection string.", "args[0]");
+            }
+
+            if (!File.Exists(args[0]) && !Directory.Exists(args[0]))
+            {
+                throw new ArgumentException($"File or Folder '{args[0]}' does not exist.", "args[0]");
+            }
+
+            FileInfo statsFile;
+            if (File.Exists(args[0]))
+            {
+                FileInfo fileInfo = new FileInfo(args[0]);
+                await TranscodeFile(fileInfo);
+
+                statsFile = new FileInfo(Path.Combine(fileInfo.Directory.FullName, fileInfo.Name + ".stats.csv"));
+            }
+            else
+            {
+                foreach(String path in Directory.GetFiles(args[0], "*.json", SearchOption.AllDirectories))
+                {
+                    FileInfo fileInfo = new FileInfo(path);
+                    await TranscodeFile(fileInfo);
+                }
+                statsFile = new FileInfo(Path.Combine(new DirectoryInfo(args[0]).FullName, "stats.csv"));
+            }
+
+            long totalInputSize = 0;
+            long totalNormalizedSize = 0;
+            long totalBinaryWithRefStringsSize = 0;
+            long totalBinaryWithoutRefStringsSize = 0;
+
+            if (statsFile.Exists)
+            {
+                statsFile.Delete();
+            }
+
+            using (StreamWriter statsWriter = statsFile.CreateText())
+            {
+                statsWriter.WriteLine("InputJsonSize;NormalizedJsonSize;BinaryWithRefStringsSize;BinaryNoRefStringsSize;BinaryWithRefStringsPercent;BinaryNoRefStringsPercent");
+                foreach(TranscodingResult result in results)
+                {
+                    statsWriter.WriteLine($"{result.InputJsonSize};{result.NormalizedJsonSize};{result.BinaryEncodingSizeWithRefStrings};{result.BinaryEncodingSizeWithoutRefStrings};{(double)result.BinaryEncodingSizeWithRefStrings / result.NormalizedJsonSize:##0.00 %};{(double)result.BinaryEncodingSizeWithoutRefStrings / result.NormalizedJsonSize:##0.00 %}");
+                    totalInputSize += result.InputJsonSize;
+                    totalNormalizedSize += result.NormalizedJsonSize;
+                    totalBinaryWithRefStringsSize += result.BinaryEncodingSizeWithRefStrings;
+                    totalBinaryWithoutRefStringsSize += result.BinaryEncodingSizeWithoutRefStrings;
+                }
+            }
+            Console.WriteLine($"Total Input Size: {totalInputSize}, Normalized Sized: {totalNormalizedSize}, Binary (With ref strings): {totalBinaryWithRefStringsSize} --> {(double)totalBinaryWithRefStringsSize / totalNormalizedSize:##0.00 %}, Binary (no ref strings): {totalBinaryWithoutRefStringsSize} --> {(double)totalBinaryWithoutRefStringsSize / totalNormalizedSize:##0.00 %}");
+        }
+
+        static async Task TranscodeFile(FileInfo fileInfo)
+        {
+            TranscodingResult result = new TranscodingResult();
+            String jsonRawInput = String.Empty;
+            using (StreamReader reader = File.OpenText(fileInfo.FullName))
+            {
+                jsonRawInput = reader.ReadToEnd();
+                result.InputJsonSize = reader.BaseStream.Position;
+            }
+
+            JObject jObject = JsonConvert.DeserializeObject<JObject>(jsonRawInput);
+            String jsonInput = JsonConvert.SerializeObject(jObject, Formatting.None);
+
+            CosmosElement cosmosElement = CosmosElement.Parse(jsonInput);
+
+            IJsonWriter writer = CosmosJson.JsonWriter.Create(JsonSerializationFormat.Text);
+            cosmosElement.WriteTo(writer);
+            result.NormalizedJsonSize= WriteToFile(
+            new FileInfo(Path.Combine(fileInfo.Directory.FullName, fileInfo.Name + ".cosmostextjson.txt")),
+            writer.GetResult());
+
+            writer = CosmosJson.JsonWriter.Create(JsonSerializationFormat.Binary, enableEncodedStrings: true);
+            cosmosElement.WriteTo(writer);
+            result.BinaryEncodingSizeWithRefStrings = WriteToFile(
+            new FileInfo(Path.Combine(fileInfo.Directory.FullName, fileInfo.Name + ".binaryWithReferenceStrings.bin")),
+            writer.GetResult());
+
+            writer = CosmosJson.JsonWriter.Create(JsonSerializationFormat.Binary, enableEncodedStrings: false);
+            cosmosElement.WriteTo(writer);
+            result.BinaryEncodingSizeWithoutRefStrings = WriteToFile(
+            new FileInfo(Path.Combine(fileInfo.Directory.FullName, fileInfo.Name + ".binaryNoReferenceStrings.bin")),
+            writer.GetResult());
+
+            results.Add(result);
+        }
+
+        static long WriteToFile(FileInfo fileInfo, ReadOnlyMemory<byte> payload)
+        {
+            if (fileInfo.Exists)
+            {
+                fileInfo.Delete();
+            }
+
+            using (FileStream file = fileInfo.Create())
+            {
+                file.Write(payload.Span);
+                file.Flush();
+            }
+
+            return payload.Length;
+        }
+
+        struct TranscodingResult
+        {
+            public long InputJsonSize;
+            public long NormalizedJsonSize;
+            public long BinaryEncodingSizeWithoutRefStrings;
+            public long BinaryEncodingSizeWithRefStrings;
+        }
+    }
+}

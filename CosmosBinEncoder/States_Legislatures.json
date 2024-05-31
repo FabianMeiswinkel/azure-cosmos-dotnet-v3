@@ -1,0 +1,459 @@
+{
+    "last_name":"Stevens",
+    "updated_at":"2015-06-30 23:45:13",
+    "sources":[
+    {
+        "url":"http://akleg.gov/legislator.php?id=stg"
+    }
+    ],
+    "full_name":"Gary Stevens",
+    "old_roles":
+    {
+        "27":[
+        {
+            "term":"27",
+            "end_date":null,
+            "district":"R",
+            "chamber":"upper",
+            "state":"ak",
+            "party":"Republican",
+            "type":"member",
+            "start_date":null
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000002",
+            "chamber":"upper",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Education",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000007",
+            "chamber":"upper",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Resources",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000008",
+            "chamber":"upper",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Rules",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000015",
+            "chamber":"upper",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Education & Early Development",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000017",
+            "chamber":"upper",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Fish & Game",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000018",
+            "chamber":"upper",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Governor",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000021",
+            "chamber":"upper",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Legislature",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000121",
+            "chamber":"upper",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"World Trade",
+            "position":"chair",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000148",
+            "chamber":"joint",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Alaska Arctic Policy Commission",
+            "position":"alternate",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000033",
+            "chamber":"joint",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Higher Educ/Career Readiness Task Force",
+            "position":"co-chair",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000034",
+            "chamber":"joint",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Educ Funding District Cost Factor Comm",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000035",
+            "chamber":"joint",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Select Committee On Legislative Ethics",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000147",
+            "chamber":"joint",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Legislative Celebration Commission",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000036",
+            "chamber":"joint",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Legislative Council",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"27",
+            "committee_id":"AKC000039",
+            "chamber":"upper",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Committee On Committees",
+            "position":"chair",
+            "type":"committee member"
+        }
+        ],
+        "28":[
+        {
+            "term":"28",
+            "end_date":null,
+            "district":"R",
+            "chamber":"upper",
+            "state":"ak",
+            "party":"Republican",
+            "type":"member",
+            "start_date":null
+        }
+        ,
+        {
+            "term":"28",
+            "committee_id":"AKC000121",
+            "chamber":"upper",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"World Trade",
+            "position":"chair",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"28",
+            "committee_id":"AKC000169",
+            "chamber":"joint",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Legislative Centennial Commission",
+            "position":"chair",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"28",
+            "committee_id":"AKC000193",
+            "chamber":"upper",
+            "state":"ak",
+            "subcommittee":"Finance Subcommittee",
+            "committee":"Fish & Game",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"28",
+            "committee_id":"AKC000204",
+            "chamber":"upper",
+            "state":"ak",
+            "subcommittee":"Finance Subcommittee",
+            "committee":"University Of Alaska",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"28",
+            "committee_id":"AKC000002",
+            "chamber":"upper",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Education",
+            "position":"chair",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"28",
+            "committee_id":"AKC000036",
+            "chamber":"joint",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Legislative Council",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"28",
+            "committee_id":"AKC000186",
+            "chamber":"joint",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Alaska Arctic Policy Commission",
+            "position":"alternate",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"28",
+            "committee_id":"AKC000030",
+            "chamber":"joint",
+            "state":"ak",
+            "subcommittee":null,
+            "committee":"Administrative Regulation Review",
+            "position":"member",
+            "type":"committee member"
+        }
+        ,
+        {
+            "term":"28",
+            "committee_id":"AKC000191",
+            "chamber":"upper",
+            "state":"ak",
+            "subcommittee":"Finance Subcommittee",
+            "committee":"Education & Early Development",
+            "position":"member",
+            "type":"committee member"
+        }
+        ]
+    }
+    ,
+    "id":"AKL000001",
+    "first_name":"Gary",
+    "middle_name":"",
+    "district":"P",
+    "state":"ak",
+    "votesmart_id":"12784",
+    "party":"Republican",
+    "email":"Senator.Gary.Stevens@akleg.gov",
+    "all_ids":[
+    "AKL000001",
+    "AKL000173"
+    ],
+    "leg_id":"AKL000001",
+    "active":true,
+    "transparencydata_id":"fc7e45fc8af546c9a7c6dac315000aaa",
+    "photo_url":"http://w3.legis.state.ak.us/images/senate/STG.jpg",
+    "roles":[
+    {
+        "term":"29",
+        "end_date":null,
+        "district":"P",
+        "chamber":"upper",
+        "state":"ak",
+        "party":"Republican",
+        "type":"member",
+        "start_date":null
+    }
+    ,
+    {
+        "term":"29",
+        "committee_id":"AKC000006",
+        "chamber":"upper",
+        "state":"ak",
+        "subcommittee":null,
+        "committee":"Labor & Commerce",
+        "position":"member",
+        "type":"committee member"
+    }
+    ,
+    {
+        "term":"29",
+        "committee_id":"AKC000035",
+        "chamber":"joint",
+        "state":"ak",
+        "subcommittee":null,
+        "committee":"Select Committee On Legislative Ethics",
+        "position":"member",
+        "type":"committee member"
+    }
+    ,
+    {
+        "term":"29",
+        "committee_id":"AKC000204",
+        "chamber":"upper",
+        "state":"ak",
+        "subcommittee":"Finance Subcommittee",
+        "committee":"University Of Alaska",
+        "position":"member",
+        "type":"committee member"
+    }
+    ,
+    {
+        "term":"29",
+        "committee_id":"AKC000233",
+        "chamber":"upper",
+        "state":"ak",
+        "subcommittee":null,
+        "committee":"Special Cmte On The Arctic",
+        "position":"member",
+        "type":"committee member"
+    }
+    ,
+    {
+        "term":"29",
+        "committee_id":"AKC000002",
+        "chamber":"upper",
+        "state":"ak",
+        "subcommittee":null,
+        "committee":"Education",
+        "position":"member",
+        "type":"committee member"
+    }
+    ,
+    {
+        "term":"29",
+        "committee_id":"AKC000036",
+        "chamber":"joint",
+        "state":"ak",
+        "subcommittee":null,
+        "committee":"Legislative Council",
+        "position":"chair",
+        "type":"committee member"
+    }
+    ,
+    {
+        "term":"29",
+        "committee_id":"AKC000186",
+        "chamber":"joint",
+        "state":"ak",
+        "subcommittee":null,
+        "committee":"Alaska Arctic Policy Commission",
+        "position":"alternate",
+        "type":"committee member"
+    }
+    ,
+    {
+        "term":"29",
+        "committee_id":"AKC000235",
+        "chamber":"upper",
+        "state":"ak",
+        "subcommittee":null,
+        "committee":"Special World Trade Cmte",
+        "position":"vice-chair",
+        "type":"committee member"
+    }
+    ,
+    {
+        "term":"29",
+        "committee_id":"AKC000238",
+        "chamber":"upper",
+        "state":"ak",
+        "subcommittee":"Finance Subcommittee",
+        "committee":"Judiciary Subcommittee",
+        "position":"member",
+        "type":"committee member"
+    }
+    ],
+    "url":"http://senate.legis.state.ak.us/senator.php?id=stg",
+    "country":"us",
+    "created_at":"2011-02-11 00:13:25",
+    "level":"state",
+    "chamber":"upper",
+    "offices":[
+    {
+        "fax":"907-465-3517",
+        "name":"Capitol Office",
+        "phone":"907-465-4925",
+        "address":"State Capitol Room 429\nJuneau AK, 99801",
+        "type":"capitol",
+        "email":"Senator.Gary.Stevens@akleg.gov"
+    }
+    ,
+    {
+        "fax":"907-486-5264",
+        "name":"District Office",
+        "phone":"907-486-4925",
+        "address":"305 Center Ave. Suite 1\nKodiak AK, 99615",
+        "type":"district",
+        "email":null
+    }
+    ],
+    "suffixes":"",
+    "_rid":"ZmZ-AJPgHgEBAAAAAAAAAA==",
+    "_ts":1437350941,
+    "_self":"dbs/ZmZ-AA==/colls/ZmZ-AJPgHgE=/docs/ZmZ-AJPgHgEBAAAAAAAAAA==/",
+    "_etag":"\"00002800-0000-0000-0000-55ac3c1d0000\"",
+    "_attachments":"attachments/"
+}
