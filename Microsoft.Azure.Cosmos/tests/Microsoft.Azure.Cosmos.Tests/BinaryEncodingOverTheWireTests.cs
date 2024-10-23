@@ -8,7 +8,12 @@ namespace Microsoft.Azure.Cosmos.Tests
     using System;
     using System.Collections.Generic;
     using System.Configuration;
+    using System.Globalization;
+    using System.IO;
     using System.Linq;
+    using System.Text;
+    using System.Text.Json;
+    using System.Text.Json.Nodes;
     using System.Threading.Tasks;
     using Microsoft.Azure.Cosmos.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -283,6 +288,245 @@ namespace Microsoft.Azure.Cosmos.Tests
             }
 
             return documents;
+        }
+
+        [TestMethod]
+        public void ExportJavaReferences_SByte()
+        {
+            sbyte[] values = new sbyte[] { SByte.MinValue, -99, 0, 1, 100, SByte.MaxValue};
+            ExportJavaReferences(
+                GenerateJavaReferences(values),
+                "C:\\Temp\\SByte.json"
+            );
+        }
+
+        [TestMethod]
+        public void ExportJavaReferences_Int64()
+        {
+            long[] values = new long[] { Int64.MinValue, (long)Int32.MinValue - 1, Int16.MinValue - 1, SByte.MinValue - 1, -99, 0, 1, 100, SByte.MaxValue + 1, Int16.MaxValue + 1, (long)Int32.MaxValue + 1, Int64.MaxValue };
+            ExportJavaReferences(
+                GenerateJavaReferences(values),
+                "C:\\Temp\\Int64.json"
+            );
+        }
+
+        [TestMethod]
+        public void ExportJavaReferences_Int32()
+        {
+            int[] values = new int[] { Int32.MinValue, Int16.MinValue - 1, SByte.MinValue - 1 , - 99, 0, 1, 100, SByte.MaxValue + 1, Int16.MaxValue + 1, Int32.MaxValue };
+            ExportJavaReferences(
+                GenerateJavaReferences(values),
+                "C:\\Temp\\Int32.json"
+            );
+        }
+
+        [TestMethod]
+        public void ExportJavaReferences_UInt32()
+        {
+            uint[] values = new uint[] { UInt32.MinValue, 1, 100, Byte.MaxValue + 1, UInt16.MaxValue + 1, UInt32.MaxValue };
+            ExportJavaReferences(
+                GenerateJavaReferences(values),
+                "C:\\Temp\\UInt32.json"
+            );
+        }
+
+        [TestMethod]
+        public void ExportJavaReferences_Int16()
+        {
+            short[] values = new short[] { Int16.MinValue, SByte.MinValue - 1, -99, 0, 1, 100, SByte.MaxValue + 1, Int16.MaxValue };
+            ExportJavaReferences(
+                GenerateJavaReferences(values),
+                "C:\\Temp\\Int16.json"
+            );
+        }
+
+        [TestMethod]
+        public void ExportJavaReferences_Float()
+        {
+            float[] values = new float[] { Single.MinValue, -(1/3f), -0.5f, 0, 0.5f, 1/3f, Single.MaxValue };
+            ExportJavaReferences(
+                GenerateJavaReferences(values),
+                "C:\\Temp\\Float.json"
+            );
+        }
+
+        [TestMethod]
+        public void ExportJavaReferences_Double()
+        {
+            double[] values = new double[] { Double.MinValue, Single.MinValue - 0.000001, -(1 / 3), -0.5f, 0, 0.5f, 1 / 3, Single.MaxValue + -0.000001, Double.MaxValue };
+            ExportJavaReferences(
+                GenerateJavaReferences(values),
+                "C:\\Temp\\Double.json"
+            );
+        }
+
+        [TestMethod]
+        public void ExportJavaReferences_String_Simple()
+        {
+            string[][] values = new[]
+            {
+                new string[]
+                {
+                    "Hello World",
+                    "This is a test for a pretty long string exceeding one hundred characters in total length !!!!!!!!!!! Really!"
+                }
+            };
+            ExportJavaReferences(
+                GenerateJavaReferences(values),
+                "C:\\Temp\\String_Simple.json"
+            );
+        }
+
+        [TestMethod]
+        public void ExportJavaReferences_String_SystemStrings()
+        {
+            string[][] values = new[]
+            {
+                new string[]
+                {
+                    "id",
+                    "_ts",
+                    "_rid",
+                    "_self",
+                    "_attachments",
+                    "_ts"
+                }
+            };
+            ExportJavaReferences(
+                GenerateJavaReferences(values),
+                "C:\\Temp\\String_SystemStrings.json"
+            );
+        }
+
+        [TestMethod]
+        public void ExportJavaReferences_String_ReferenceStrings()
+        {
+            string[][] values = new string[][]
+            {
+                new string[]
+                {
+                    "ReferenceString01",
+                    "ReferenceString01",
+                    "ReferenceString01"
+                },
+                new string[]
+                {
+                    "ReferenceString01",
+                    "ReferenceString02",
+                    "ReferenceString03"
+                }
+            };
+            ExportJavaReferences(
+                GenerateJavaReferences(values),
+                "C:\\Temp\\String_ReferenceStrings.json"
+            );
+        }
+
+        private static void ExportJavaReferences(JsonObject doc, String fileName)
+        {
+            using (StreamWriter output = File.CreateText(fileName))
+            {
+                JsonSerializerOptions jsonOptions = new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                };
+                output.WriteLine(doc.ToJsonString(jsonOptions));
+            }
+        }
+
+        private static void WriteBinaryValue(IJsonWriter writer, sbyte value)
+        {
+            writer.WriteInt8Value(value);
+        }
+
+        private static void WriteBinaryValue(IJsonWriter writer, int value)
+        {
+            writer.WriteInt32Value(value);
+        }
+
+        private static void WriteBinaryValue(IJsonWriter writer, uint value)
+        {
+            writer.WriteUInt32Value(value);
+        }
+
+        private static void WriteBinaryValue(IJsonWriter writer, short value)
+        {
+            writer.WriteInt16Value(value);
+        }
+
+        private static void WriteBinaryValue(IJsonWriter writer, long value)
+        {
+            writer.WriteInt64Value(value);
+        }
+
+        private static void WriteBinaryValue(IJsonWriter writer, float value)
+        {
+            writer.WriteFloat32Value(value);
+        }
+
+        private static void WriteBinaryValue(IJsonWriter writer, double value)
+        {
+            writer.WriteFloat64Value(value);
+        }
+
+        private static void WriteBinaryValue(IJsonWriter writer, string[] values)
+        {
+            writer.WriteArrayStart();
+            foreach (string value in values)
+            {
+                writer.WriteStringValue(value);
+            }
+            writer.WriteArrayEnd();
+        }
+
+        private static void WriteBinaryValue(IJsonWriter writer, Object value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            throw new NotImplementedException($"Write value not implemented for type '{value.GetType().Name}'. ");
+        }
+
+        private static JsonObject GenerateJavaReferences<T>(IEnumerable<T> values)
+        {
+            JsonArray valuesNode = new JsonArray();
+            JsonObject doc = new()
+            {
+                { "type", typeof(T).Name },
+                { "values", valuesNode }
+            };
+
+            foreach (T v in values)
+            {
+                IJsonWriter writer = Cosmos.Json.JsonWriter.Create(JsonSerializationFormat.Binary, 256, true);
+
+                WriteBinaryValue(writer, (dynamic)v);
+                ReadOnlySpan<byte> encoded;
+
+                string jsonValue;
+                if (typeof(T) == typeof(string[]))
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("[\"");
+                    string[] stringValues = (string[])(object)v;
+                    jsonValue = String.Join('|', stringValues);
+                }
+                else
+                {
+                    jsonValue = String.Format(CultureInfo.InvariantCulture, "{0}", v);
+                }
+
+                JsonObject valueNode = new()
+                {
+                    { "jsonValue", jsonValue },
+                    { "binaryValueBase64",  Convert.ToBase64String(writer.GetResult().Span, Base64FormattingOptions.None) }
+                };
+                valuesNode.Add(valueNode);
+            }
+
+            return doc;
         }
 
         public sealed class AsyncLazy<T> : Lazy<Task<T>>
