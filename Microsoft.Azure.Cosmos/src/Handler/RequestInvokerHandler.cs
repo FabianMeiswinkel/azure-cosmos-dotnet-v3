@@ -24,6 +24,7 @@ namespace Microsoft.Azure.Cosmos.Handlers
     internal class RequestInvokerHandler : RequestHandler
     {
         private static readonly HttpMethod httpPatchMethod = new HttpMethod(HttpConstants.HttpMethods.Patch);
+        private static readonly string BinarySerializationFormat = SupportedSerializationFormats.CosmosBinary.ToString();
         private static (bool, ResponseMessage) clientIsValid = (false, null);
 
         private readonly CosmosClient client;
@@ -67,6 +68,12 @@ namespace Microsoft.Azure.Cosmos.Handlers
                 request.Headers.Add(HttpConstants.HttpHeaders.Prefer, HttpConstants.HttpHeaderValues.PreferReturnMinimal);
             }
 
+            if (ConfigurationManager.IsBinaryEncodingEnabled()
+                && RequestInvokerHandler.IsPointOperationSupportedForBinaryEncoding(request))
+            {
+                request.Headers.Add(HttpConstants.HttpHeaders.SupportedSerializationFormats, RequestInvokerHandler.BinarySerializationFormat);
+            }
+
             await this.ValidateAndSetConsistencyLevelAsync(request);
             this.SetPriorityLevel(request);
 
@@ -79,7 +86,7 @@ namespace Microsoft.Azure.Cosmos.Handlers
             await request.AssertPartitioningDetailsAsync(this.client, cancellationToken, request.Trace);
             this.FillMultiMasterContext(request);
 
-            AvailabilityStrategy strategy = this.AvailabilityStrategy(request);
+            AvailabilityStrategyInternal strategy = this.AvailabilityStrategy(request);
 
             ResponseMessage response = strategy != null && strategy.Enabled()
                 ? await strategy.ExecuteAvailabilityStrategyAsync(
@@ -94,6 +101,14 @@ namespace Microsoft.Azure.Cosmos.Handlers
                 ((CosmosTraceDiagnostics)response.Diagnostics).Value.AddOrUpdateDatum("ExcludedRegions", request.RequestOptions.ExcludeRegions);
             }
 
+            if (ConfigurationManager.IsBinaryEncodingEnabled()
+                && RequestInvokerHandler.IsPointOperationSupportedForBinaryEncoding(request)
+                && response.Content != null
+                && response.Content is not CloneableStream)
+            {
+                response.Content = await StreamExtension.AsClonableStreamAsync(response.Content, default);
+            }
+
             return response;
         }
 
@@ -103,10 +118,17 @@ namespace Microsoft.Azure.Cosmos.Handlers
         /// </summary>
         /// <param name="request"></param>
         /// <returns>whether the request should be a parallel hedging request.</returns>
-        public AvailabilityStrategy AvailabilityStrategy(RequestMessage request)
+        public AvailabilityStrategyInternal AvailabilityStrategy(RequestMessage request)
         {
-            return request.RequestOptions?.AvailabilityStrategy
+            AvailabilityStrategy strategy = request.RequestOptions?.AvailabilityStrategy
                     ?? this.client.ClientOptions.AvailabilityStrategy;
+
+            if (strategy == null)
+            {
+                return null;
+            }
+
+            return strategy as AvailabilityStrategyInternal;
         }
 
         public virtual async Task<ResponseMessage> BaseSendAsync(
@@ -538,6 +560,16 @@ namespace Microsoft.Azure.Cosmos.Handlers
               operationType == OperationType.Replace ||
               operationType == OperationType.Upsert ||
               operationType == OperationType.Patch);
+        }
+
+        private static bool IsPointOperationSupportedForBinaryEncoding(RequestMessage request)
+        {
+            return request.ResourceType == ResourceType.Document 
+                && (request.OperationType == OperationType.Create
+                    || request.OperationType == OperationType.Replace
+                    || request.OperationType == OperationType.Delete
+                    || request.OperationType == OperationType.Read
+                    || request.OperationType == OperationType.Upsert);
         }
 
         private static bool IsClientNoResponseSet(CosmosClientOptions clientOptions, OperationType operationType)

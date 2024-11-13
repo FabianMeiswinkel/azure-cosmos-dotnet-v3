@@ -643,6 +643,9 @@ namespace Microsoft.Azure.Cosmos
 
         /// <summary>
         /// Allows optimistic batching of requests to service. Setting this option might impact the latency of the operations. Hence this option is recommended for non-latency sensitive scenarios only.
+        /// <remarks>
+        /// The use of Resource Tokens scoped to a Partition Key as an authentication mechanism when Bulk is enabled is not recommended as it reduces the potential throughput benefit
+        /// </remarks>
         /// </summary>
         public bool AllowBulkExecution { get; set; }
 
@@ -694,7 +697,35 @@ namespace Microsoft.Azure.Cosmos
         /// <summary>
         /// Availability Strategy to be used for periods of high latency
         /// </summary>
-        internal AvailabilityStrategy AvailabilityStrategy { get; set; }
+        /// /// <example>
+        /// An example on how to set an availability strategy custom serializer.
+        /// <code language="c#">
+        /// <![CDATA[
+        /// CosmosClient client = new CosmosClientBuilder("connection string")
+        /// .WithApplicationPreferredRegions(
+        ///    new List<string> { "East US", "Central US", "West US" } )
+        /// .WithAvailabilityStrategy(
+        ///    AvailabilityStrategy.CrossRegionHedgingStrategy(
+        ///    threshold: TimeSpan.FromMilliseconds(500),
+        ///    thresholdStep: TimeSpan.FromMilliseconds(100)
+        /// ))
+        /// .Build();
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// <remarks> 
+        /// The availability strategy in the example is a Cross Region Hedging Strategy.
+        /// These strategies take two values, a threshold and a threshold step.When a request that is sent 
+        /// out takes longer than the threshold time, the SDK will hedge to the second region in the application preferred regions list.
+        /// If a response from either the primary request or the first hedged request is not received 
+        /// after the threshold step time, the SDK will hedge to the third region and so on.
+        /// </remarks>
+#if PREVIEW
+        public
+#else
+        internal
+#endif
+        AvailabilityStrategy AvailabilityStrategy { get; set; }
 
         /// <summary>
         /// Enable partition key level failover

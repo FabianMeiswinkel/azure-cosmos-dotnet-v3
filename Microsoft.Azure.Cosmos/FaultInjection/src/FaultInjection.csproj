@@ -14,6 +14,7 @@
 		<AssemblyName>Microsoft.Azure.Cosmos.FaultInjection</AssemblyName>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<SdkProjectRef>True</SdkProjectRef>
 	</PropertyGroup>
 
@@ -29,6 +30,11 @@
 		<PackageReference Include="Microsoft.Azure.Cosmos.Direct" Version="[$(DirectVersion)]" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.HybridRow" Version="[$(HybridRowVersion)]" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	  <PackageReference Include="System.Text.Json" Version="8.0.5" />
 	</ItemGroup>
 	
 	<PropertyGroup>

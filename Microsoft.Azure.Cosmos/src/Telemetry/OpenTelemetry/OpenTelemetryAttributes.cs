@@ -5,6 +5,7 @@
 namespace Microsoft.Azure.Cosmos.Telemetry
 {
     using System.Net;
+    using Microsoft.Azure.Cosmos.Query.Core;
 
     internal class OpenTelemetryAttributes
     {
@@ -18,6 +19,17 @@ namespace Microsoft.Azure.Cosmos.Telemetry
         internal OpenTelemetryAttributes(RequestMessage requestMessage)
         {
             this.RequestContentLength = requestMessage?.Headers?.ContentLength;
+            this.ConsistencyLevel = requestMessage?.Headers?.ConsistencyLevel;
+
+            if (requestMessage != null)
+            {
+                this.OperationType = requestMessage.OperationType;
+                this.ResourceType = requestMessage.ResourceType;
+            }
+            else
+            {
+                this.OperationType = Documents.OperationType.Invalid;
+            }
         }
 
         /// <summary>
@@ -71,31 +83,23 @@ namespace Microsoft.Azure.Cosmos.Telemetry
         internal Documents.OperationType OperationType { get; set; }
 
         /// <summary>
+        /// ResourceType
+        /// </summary>
+        internal Documents.ResourceType? ResourceType { get; set; }
+
+        /// <summary>
         /// Batch Size
         /// </summary>
         internal int? BatchSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the operation type for batch operations. 
-        /// Will have a value for homogeneous batch operations and will be null for heterogeneous batch operations.
-        /// 
-        /// Operation name should be prepended with BATCH for homogeneous operations, or be just BATCH for heterogeneous operations.
+        /// Query Spec with Query Text and Parameters
         /// </summary>
-        /// <example>
-        /// For example, if you have a batch of homogeneous operations like Read:
-        /// <code>
-        /// var recorder = new OpenTelemetryCoreRecorder();
-        /// recorder.BatchOperationName = Documents.OperationType.Read; // Homogeneous batch
-        /// string operationName = "BATCH." + recorder.BatchOperationName; // Results in "BATCH.Read"
-        /// </code>
-        /// 
-        /// For a batch of heterogeneous operations:
-        /// <code>
-        /// var recorder = new OpenTelemetryCoreRecorder();
-        /// recorder.BatchOperationName = null; // Heterogeneous batch
-        /// string operationName = "BATCH"; // No specific operation type
-        /// </code>
-        /// </example>
-        internal Documents.OperationType? BatchOperationName { get; set; }
+        internal SqlQuerySpec QuerySpec { get; set; }
+
+        /// <summary>
+        /// Consistency Level
+        /// </summary>
+        internal string ConsistencyLevel { get; set; }
     }
 }

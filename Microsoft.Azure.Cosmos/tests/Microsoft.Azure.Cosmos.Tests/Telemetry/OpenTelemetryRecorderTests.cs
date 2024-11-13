@@ -7,7 +7,6 @@ namespace Microsoft.Azure.Cosmos.Tests.Telemetry
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
     using System.Linq;
     using System.Net;
     using System.Reflection;
@@ -19,7 +18,6 @@ namespace Microsoft.Azure.Cosmos.Tests.Telemetry
     using Microsoft.Azure.Cosmos.Tracing;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
-    using static Microsoft.Azure.Cosmos.CrossRegionParallelHedgingAvailabilityStrategy;
 
     [TestClass]
     public class OpenTelemetryRecorderTests
@@ -45,11 +43,11 @@ namespace Microsoft.Azure.Cosmos.Tests.Telemetry
                 .GetTypes()
                 .Where(type => type.Namespace == "Microsoft.Azure.Cosmos" && type.Name.EndsWith("Exception"));
 
-            foreach(Type className in actualClasses)
+            foreach (Type className in actualClasses)
             {
                 Assert.IsTrue(OpenTelemetryCoreRecorder.OTelCompatibleExceptions.Keys.Contains(className), $"{className.Name} is not added in {typeof(OpenTelemetryCoreRecorder).Name} Class OTelCompatibleExceptions dictionary");
             }
-            
+
         }
         /// <summary>
         /// This test verifies whether OpenTelemetryResponse can be initialized using a specific type of response available in the SDK. 
@@ -110,7 +108,7 @@ namespace Microsoft.Azure.Cosmos.Tests.Telemetry
 
                 if (instance is TransactionalBatchResponse transactionInstance)
                 {
-                    _ = new OpenTelemetryResponse(transactionInstance, false, null);
+                    _ = new OpenTelemetryResponse(transactionInstance);
                 }
                 else if (instance is ResponseMessage responseMessageInstance)
                 {
@@ -173,7 +171,7 @@ namespace Microsoft.Azure.Cosmos.Tests.Telemetry
                     Assert.AreEqual(
                         "HedgingResponse",
                         hedgingResponse,
-                        "HedgingResponse is only used internally in the CrossRegionParallelHedgingAvailabilityStrategy and is never returned. No support Needed.");
+                        "HedgingResponse is only used internally in the CrossRegionHedgingAvailabilityStrategy and is never returned. No support Needed.");
                 }
                 else
                 {
@@ -220,7 +218,7 @@ namespace Microsoft.Azure.Cosmos.Tests.Telemetry
 
         private static async Task<TransactionalBatchResponse> GetTransactionalBatchResponse(ItemBatchOperation[] arrayOperations = null)
         {
-            if(arrayOperations == null)
+            if (arrayOperations == null)
             {
                 arrayOperations = new ItemBatchOperation[1];
                 arrayOperations[0] = new ItemBatchOperation(Documents.OperationType.Read, 0, new PartitionKey("0"));
@@ -249,7 +247,7 @@ namespace Microsoft.Azure.Cosmos.Tests.Telemetry
             arrayOperations[0] = new ItemBatchOperation(Documents.OperationType.Read, 0, new PartitionKey("0"));
             PartitionKeyRangeBatchResponse partitionKeyRangeBatchResponse = new PartitionKeyRangeBatchResponse(
                 arrayOperations.Length,
-                await OpenTelemetryRecorderTests.GetTransactionalBatchResponse(arrayOperations), 
+                await OpenTelemetryRecorderTests.GetTransactionalBatchResponse(arrayOperations),
                 MockCosmosUtil.Serializer);
 
             return partitionKeyRangeBatchResponse;
@@ -259,43 +257,43 @@ namespace Microsoft.Azure.Cosmos.Tests.Telemetry
         public void MarkFailedTest()
         {
             Assert.IsFalse(OpenTelemetryCoreRecorder.IsExceptionRegistered(
-                new Exception(), 
+                new Exception(),
                 default));
 
             Assert.IsTrue(OpenTelemetryCoreRecorder.IsExceptionRegistered(
                 new CosmosNullReferenceException(
-                    new NullReferenceException(), 
-                    NoOpTrace.Singleton), 
+                    new NullReferenceException(),
+                    NoOpTrace.Singleton),
                 default));
 
             Assert.IsTrue(OpenTelemetryCoreRecorder.IsExceptionRegistered(
                 new CosmosObjectDisposedException(
                     new ObjectDisposedException("dummyobject"),
-                    MockCosmosUtil.CreateMockCosmosClient(), 
-                    NoOpTrace.Singleton), 
+                    MockCosmosUtil.CreateMockCosmosClient(),
+                    NoOpTrace.Singleton),
                 default));
 
             Assert.IsTrue(OpenTelemetryCoreRecorder.IsExceptionRegistered(
                 new CosmosOperationCanceledException(
-                    new OperationCanceledException(), 
-                    new CosmosTraceDiagnostics(NoOpTrace.Singleton)), 
+                    new OperationCanceledException(),
+                    new CosmosTraceDiagnostics(NoOpTrace.Singleton)),
                 default));
 
             Assert.IsTrue(OpenTelemetryCoreRecorder.IsExceptionRegistered(
                 new CosmosException(
-                    System.Net.HttpStatusCode.OK, 
-                    "dummyMessage", 
+                    System.Net.HttpStatusCode.OK,
+                    "dummyMessage",
                     "dummyStacktrace",
-                    null, 
-                    NoOpTrace.Singleton, 
-                    default, 
-                    null), 
+                    null,
+                    NoOpTrace.Singleton,
+                    default,
+                    null),
                 default));
 
             Assert.IsTrue(OpenTelemetryCoreRecorder.IsExceptionRegistered(
                 new ChangeFeedProcessorUserException(
-                    new Exception(), 
-                    default), 
+                    new Exception(),
+                    default),
                 default));
 
             // If there is an unregistered exception is thrown, defaut exception wil be called
@@ -321,7 +319,7 @@ namespace Microsoft.Azure.Cosmos.Tests.Telemetry
 
     internal class NewCosmosObjectDisposedException : CosmosObjectDisposedException
     {
-        internal NewCosmosObjectDisposedException(ObjectDisposedException originalException, CosmosClient cosmosClient, ITrace trace) 
+        internal NewCosmosObjectDisposedException(ObjectDisposedException originalException, CosmosClient cosmosClient, ITrace trace)
             : base(originalException, cosmosClient, trace)
         {
         }
