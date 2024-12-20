@@ -15,10 +15,13 @@ namespace Microsoft.Azure.Cosmos.Tests
     using System.Text.Json;
     using System.Text.Json.Nodes;
     using System.Threading.Tasks;
+    using Microsoft.Azure.Cosmos.CosmosElements;
     using Microsoft.Azure.Cosmos.Json;
+    using Microsoft.Azure.Cosmos.Tests.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+    using static Microsoft.Azure.Cosmos.Json.JsonBinaryEncoding;
 
     /// <summary>
     /// Tests for CrossPartitionQueryTests.
@@ -375,6 +378,65 @@ namespace Microsoft.Azure.Cosmos.Tests
         }
 
         [TestMethod]
+        public void ExportJavaReferences_JsonDoc_String_Simple()
+        {
+            JsonObject doc = new JsonObject
+            {
+                { "Property01", "HelloWorld" },
+                { "Property02", "A" },
+                { "Property03", new String('A', 998) },
+                //{ "Property04", new String('B', 998) }
+            };
+
+            ExportJavaReferences(
+                GenerateJavaReferencesAsDoc(doc),
+                "C:\\Temp\\JsonDoc_String_Simple.json");
+        }
+
+        [TestMethod]
+        public void ExportJavaReferences_JsonDoc_String_Trivial()
+        {
+            JsonObject doc = new JsonObject
+            {
+                { "Property01", "HelloWorld" },
+            };
+
+            ExportJavaReferences(
+                GenerateJavaReferencesAsDoc(doc),
+                "C:\\Temp\\JsonDoc_String_Trivial.json");
+        }
+
+        [TestMethod]
+        public void ExportJavaReferences_JsonDoc_String_Multiple()
+        {
+            JsonObject doc = new JsonObject
+            {
+                { "id", "SomeId" },
+                { "Property01", "HelloWorld" },
+                { "Property02", "HelloWorld" },
+                { "Property03", Guid.NewGuid().ToString() }
+            };
+
+            ExportJavaReferences(
+                GenerateJavaReferencesAsDoc(doc),
+                "C:\\Temp\\JsonDoc_String_Multiple.json");
+        }
+
+        [TestMethod]
+        public void ExportJavaReferences_JsonDoc_Number_Simple()
+        {
+            JsonObject doc = new JsonObject
+            {
+                { "IntProperty", 12345 },
+                { "FloatProperty", 123.45 }
+            };
+
+            ExportJavaReferences(
+                GenerateJavaReferencesAsDoc(doc),
+                "C:\\Temp\\JsonDoc_Number_Simple.json");
+        }
+
+        [TestMethod]
         public void ExportJavaReferences_String_SystemStrings()
         {
             string[][] values = new[]
@@ -486,6 +548,22 @@ namespace Microsoft.Azure.Cosmos.Tests
             throw new NotImplementedException($"Write value not implemented for type '{value.GetType().Name}'. ");
         }
 
+        private static JsonObject GenerateJavaReferencesAsDoc(JsonObject doc)
+        {
+            string jsonValue = doc.ToJsonString(new JsonSerializerOptions { WriteIndented = false });
+
+            // Binary
+            byte[] binary = JsonTestUtils.ConvertTextToBinary(jsonValue);
+            Console.WriteLine($"ValueLength: {JsonBinaryEncoding.GetValueLength(binary.AsMemory().Span.Slice(1))}");
+            JsonObject envelope = new()
+            {
+                { "jsonValue", jsonValue },
+                { "binaryValueBase64",  Convert.ToBase64String(binary, Base64FormattingOptions.None) }
+            };
+
+            return envelope;
+        }
+
         private static JsonObject GenerateJavaReferences<T>(IEnumerable<T> values)
         {
             JsonArray valuesNode = new JsonArray();
@@ -497,10 +575,9 @@ namespace Microsoft.Azure.Cosmos.Tests
 
             foreach (T v in values)
             {
-                IJsonWriter writer = Cosmos.Json.JsonWriter.Create(JsonSerializationFormat.Binary, 256, true);
+                IJsonWriter writer = Cosmos.Json.JsonWriter.Create(JsonSerializationFormat.Binary, JsonWriteOptions.None, 256);
 
                 WriteBinaryValue(writer, (dynamic)v);
-                ReadOnlySpan<byte> encoded;
 
                 string jsonValue;
                 if (typeof(T) == typeof(string[]))
@@ -515,15 +592,174 @@ namespace Microsoft.Azure.Cosmos.Tests
                     jsonValue = String.Format(CultureInfo.InvariantCulture, "{0}", v);
                 }
 
+                byte[] dummy = writer.GetResult().Span.ToArray();
+                for (int i = 0; i < 10; i++)
+                {
+                    Console.WriteLine($"{i}: {DebugTypeMarker(dummy[i])}");
+                }
+
                 JsonObject valueNode = new()
                 {
                     { "jsonValue", jsonValue },
-                    { "binaryValueBase64",  Convert.ToBase64String(writer.GetResult().Span, Base64FormattingOptions.None) }
+                    { "binaryValueBase64",  Convert.ToBase64String(dummy, Base64FormattingOptions.None) }
+                    //{ "binaryValueBase64",  Convert.ToBase64String(writer.GetResult().Span, Base64FormattingOptions.None) }
                 };
                 valuesNode.Add(valueNode);
             }
 
             return doc;
+        }
+
+        public static string DebugTypeMarker(byte b)
+        {
+            String type = $"{b} --> ";
+
+            if (JsonBinaryEncoding.TypeMarker.IsArray(b))
+            {
+                type += "Array, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsBoolean(b))
+            {
+                type += "Boolean, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsCompressedString(b))
+            {
+                type += "CompressedString, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsDateTimeString(b))
+            {
+                type += "DateTimeString, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsEmptyArray(b))
+            {
+                type += "EmptyArray, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsEmptyObject(b))
+            {
+                type += "EmptyObject, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsEncodedLengthString(b))
+            {
+                type += "EncodedLengthString, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsEncodedNumberLiteral(b))
+            {
+                type += "EncodedNumberLiteral, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsEncodedString(b))
+            {
+                type += "EncodedString, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsFalse(b))
+            {
+                type += "False, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsFixedLengthNumber(b))
+            {
+                type += "FixedLengthNumber, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsGuid(b))
+            {
+                type += "Guid, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsGuidString(b))
+            {
+                type += "GuidString, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsHexadecimalString(b))
+            {
+                type += "HexadecimalString, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsNull(b))
+            {
+                type += "Null, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsNumber(b))
+            {
+                type += "Number, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsObject(b))
+            {
+                type += "Object, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsOneByteEncodedString(b))
+            {
+                type += "OneByteEncodedString, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsOneByteEncodedUserString(b))
+            {
+                type += "OneByteEncodedUserString, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsReferenceString(b))
+            {
+                type += "ReferenceString, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsString(b))
+            {
+                type += "String, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsSystemString(b))
+            {
+                type += "SystemString, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsTrue(b))
+            {
+                type += "True, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsTwoByteEncodedString(b))
+            {
+                type += "TwoByteEncodedString, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsTwoByteEncodedUserString(b))
+            {
+                type += "TwoByteEncodedUserString, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsUserString(b))
+            {
+                type += "UserString, ";
+            }
+
+            if (!JsonBinaryEncoding.TypeMarker.IsValid(b))
+            {
+                type += "Invalid, ";
+            }
+
+            if (JsonBinaryEncoding.TypeMarker.IsVariableLengthString(b))
+            {
+                type += "VariableLengthString, ";
+            }
+
+            if (String.IsNullOrEmpty(type))
+            {
+                return "NO TYPE MARKER";
+            }
+
+            return type;
         }
 
         public sealed class AsyncLazy<T> : Lazy<Task<T>>
