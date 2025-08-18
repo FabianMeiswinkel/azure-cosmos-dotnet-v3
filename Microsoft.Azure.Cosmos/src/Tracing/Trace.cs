@@ -6,17 +6,14 @@ namespace Microsoft.Azure.Cosmos.Tracing
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
-    using Microsoft.Azure.Cosmos.Tracing.TraceData;
     using Microsoft.Azure.Documents;
 
     internal sealed class Trace : ITrace
     {
-        private static readonly IReadOnlyDictionary<string, object> EmptyDictionary = new Dictionary<string, object>();
+        private static readonly Dictionary<string, object> EmptyDictionary = new Dictionary<string, object>();
         private readonly List<ITrace> children;
-        private readonly Lazy<Dictionary<string, object>> data;
+        private volatile Dictionary<string, object> data;
+        private volatile Boolean materializationStarted;
         private ValueStopwatch stopwatch;
 
         private Trace(
@@ -34,7 +31,7 @@ namespace Microsoft.Azure.Cosmos.Tracing
             this.Component = component;
             this.Parent = parent;
             this.children = new List<ITrace>();
-            this.data = new Lazy<Dictionary<string, object>>();
+            this.data = null;
             this.Summary = summary ?? throw new ArgumentNullException(nameof(summary));
         }
 
@@ -56,7 +53,17 @@ namespace Microsoft.Azure.Cosmos.Tracing
 
         public IReadOnlyList<ITrace> Children => this.children;
 
-        public IReadOnlyDictionary<string, object> Data => this.data.IsValueCreated ? this.data.Value : Trace.EmptyDictionary;
+        public IReadOnlyDictionary<string, object> Data
+        {
+            get
+            {
+                lock (this.Name)
+                {
+                    this.materializationStarted = true;
+                    return this.data;
+                }
+            }
+        }
 
         public void Dispose()
         {
@@ -124,18 +131,44 @@ namespace Microsoft.Azure.Cosmos.Tracing
 
         public void AddDatum(string key, TraceDatum traceDatum)
         {
-            this.data.Value.Add(key, traceDatum);
+            lock (this.Name)
+            {
+                Dictionary<string, object> writableSnapshot = this.EnsureDataForWriteUnderLock();
+                writableSnapshot.Add(key, traceDatum);
+                this.data = writableSnapshot;
+            }
+
             this.Summary.UpdateRegionContacted(traceDatum);
         }
 
         public void AddDatum(string key, object value)
         {
-            this.data.Value.Add(key, value);
+            lock (this.Name)
+            {
+                Dictionary<string, object> writableSnapshot = this.EnsureDataForWriteUnderLock();
+                writableSnapshot.Add(key, value);
+                this.data = writableSnapshot;
+            }
         }
 
         public void AddOrUpdateDatum(string key, object value)
         {
-            this.data.Value[key] = value;
+            lock (this.Name)
+            {
+                Dictionary<string, object> writableSnapshot = this.EnsureDataForWriteUnderLock();
+                writableSnapshot[key] = value;
+                this.data = writableSnapshot;
+            }
+        }
+
+        private Dictionary<string, object> EnsureDataForWriteUnderLock()
+        {
+            if (this.materializationStarted)
+            {
+                return new Dictionary<string, object>(this.data ?? EmptyDictionary);
+            }
+
+            return this.data;
         }
     }
 }
